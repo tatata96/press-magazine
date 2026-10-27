@@ -1,3 +1,8 @@
+// Wrapper that CoverTilt rotates; it also carries the shadow offsets (--shadow-x/y, px).
+.tilt {
+  will-change: transform;
+}
+
 // Magazine proportions (A4, 210 x 297). The source photo is 4:5, so it is cropped to
 // fill the frame. Capped by viewport height so the whole cover stays on screen.
 .cover {
@@ -5,6 +10,9 @@
   width: min(80vw, 480px, calc((100svh - 160px) * var(--cover-ratio)));
   aspect-ratio: 210 / 297;
   margin: 0;
+  box-shadow:
+    calc(var(--shadow-x, 0) * 1px) calc(24px + var(--shadow-y, 0) * 1px) 40px -16px
+      rgb(0 0 0 / 0.25);
 
   img {
     display: block;
