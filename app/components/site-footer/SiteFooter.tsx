@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Logo from "../logo/Logo";
 import LogoMark from "../logo/LogoMark";
 import styles from "./site-footer.module.scss";
@@ -8,16 +9,18 @@ const contactHref = "mailto:hello@example.com";
 const instagramHref = "https://www.instagram.com/";
 
 export default async function SiteFooter() {
+  const t = await getTranslations("SiteFooter");
+
   return (
     <footer className={styles.footer}>
       <div className={styles.columns}>
         <div className={styles.column}>
-          <p className={`${styles.upper} type-footer`}>A magazine by September</p>
+          <p className={`${styles.upper} type-footer`}>{t("byline")}</p>
         </div>
         <ul className={`${styles.column} ${styles.links}`}>
           <li>
             <a href={contactHref} className={`${styles.link} type-footer`}>
-              Contact
+              {t("contact")}
             </a>
           </li>
           <li>
@@ -27,12 +30,12 @@ export default async function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Instagram
+              {t("instagram")}
             </a>
           </li>
         </ul>
         <p className={`${styles.upper} ${styles.location} type-footer`}>
-          Istanbul / Worldwide
+          {t("location")}
         </p>
       </div>
       <LogoMark className={styles.mark} />

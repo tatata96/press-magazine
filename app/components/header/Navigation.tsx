@@ -10,15 +10,20 @@ type NavigationItem = {
 
 type NavigationProps = {
   items: NavigationItem[];
+  labels: {
+    navigation: string;
+    openMenu: string;
+    closeMenu: string;
+  };
 };
 
 // Inline links on desktop; a toggleable panel below the header on mobile.
-export default function Navigation({ items }: NavigationProps) {
+export default function Navigation({ items, labels }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav
-      aria-label="Main"
+      aria-label={labels.navigation}
       className={styles.nav}
       onKeyDown={(event) => {
         if (event.key === "Escape") setIsOpen(false);
@@ -29,7 +34,7 @@ export default function Navigation({ items }: NavigationProps) {
         className={styles.toggle}
         aria-expanded={isOpen}
         aria-controls="main-menu"
-        aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-label={isOpen ? labels.closeMenu : labels.openMenu}
         onClick={() => setIsOpen((open) => !open)}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
