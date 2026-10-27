@@ -31,7 +31,7 @@
 .item {
   position: absolute;
   z-index: 1;
-  max-width: 20vw;
+  max-width: 42vw;
   font-family: var(--font-family-crit);
   font-size: var(--type-label-size);
   line-height: var(--type-body-line-height);
@@ -39,21 +39,44 @@
   letter-spacing: var(--type-label-letter-spacing);
 }
 
+// On narrow screens the cover fills most of the width, so the items sit in the
+// space above and below it.
 .topLeft {
-  top: 15%;
-  left: 4vw;
+  top: 12px;
+  left: 16px;
 }
 
 .middleRight {
-  top: 45%;
-  right: 4vw;
+  top: 12px;
+  right: 16px;
   text-align: right;
 }
 
 .bottomLeft {
   font-family: var(--font-family-mono);
-  bottom: 15%;
-  left: 4vw;
+  bottom: 12px;
+  left: 16px;
+}
+
+@media (min-width: 900px) {
+  .item {
+    max-width: 20vw;
+  }
+
+  .topLeft {
+    top: 15%;
+    left: 4vw;
+  }
+
+  .middleRight {
+    top: 45%;
+    right: 4vw;
+  }
+
+  .bottomLeft {
+    bottom: 15%;
+    left: 4vw;
+  }
 }
 
 // The call to action links to the newsletter page; underlined on hover like the

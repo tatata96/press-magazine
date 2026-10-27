@@ -1,11 +1,11 @@
 "use client";
 
-import {useEffect, useRef, type ReactNode} from "react";
-import {useTranslations} from "next-intl";
+import { useEffect, useRef, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
-import {ScrollTrigger} from "gsap/ScrollTrigger";
-import {Link} from "../../i18n/navigation";
-import {homeIntro} from "./home-intro-state";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Link } from "../../i18n/navigation";
+import { homeIntro } from "./home-intro-state";
 import styles from "./home-stage.module.scss";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,18 +13,18 @@ gsap.registerPlugin(ScrollTrigger);
 // The copy lives under "HomeStage" in the messages files. It is a first draft, not
 // final editorial content; the Turkish lines in particular are unreviewed.
 const STAGE_ITEMS = [
-  {key: "issue", position: "topLeft"},
-  {key: "about", position: "middleRight"},
-  {key: "newsletter", position: "bottomLeft", href: "/newsletter"},
+  { key: "issue", position: "topLeft" },
+  { key: "about", position: "middleRight" },
+  { key: "newsletter", position: "bottomLeft", href: "/newsletter" },
 ] as const;
 
 // Scroll distance per item, as a fraction of the viewport height.
 const SCROLL_PER_ITEM = 0.7;
 
 // Pins the home stage while scrolling reveals the text items around the
-// cover, then releases it so the footer follows. Desktop without reduced motion only;
-// elsewhere the items stay hidden and the page is just the cover.
-export default function HomeStage({children}: {children: ReactNode}) {
+// cover, then releases it so the footer follows. Without reduced motion only;
+// otherwise the items stay hidden and the page is just the cover.
+export default function HomeStage({ children }: { children: ReactNode }) {
   const t = useTranslations("HomeStage");
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -52,41 +52,37 @@ export default function HomeStage({children}: {children: ReactNode}) {
     }
 
     const mm = gsap.matchMedia();
-    mm.add(
-      "(min-width: 900px) and (prefers-reduced-motion: no-preference)",
-      () => {
-        stage.classList.add(styles.active);
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      stage.classList.add(styles.active);
 
-        // Coming back to the home page: rest on the finished state with every item
-        // visible, instead of replaying the scroll reveal.
-        if (homeIntro.played) return () => stage.classList.remove(styles.active);
+      // Coming back to the home page: rest on the finished state with every item
+      // visible, instead of replaying the scroll reveal.
+      if (homeIntro.played) return () => stage.classList.remove(styles.active);
 
-        // autoAlpha also hides the items from keyboard focus until they are revealed.
-        gsap.set(items, {autoAlpha: 0, y: 32});
+      // autoAlpha also hides the items from keyboard focus until they are revealed.
+      gsap.set(items, { autoAlpha: 0, y: 32 });
 
-        const timeline = gsap.timeline({
-          defaults: {ease: "none"},
-          scrollTrigger: {
-            trigger: stage,
-            // Pin below the sticky header instead of underneath it.
-            start: () => `top ${header?.getBoundingClientRect().height ?? 0}px`,
-            end: () =>
-              `+=${items.length * window.innerHeight * SCROLL_PER_ITEM}`,
-            pin: true,
-            // GSAP skips the spacing by default when the parent is a flex container, as
-            // the body is; without it the footer scrolls up while the stage is pinned.
-            pinSpacing: true,
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-          },
-        });
-        items.forEach((item, index) => {
-          timeline.to(item, {autoAlpha: 1, y: 0, duration: 1}, index);
-        });
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: stage,
+          // Pin below the sticky header instead of underneath it.
+          start: () => `top ${header?.getBoundingClientRect().height ?? 0}px`,
+          end: () => `+=${items.length * window.innerHeight * SCROLL_PER_ITEM}`,
+          pin: true,
+          // GSAP skips the spacing by default when the parent is a flex container, as
+          // the body is; without it the footer scrolls up while the stage is pinned.
+          pinSpacing: true,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      });
+      items.forEach((item, index) => {
+        timeline.to(item, { autoAlpha: 1, y: 0, duration: 1 }, index);
+      });
 
-        return () => stage.classList.remove(styles.active);
-      },
-    );
+      return () => stage.classList.remove(styles.active);
+    });
 
     return () => {
       mm.revert();

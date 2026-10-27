@@ -45,10 +45,13 @@ export default function HomeIntro({children}: {children: ReactNode}) {
 
     // The cover starts with its top edge four fifths of the way down the
     // wordmark, so it overlaps only the bottom fifth of it.
-    // Measured because the header height varies.
+    // Measured because the header height varies. offsetTop is relative to the stage,
+    // which sits below the header, so the stage's viewport position is added to
+    // compare it with the wordmark's.
     const coverStartOffset = () => {
       const mark = wordmark.getBoundingClientRect();
-      return mark.top + mark.height * 0.8 - cover.offsetTop;
+      const stageTop = cover.offsetParent?.getBoundingClientRect().top ?? 0;
+      return mark.top + mark.height * 0.8 - (stageTop + cover.offsetTop);
     };
     const onResize = () => {
       if (root.dataset.intro === "pending") timeline.invalidate();
