@@ -1,0 +1,67 @@
+// The root adds no box of its own, so the page's centering still applies to the cover.
+.intro {
+  display: contents;
+  // Pre-hydration estimate of the cover's starting offset: the point four fifths
+  // of the way down the wordmark (513/1223 of its width, plus its top inset) minus the
+  // cover's natural top (header plus the page's top padding). HomeIntro measures the real value.
+  --header-height: 66px;
+  --wordmark-width: min(92vw, 1400px);
+  --cover-offset: calc(
+    24px + var(--wordmark-width) * 0.34 - 32px - var(--header-height)
+  );
+
+  @media (min-width: 768px) {
+    --header-height: 78px;
+  }
+}
+
+.wordmark {
+  display: none;
+  position: fixed;
+  inset: 24px 0 auto;
+  z-index: 5;
+  justify-content: center;
+  pointer-events: none;
+
+  img {
+    display: block;
+    width: var(--wordmark-width);
+    height: auto;
+  }
+}
+
+// Above the wordmark, which it overlaps at the start of the intro.
+.cover {
+  position: relative;
+  z-index: 6;
+}
+
+// The intro's starting state. Without a reduced-motion preference, scroll is locked
+// and the header and footer wait until the first scroll gesture plays the intro.
+@media (prefers-reduced-motion: no-preference) {
+  .intro:not([data-intro="done"]) .wordmark {
+    display: flex;
+  }
+
+  // Promotes the moving pieces to their own layers before the intro starts.
+  .intro:not([data-intro="done"]) :is(.wordmark, .cover) {
+    will-change: transform;
+  }
+
+  html:has(.intro:not([data-intro="done"])) {
+    overflow: hidden;
+  }
+
+  body:has(.intro:not([data-intro="done"])) :is(header, footer) {
+    visibility: hidden;
+  }
+
+  // The header must be visible while it animates in and out.
+  body:has(.intro:is([data-intro="playing"], [data-intro="rewinding"])) header {
+    visibility: visible;
+  }
+
+  .intro[data-intro="pending"] .cover {
+    transform: translateY(var(--cover-offset));
+  }
+}
