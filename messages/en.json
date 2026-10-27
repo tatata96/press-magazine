@@ -15,6 +15,11 @@
   "Cover": {
     "alt": "Magazine cover"
   },
+  "HomeStage": {
+    "issue": "Issue 01",
+    "about": "A magazine by September, made in Istanbul.",
+    "newsletter": "Join the free newsletter."
+  },
   "SiteFooter": {
     "byline": "A magazine by September",
     "contact": "Contact",

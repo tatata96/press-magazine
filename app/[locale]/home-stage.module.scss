@@ -1,0 +1,74 @@
+// One screen high, with the cover centered; the footer sits below the fold. On wide
+// screens HomeStage pins this section while the items around the cover scroll in.
+.stage {
+  // Header height: HomeStage sets the measured --header-height on the root; until
+  // then this estimate (logo + padding + rules, see header.module.scss) applies.
+  --header-estimate: 54px;
+  --header-size: var(--header-height, var(--header-estimate));
+  position: relative;
+  min-height: calc(100svh - var(--header-size));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+
+  @media (min-width: 768px) {
+    --header-estimate: 66px;
+  }
+}
+
+.items {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.active .items {
+  display: block;
+}
+
+.item {
+  position: absolute;
+  z-index: 1;
+  max-width: 20vw;
+  font-family: var(--font-family-crit);
+  font-size: var(--type-label-size);
+  line-height: var(--type-body-line-height);
+  text-transform: uppercase;
+  letter-spacing: var(--type-label-letter-spacing);
+}
+
+.topLeft {
+  top: 15%;
+  left: 4vw;
+}
+
+.middleRight {
+  top: 45%;
+  right: 4vw;
+  text-align: right;
+}
+
+.bottomLeft {
+  font-family: var(--font-family-mono);
+  bottom: 15%;
+  left: 4vw;
+}
+
+// The call to action links to the newsletter page; underlined on hover like the
+// header links.
+.link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}

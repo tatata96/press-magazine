@@ -4,21 +4,19 @@
   // Pre-hydration estimate of the cover's starting offset: the point four fifths
   // of the way down the wordmark (513/1223 of its width, plus its top inset) minus the
   // cover's natural top (header plus the page's top padding). HomeIntro measures the real value.
-  --header-height: 66px;
   --wordmark-width: min(92vw, 1400px);
   --cover-offset: calc(
-    24px + var(--wordmark-width) * 0.34 - 32px - var(--header-height)
+    24px + var(--wordmark-width) * 0.34 - 32px - var(--header-size)
   );
-
-  @media (min-width: 768px) {
-    --header-height: 78px;
-  }
 }
 
 .wordmark {
   display: none;
-  position: fixed;
-  inset: 24px 0 auto;
+  // Absolute, not fixed: GSAP gives the pinned stage a transform, which would make it
+  // the containing block of a fixed element anyway. The stage sits right under the
+  // header while the intro runs, so this lands 24px from the top of the viewport.
+  position: absolute;
+  inset: calc(24px - var(--header-size)) 0 auto;
   z-index: 5;
   justify-content: center;
   pointer-events: none;

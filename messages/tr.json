@@ -15,6 +15,11 @@
   "Cover": {
     "alt": "Dergi kapağı"
   },
+  "HomeStage": {
+    "issue": "Sayı 01",
+    "about": "İstanbul'da hazırlanan, September'dan bir dergi.",
+    "newsletter": "Ücretsiz bültene katılın."
+  },
   "SiteFooter": {
     "byline": "September'dan bir dergi",
     "contact": "İletişim",

@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect, useRef, type ReactNode} from "react";
+import {useEffect, useRef, useState, type ReactNode} from "react";
 import Image from "next/image";
 import gsap from "gsap";
+import {homeIntro} from "./home-intro-state";
 import styles from "./home-intro.module.scss";
 
 // The first scroll gesture down starts the intro; it then plays on its own timer.
@@ -20,6 +21,8 @@ export default function HomeIntro({children}: {children: ReactNode}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const wordmarkRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
+  // Fixed at the first render so React never overwrites the state the effect manages.
+  const [initialState] = useState(() => (homeIntro.played ? "done" : "pending"));
 
   useEffect(() => {
     const root = rootRef.current;
@@ -31,7 +34,7 @@ export default function HomeIntro({children}: {children: ReactNode}) {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reducedMotion || window.scrollY > 0) {
+    if (homeIntro.played || reducedMotion || window.scrollY > 0) {
       root.dataset.intro = "done";
       return;
     }
@@ -57,6 +60,7 @@ export default function HomeIntro({children}: {children: ReactNode}) {
       paused: true,
       defaults: {ease: "power3.inOut"},
       onComplete: () => {
+        homeIntro.played = true;
         root.dataset.intro = "done";
         listenFor("backward");
       },
@@ -147,7 +151,7 @@ export default function HomeIntro({children}: {children: ReactNode}) {
   }, []);
 
   return (
-    <div ref={rootRef} className={styles.intro} data-intro="pending">
+    <div ref={rootRef} className={styles.intro} data-intro={initialState}>
       <noscript>
         <style>{`
           html { overflow: auto !important; }

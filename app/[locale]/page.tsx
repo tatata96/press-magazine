@@ -1,13 +1,13 @@
 import Cover from "../components/cover/Cover";
 import HomeIntro from "./HomeIntro";
-import styles from "./page.module.scss";
+import HomeStage from "./HomeStage";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <HomeStage>
       <HomeIntro>
         <Cover />
       </HomeIntro>
-    </main>
+    </HomeStage>
   );
 }
