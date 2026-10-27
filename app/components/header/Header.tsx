@@ -8,9 +8,9 @@ import styles from "./header.module.scss";
 export default async function Header() {
   const t = await getTranslations("Header");
 
-  // Placeholder targets: final routes are not decided yet.
+  // The newsletter target is a placeholder: its final route is not decided yet.
   const navigationItems = [
-    { label: t("about"), href: "#about" },
+    { label: t("about"), href: "/about" },
     { label: t("newsletter"), href: "#newsletter" },
   ];
 

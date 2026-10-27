@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Link } from "../../../i18n/navigation";
 import styles from "./header.module.scss";
 
 type NavigationItem = {
@@ -52,13 +53,13 @@ export default function Navigation({ items, labels }: NavigationProps) {
       >
         {items.map((item) => (
           <li key={item.href}>
-            <a
+            <Link
               href={item.href}
               className={styles.link}
               onClick={() => setIsOpen(false)}
             >
               {item.label}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

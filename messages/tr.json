@@ -20,5 +20,64 @@
     "contact": "İletişim",
     "instagram": "Instagram",
     "location": "İstanbul / Dünya"
+  },
+  "AboutPage": {
+    "title": "Hakkında",
+    "hero": {
+      "tagline": [
+        "September'dan",
+        "bir dergi"
+      ],
+      "issue": "Sayı 01",
+      "description": "İstanbul merkezli September Company'den bir yeryüzü kültürü yayını. İlk sayının çerçevesini keşfedin."
+    },
+    "what": {
+      "heading": "Ne?",
+      "body": "<b>Press</b>, İstanbul merkezli küresel bir kültür platformu olma, bir yeryüzü kültürü yayını olma hedefiyle kuruldu. Doğu ile Batı arasında; geçmiş ile gelecek, yerel ile küresel, ışık ile gölge arasında. Zamanın ruhu olmayı amaçlayan, gelenekselden radikale geçişin anlarına ve ayrıntılarına ayna tutan bir dergi."
+    },
+    "where": {
+      "heading": "Nerede?",
+      "paragraphs": [
+        "Fiziksel olarak İstanbul'da ve nerede olursak orada. İçerik olarak ise dünyanın dört bir yanında…",
+        "Dijital platformların ötesinde İstanbul, Paris, Milano, Londra, Berlin ve New York'ta basılı olarak da bulunabilir."
+      ]
+    },
+    "when": {
+      "heading": "Ne zaman?",
+      "body": "İlk sayı Kasım 2026'da geliyor. Yılda iki kez raflarda. Özenle hazırlanmış seçkileri haftalık bültenlerle abonelere ulaşacak, günlük içerikler ise Instagram'da yayımlanacak."
+    },
+    "how": {
+      "heading": "Nasıl?",
+      "lead": "Olması gerektiği gibi; zahmetsiz, doğal, entelektüel.",
+      "body": "Bir kültürel hafıza oluşturmak için moda, sanat, spor, müzik, sinema, edebiyat ve mimari gibi alanlarda yerel ile küreseli bir araya getiren, estetik kaygıları önceleyen ve kendini sanatsal bir nesne olarak şekillendiren bir yapı planladık. Bu anlamda Press, bir karakter inşasıdır, bir düşünme biçimidir.",
+      "notes": [
+        "Akdeniz'in ışığını, İstanbul'un katmanlı zekâsını ve çağdaş dünyanın estetik dilini aynı sayfaya taşıyoruz.",
+        "Press, trendleri yalnızca kaydetmek yerine yorumlayan bir yayın. Popüler kültürü dışarıda bırakmadan, ona teslim olmadan anlamaya çalışır ve gelecek için notlar bırakır.",
+        "Sanatı steril hale gelmeden merkezine yerleştirir. Entelektüeldir; ama ne ulaşılmaz ne de sıkıcıdır.",
+        "Reklam verenler için estetik bir ekosistemdir.",
+        "Aynı zamanda yaratıcılar için steril bir platformdur. Çünkü bu alan özgürdür. Üretim için bir zemin; fotoğrafçılar, stilistler, yazarlar ve sanatçılar için yeni bir penceredir. Risk alan, yeni bir dil kuran, referanslar yaratan ve benzer düşünen insanlarla aynı sayfada buluşan bir mecra olmak istiyoruz.",
+        "Okurlar için: Bu dergi bir rehber değil, bir yoldaştır. Ne giyeceğinizi söylemez; nasıl düşüneceğinize karar vermenize yardım eder."
+      ]
+    },
+    "why": {
+      "heading": "Neden?",
+      "lead": "Neden olmasın?",
+      "body": "Daha nitelikli bir yaşam için ihtiyaç duyduğumuz nitelikli alanlar sunmak ve ilham veren hikâyeleri, onları yaratanlar için de okuyanlar için de daha görünür ve kalıcı kılmak."
+    },
+    "who": {
+      "heading": "Kim?",
+      "paragraphs": [
+        "Türkiye'de yayıncılık sektörünün her kademesinde 25 yıldır çalışmış, yayınlar üretmiş, içerik geliştirmiş ve bu mesleği sevmiş insanlarız.",
+        "September Company çatısı altında yürüttüğümüz moda ve imaj ajansı faaliyetlerini Press ile taçlandırıyoruz."
+      ],
+      "teamLabel": "Ekip",
+      "roles": {
+        "ensarAltun": "Kurucu, Kreatif Direktör",
+        "silaGuven": "İçerik ve Editoryal Direktör",
+        "utkuPalamutcu": "Genel Koordinatör, Moda Direktörü",
+        "dogukanKarapinar": "Tasarım Direktörü",
+        "elifSelinUnuvar": "Marka ve Proje Direktörü"
+      }
+    }
   }
 }

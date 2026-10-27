@@ -1,0 +1,18 @@
+// Applied by AboutStage while it pins and slides its sections over each other. --header-height
+// is kept in sync by AboutStage.
+.pinned {
+  position: relative;
+  // Sections waiting below the stage are clipped until they slide in.
+  overflow: hidden;
+  // Sections share one grid cell, so the stage grows with its tallest section
+  // and the section's bottom padding is never clipped on short viewports.
+  display: grid;
+  min-height: calc(100svh - var(--header-height, 80px));
+
+  // Every section occupies the whole stage; GSAP controls which one is visible.
+  > * {
+    grid-area: 1 / 1;
+    align-content: start;
+    background: var(--background);
+  }
+}
