@@ -4,36 +4,39 @@ import {useEffect, useRef, type ReactNode} from "react";
 import gsap from "gsap";
 import styles from "./cover.module.scss";
 
-const MAX_TILT_DEG = 8;
+const MAX_DRIFT_PX = 5;
 const MAX_SHADOW_SHIFT_PX = 14;
-const PERSPECTIVE_PX = 900;
 
-// Leans the cover toward the cursor like a magazine lying on a table, and shifts its
-// shadow the opposite way. Only for a mouse or trackpad without a reduced-motion
-// preference; otherwise the cover stays flat.
-export default function CoverTilt({children}: {children: ReactNode}) {
+// Keeps the cover flat and moves a soft highlight across it, like light on coated paper,
+// following the cursor. The cover drifts a few pixels away from the cursor and its shadow
+// shifts further, which reads as depth. Only for a mouse or trackpad without a
+// reduced-motion preference; otherwise the cover stays static.
+export default function CoverSheen({children}: {children: ReactNode}) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    const canTilt = window.matchMedia(
+    const canFollow = window.matchMedia(
       "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
     ).matches;
-    if (!canTilt) return;
+    if (!canFollow) return;
 
-    gsap.set(element, {transformPerspective: PERSPECTIVE_PX});
     const follow = {duration: 0.8, ease: "power3.out"};
-    const rotateX = gsap.quickTo(element, "rotationX", follow);
-    const rotateY = gsap.quickTo(element, "rotationY", follow);
+    const driftX = gsap.quickTo(element, "x", follow);
+    const driftY = gsap.quickTo(element, "y", follow);
+    const sheenX = gsap.quickTo(element, "--sheen-x", follow);
+    const sheenY = gsap.quickTo(element, "--sheen-y", follow);
     const shadowX = gsap.quickTo(element, "--shadow-x", follow);
     const shadowY = gsap.quickTo(element, "--shadow-y", follow);
 
-    // x and y are the cursor's position across the viewport, from -1 to 1. A cursor
-    // above the cover tips its top edge away, one on the right tips its right edge away.
+    // x and y are the cursor's position across the viewport, from -1 to 1. The highlight
+    // sits at the matching point of the cover (0-100%), the shadow leans away from it.
     const lean = (x: number, y: number) => {
-      rotateX(-y * MAX_TILT_DEG);
-      rotateY(x * MAX_TILT_DEG);
+      driftX(-x * MAX_DRIFT_PX);
+      driftY(-y * MAX_DRIFT_PX);
+      sheenX(50 + x * 50);
+      sheenY(50 + y * 50);
       shadowX(-x * MAX_SHADOW_SHIFT_PX);
       shadowY(-y * MAX_SHADOW_SHIFT_PX);
     };
@@ -45,6 +48,7 @@ export default function CoverTilt({children}: {children: ReactNode}) {
     };
     const onLeave = () => lean(0, 0);
 
+    element.dataset.sheen = "on";
     window.addEventListener("pointermove", onPointerMove, {passive: true});
     document.documentElement.addEventListener("mouseleave", onLeave);
 
@@ -53,11 +57,12 @@ export default function CoverTilt({children}: {children: ReactNode}) {
       document.documentElement.removeEventListener("mouseleave", onLeave);
       gsap.killTweensOf(element);
       gsap.set(element, {clearProps: "all"});
+      delete element.dataset.sheen;
     };
   }, []);
 
   return (
-    <div ref={ref} className={styles.tilt}>
+    <div ref={ref} className={styles.sheen}>
       {children}
     </div>
   );

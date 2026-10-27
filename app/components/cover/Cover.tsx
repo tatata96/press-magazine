@@ -1,13 +1,13 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import CoverTilt from "./CoverTilt";
+import CoverSheen from "./CoverSheen";
 import styles from "./cover.module.scss";
 
 export default async function Cover() {
   const t = await getTranslations("Cover");
 
   return (
-    <CoverTilt>
+    <CoverSheen>
       <figure className={styles.cover}>
         <Image
           src="/images/cover.jpg"
@@ -18,6 +18,6 @@ export default async function Cover() {
           priority
         />
       </figure>
-    </CoverTilt>
+    </CoverSheen>
   );
 }
