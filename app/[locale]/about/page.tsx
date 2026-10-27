@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import Logo from "@/app/components/logo/Logo";
@@ -12,6 +13,11 @@ function toStrings(value: unknown): string[] {
 }
 
 const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("AboutPage");
+  return { title: t("title") };
+}
 
 export default async function AboutPage() {
   const t = await getTranslations("AboutPage");
