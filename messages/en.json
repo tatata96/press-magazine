@@ -79,5 +79,23 @@
         "elifSelinUnuvar": "Brand & Project Director"
       }
     }
+  },
+  "NewsletterPage": {
+    "heading": "Letter",
+    "lead": "Stay in the loop between issues.",
+    "body": "Carefully curated selections, in your inbox with our weekly newsletter.",
+    "signupTitle": "Sign up for our newsletter"
+  },
+  "NewsletterForm": {
+    "emailLabel": "Email",
+    "emailRequired": "Enter your email address.",
+    "emailInvalid": "Enter a valid email address, for example name@example.com.",
+    "ageLabel": "Age",
+    "ageHelper": "Optional.",
+    "ageInvalid": "Enter your age as a whole number greater than zero.",
+    "submit": "Sign up",
+    "notAvailable": "Signup is not available yet. Your details were not saved.",
+    "nameLabel": "First name",
+    "surnameLabel": "Last name"
   }
 }
