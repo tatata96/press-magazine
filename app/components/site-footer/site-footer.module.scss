@@ -1,0 +1,113 @@
+.footer {
+  --wordmark-size: clamp(96px, 28vw, 360px);
+  --top-gap: 48px;
+  // Pushes the footer to the bottom when the page content is short.
+  margin-top: auto;
+  position: relative;
+  // Clips the fixed wordmark to the footer's own box, starting at the rule so
+  // the gap above it stays plain page background.
+  clip-path: inset(var(--top-gap) 0 0);
+  // Room for the wordmark below the columns.
+  padding: var(--top-gap) 16px calc(var(--wordmark-size) * 0.8 + 32px);
+  background: var(--background);
+}
+
+// Logotype pinned to the viewport bottom behind the page; the footer's
+// clip-path reveals it as the footer scrolls into view.
+.wordmark {
+  position: fixed;
+  inset: auto 0 16px;
+  z-index: 0;
+  opacity: 0.15;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.wordmarkLogo {
+  display: block;
+  height: calc(var(--wordmark-size) * 0.8);
+  width: auto;
+}
+
+.columns {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 24px;
+  padding-top: 32px;
+  border-top: var(--rule-width) solid var(--border-subtle);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 16px;
+    padding-top: 48px;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  p {
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    // The middle column starts at the page midpoint, as in the design.
+    &:nth-child(2) {
+      justify-self: center;
+    }
+  }
+}
+
+.year {
+  position: absolute;
+  inset: auto 16px 16px auto;
+  z-index: 1;
+  margin: 0;
+}
+
+// Emblem anchored to the bottom-left corner, mirroring the year on the right.
+.mark {
+  position: absolute;
+  inset: auto auto 16px 16px;
+  z-index: 1;
+  display: block;
+  width: 40px;
+  height: auto;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.location {
+  margin: 0;
+
+  @media (min-width: 768px) {
+    justify-self: end;
+    text-align: end;
+  }
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}

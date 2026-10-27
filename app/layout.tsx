@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.scss";
 import "./typography.scss";
 import Header from "./components/header/Header";
+import SiteFooter from "./components/site-footer/SiteFooter";
 
 const pressed = localFont({
   src: "./style/fonts/Pressed.otf",
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <Header />
         {children}
+        <SiteFooter />
       </body>
     </html>
   );
