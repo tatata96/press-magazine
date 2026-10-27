@@ -1,0 +1,99 @@
+.header {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
+
+  @media (min-width: 768px) {
+    padding: 12px 32px;
+  }
+}
+
+.languages {
+  display: flex;
+  gap: 16px;
+  justify-self: start;
+}
+
+.current {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.logo {
+  display: block;
+  line-height: 0;
+
+  img {
+    width: auto;
+    height: 28px;
+
+    @media (min-width: 768px) {
+      height: 40px;
+    }
+  }
+}
+
+.nav {
+  justify-self: end;
+}
+
+.toggle {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+// Mobile: hidden panel under the header. Desktop: inline row.
+.list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  margin: 0;
+  padding: 8px 16px 16px;
+  list-style: none;
+  background: var(--background);
+  border-bottom: 1px solid var(--foreground);
+
+  &.open {
+    display: flex;
+  }
+
+  @media (min-width: 768px) {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    gap: 32px;
+    padding: 0;
+    border-bottom: 0;
+  }
+}
+
+.link {
+  display: block;
+  padding: 12px 0;
+  text-decoration: none;
+
+  @media (min-width: 768px) {
+    padding: 0;
+  }
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}

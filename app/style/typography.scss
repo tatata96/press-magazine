@@ -1,7 +1,7 @@
 :root {
   --font-family-title: var(--font-pressed), serif;
   --font-family-body: var(--font-register), serif;
-  --font-family-ui: var(--font-crit), sans-serif;
+  --font-family-crit: var(--font-crit), sans-serif;
   --font-family-mono: var(--font-crit-mono), monospace;
 
   --font-weight-light: 300;
@@ -73,7 +73,7 @@ body {
 }
 
 .type-label {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-crit);
   font-size: var(--type-label-size);
   font-weight: var(--font-weight-medium);
   line-height: var(--type-label-line-height);
@@ -81,7 +81,7 @@ body {
 }
 
 .type-caption {
-  font-family: var(--font-family-ui);
+  font-family: var(--font-family-crit);
   font-size: var(--type-caption-size);
   font-weight: var(--font-weight-regular);
   line-height: var(--type-caption-line-height);

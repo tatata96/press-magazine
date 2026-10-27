@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.scss";
 import "./typography.scss";
+import Header from "./components/header/Header";
 
 const pressed = localFont({
   src: "./style/fonts/Pressed.otf",
@@ -51,7 +52,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${pressed.variable} ${register.variable} ${crit.variable} ${critMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
