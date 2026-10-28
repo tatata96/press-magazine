@@ -12,12 +12,12 @@
   // Display title
   --type-display-size: 48px;
   --type-display-line-height: 1;
-  --type-display-letter-spacing: 0;
+  --type-display-letter-spacing: -0.04em;
 
   // Title
   --type-title-size: 32px;
   --type-title-line-height: 1.1;
-  --type-title-letter-spacing: 0;
+  --type-title-letter-spacing: -0.04em;
 
   // Body
   --type-body-size: 16px;
@@ -46,6 +46,7 @@ body {
 }
 
 .type-display {
+  margin: 0;
   font-family: var(--font-family-title);
   font-size: var(--type-display-size);
   line-height: var(--type-display-line-height);
@@ -53,6 +54,7 @@ body {
 }
 
 .type-title {
+  margin: 0;
   font-family: var(--font-family-title);
   font-size: var(--type-title-size);
   line-height: var(--type-title-line-height);
