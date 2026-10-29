@@ -103,7 +103,7 @@ export default function HomeStage({ children }: { children: ReactNode }) {
             <li
               key={item.key}
               data-stage-item
-              className={`${styles.item} ${styles[item.position]}`}
+              className={`${styles.item} ${styles[item.position]} type-mono`}
             >
               {"href" in item ? (
                 <Link href={item.href} className={styles.link}>

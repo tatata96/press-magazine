@@ -39,14 +39,6 @@
   }
 }
 
-.mono {
-  margin: 0;
-  font-family: var(--font-family-mono);
-  font-weight: var(--font-weight-light);
-  text-transform: uppercase;
-  line-height: 1.4;
-}
-
 .block {
   display: block;
 }
@@ -60,6 +52,11 @@
   }
 }
 
+.upperCase {
+  text-transform: uppercase;
+  margin: 0;
+}
+
 .logoImage {
   display: block;
   width: 100%;
@@ -67,6 +64,7 @@
 }
 
 .heroText {
+  margin: 0;
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-regular);
 }
@@ -83,8 +81,9 @@
   border-top: var(--rule-width) solid currentColor;
 }
 
+.heroTagline,
 .heroIssue {
-  font-size: clamp(14px, 1.7vw, 34px);
+  font-size: clamp(14px, 1vw, 34px);
 }
 
 .heroText {

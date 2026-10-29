@@ -57,6 +57,7 @@ body {
   margin: 0;
   font-family: var(--font-family-title);
   font-size: var(--type-title-size);
+  font-weight: 100;
   line-height: var(--type-title-line-height);
   letter-spacing: var(--type-title-letter-spacing);
 }
@@ -94,15 +95,6 @@ body {
 .type-mono {
   font-family: var(--font-family-mono);
   font-size: 14px;
-  font-weight: var(--font-weight-light);
-  line-height: 1.2;
-  letter-spacing: 0;
-}
-
-// Footer text, set in Crit Mono (only the light weight is loaded).
-.type-footer {
-  font-family: var(--font-family-mono);
-  font-size: 16px;
   font-weight: var(--font-weight-light);
   line-height: 1.2;
   letter-spacing: 0;

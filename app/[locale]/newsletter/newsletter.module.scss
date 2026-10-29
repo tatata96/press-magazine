@@ -70,14 +70,6 @@
   pointer-events: none;
 }
 
-.heading {
-  margin: 0;
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-regular);
-  font-size: clamp(48px, 9vw, 120px);
-  line-height: 1;
-}
-
 // Opaque, so images passing behind never reduce the form's legibility.
 .panel {
   display: flex;

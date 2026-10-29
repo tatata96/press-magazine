@@ -19,10 +19,19 @@ export default async function Header() {
 
       <Link href="/" className={styles.logo}>
         <Image
+          className={styles.logoText}
           src="/images/logo-text.svg"
           alt={t("logoAlt")}
           width={1223}
           height={513}
+          priority
+        />
+        <Image
+          className={styles.logoMark}
+          src="/images/logo.svg"
+          alt={t("logoAlt")}
+          width={110}
+          height={114}
           priority
         />
       </Link>
