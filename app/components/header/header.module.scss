@@ -37,6 +37,23 @@
       height: 40px;
     }
   }
+
+  // The mark replaces the wordmark while a page sets data-hide-logo on the header
+  // (the About hero already shows the wordmark at full size). display: none keeps
+  // the hidden image out of the accessibility tree.
+  .logoMark {
+    display: none;
+  }
+
+  :global(header[data-hide-logo]) & {
+    .logoText {
+      display: none;
+    }
+
+    .logoMark {
+      display: block;
+    }
+  }
 }
 
 .nav {
