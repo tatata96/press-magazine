@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
-import type { ReactNode } from "react";
+import type {Metadata} from "next";
+import {getTranslations} from "next-intl/server";
+import type {ReactNode} from "react";
 import Logo from "@/app/components/logo/Logo";
 import AboutStage from "./AboutStage";
-import { team } from "./team";
+import {team} from "./team";
 import styles from "./about.module.scss";
 
 function toStrings(value: unknown): string[] {
@@ -16,7 +16,7 @@ const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("AboutPage");
-  return { title: t("title") };
+  return {title: t("title")};
 }
 
 export default async function AboutPage() {
@@ -26,7 +26,7 @@ export default async function AboutPage() {
     <main className={styles.main}>
       <AboutStage>
         <section className={`${styles.hero} ${styles.section}`}>
-          <p className={`${styles.mono} ${styles.heroTagline}`}>
+          <p className={`type-mono ${styles.upperCase} ${styles.heroTagline}`}>
             {toStrings(t.raw("hero.tagline")).map((line) => (
               <span key={line} className={styles.block}>
                 {line}
@@ -36,12 +36,10 @@ export default async function AboutPage() {
           <h1 className={styles.logo} aria-label="Press">
             <Logo className={styles.logoImage} />
           </h1>
-          <p className={`${styles.mono} ${styles.heroIssue}`}>
+          <p className={`type-mono ${styles.upperCase} ${styles.heroIssue}`}>
             {t("hero.issue")}
           </p>
-          <p className={`${styles.mono} ${styles.heroText}`}>
-            {t("hero.description")}
-          </p>
+          <p className={`${styles.heroText}`}>{t("hero.description")}</p>
         </section>
 
         <section className={styles.section} aria-labelledby="what-heading">
@@ -49,7 +47,7 @@ export default async function AboutPage() {
             {t("what.heading")}
           </h2>
           <div className={styles.copy}>
-            <p>{t.rich("what.body", { b: bold })}</p>
+            <p>{t.rich("what.body", {b: bold})}</p>
           </div>
           <div className={`${styles.section} ${styles.pair} ${styles.nested}`}>
             <div className={styles.pairItem}>
@@ -115,9 +113,9 @@ export default async function AboutPage() {
           </div>
         </div>
         <ul className={styles.team} aria-label={t("who.teamLabel")}>
-          {team.map(({ name, roleKey }) => (
+          {team.map(({name, roleKey}) => (
             <li key={roleKey} className={styles.member}>
-              <span className={styles.mono}>{name}</span>
+              <span className={`type-mono ${styles.upperCase}`}>{name}</span>
               <span>{t(`who.roles.${roleKey}`)}</span>
             </li>
           ))}

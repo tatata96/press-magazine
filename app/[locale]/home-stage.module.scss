@@ -32,11 +32,7 @@
   position: absolute;
   z-index: 1;
   max-width: 42vw;
-  font-family: var(--font-family-crit);
-  font-size: var(--type-label-size);
-  line-height: var(--type-body-line-height);
   text-transform: uppercase;
-  letter-spacing: var(--type-label-letter-spacing);
 }
 
 // On narrow screens the cover fills most of the width, so the items sit in the
@@ -53,7 +49,6 @@
 }
 
 .bottomLeft {
-  font-family: var(--font-family-mono);
   bottom: 12px;
   left: 16px;
 }

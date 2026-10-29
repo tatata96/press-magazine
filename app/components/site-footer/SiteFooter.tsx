@@ -15,18 +15,18 @@ export default async function SiteFooter() {
     <footer className={styles.footer}>
       <div className={styles.columns}>
         <div className={styles.column}>
-          <p className={`${styles.upper} type-footer`}>{t("byline")}</p>
+          <p className={`${styles.upper} type-mono`}>{t("byline")}</p>
         </div>
         <ul className={`${styles.column} ${styles.links}`}>
           <li>
-            <a href={contactHref} className={`${styles.link} type-footer`}>
+            <a href={contactHref} className={`${styles.link} type-mono`}>
               {t("contact")}
             </a>
           </li>
           <li>
             <a
               href={instagramHref}
-              className={`${styles.link} type-footer`}
+              className={`${styles.link} type-mono`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -34,12 +34,12 @@ export default async function SiteFooter() {
             </a>
           </li>
         </ul>
-        <p className={`${styles.upper} ${styles.location} type-footer`}>
+        <p className={`${styles.upper} ${styles.location} type-mono`}>
           {t("location")}
         </p>
       </div>
       <LogoMark className={styles.mark} />
-      <p className={`${styles.year} type-footer`}>2026</p>
+      <p className={`${styles.year} type-mono`}>2026</p>
       {/* Decorative: fixed to the viewport bottom and clipped by the footer,
           so it is uncovered as the page scrolls to the end. */}
       <div className={styles.wordmark} aria-hidden="true">
