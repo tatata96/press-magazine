@@ -12,11 +12,30 @@
   width: min(80vw, 480px, calc((100svh - 160px) * var(--cover-ratio)));
   aspect-ratio: 210 / 297;
   margin: 0;
-  box-shadow: calc(var(--shadow-x, 0) * 1px)
-    calc(24px + var(--shadow-y, 0) * 1px) 40px -16px rgb(0 0 0 / 0.25);
+  box-shadow:
+    // Stacked page edges on the right and bottom give the cover thickness.
+    1px 1px 0 #ebe8e1,
+    2px 2px 0 #d9d5cc,
+    calc(var(--shadow-x, 0) * 1px) calc(24px + var(--shadow-y, 0) * 1px) 40px -16px
+      rgb(0 0 0 / 0.25);
 
   // Highlight is only shown once CoverSheen is following the cursor.
   position: relative;
+
+  // Spine: a soft crease just inside the left edge.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4%;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgb(0 0 0 / 0.18),
+      rgb(255 255 255 / 0.12) 40%,
+      transparent
+    );
+  }
 
   &::after {
     content: "";
