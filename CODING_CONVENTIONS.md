@@ -19,3 +19,17 @@ app/components/header/
   Header.tsx
   header.module.scss
 ```
+
+## Control flow
+
+- Always use braces for `if`, `else`, `for`, and `while` bodies, even for a single statement. Enforced by the ESLint `curly` rule.
+
+```ts
+// Good
+if (!email) {
+  return;
+}
+
+// Bad
+if (!email) return;
+```
