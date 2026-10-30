@@ -15,15 +15,16 @@ let cachedToken: CachedToken | null = null;
 let pendingToken: Promise<CachedToken> | null = null;
 
 // Carries only safe, user-presentable detail: never credentials, tokens, or raw bodies.
-export class ShopifyAuthError extends Error {
+export class ShopifyError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "ShopifyAuthError";
+    this.name = "ShopifyError";
   }
 }
 
 function readConfig() {
-  const {SHOPIFY_STORE_DOMAIN, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET} = process.env;
+  const {SHOPIFY_STORE_DOMAIN, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET} =
+    process.env;
   const missing = [
     ["SHOPIFY_STORE_DOMAIN", SHOPIFY_STORE_DOMAIN],
     ["SHOPIFY_CLIENT_ID", SHOPIFY_CLIENT_ID],
@@ -33,47 +34,71 @@ function readConfig() {
     .map(([name]) => name);
 
   if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_CLIENT_ID || !SHOPIFY_CLIENT_SECRET) {
-    throw new ShopifyAuthError(`Missing environment variables: ${missing.join(", ")}.`);
+    throw new ShopifyError(
+      `Missing environment variables: ${missing.join(", ")}.`,
+    );
   }
 
   const storeDomain = SHOPIFY_STORE_DOMAIN.trim()
     .replace(/^https?:\/\//, "")
     .replace(/\/+$/, "");
+
   if (!MYSHOPIFY_DOMAIN.test(storeDomain)) {
-    throw new ShopifyAuthError(
+    throw new ShopifyError(
       "SHOPIFY_STORE_DOMAIN must be the store's <name>.myshopify.com domain.",
     );
   }
 
-  return {storeDomain, clientId: SHOPIFY_CLIENT_ID, clientSecret: SHOPIFY_CLIENT_SECRET};
+  return {
+    storeDomain,
+    clientId: SHOPIFY_CLIENT_ID,
+    clientSecret: SHOPIFY_CLIENT_SECRET,
+  };
 }
 
 async function requestAccessToken(): Promise<CachedToken> {
   const {storeDomain, clientId, clientSecret} = readConfig();
 
-  const response = await fetch(`https://${storeDomain}/admin/oauth/access_token`, {
-    method: "POST",
-    headers: {"Content-Type": "application/x-www-form-urlencoded", Accept: "application/json"},
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-      client_id: clientId,
-      client_secret: clientSecret,
-    }),
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `https://${storeDomain}/admin/oauth/access_token`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+      },
+      body: new URLSearchParams({
+        grant_type: "client_credentials",
+
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+      cache: "no-store",
+    },
+  );
 
   const body: unknown = await response.json().catch(() => null);
-  const record = typeof body === "object" && body !== null ? (body as Record<string, unknown>) : {};
+  const record =
+    typeof body === "object" && body !== null
+      ? (body as Record<string, unknown>)
+      : {};
 
   if (!response.ok) {
     // Only Shopify's short error code is surfaced; the description may echo request details.
-    const code = typeof record.error === "string" ? record.error : "unknown_error";
-    throw new ShopifyAuthError(`Token request failed (HTTP ${response.status}, error: ${code}).`);
+    const code =
+      typeof record.error === "string" ? record.error : "unknown_error";
+
+    throw new ShopifyError(
+      `Token request failed (HTTP ${response.status}, error: ${code}).`,
+    );
   }
 
   const {access_token: accessToken, expires_in: expiresIn} = record;
+
   if (typeof accessToken !== "string" || typeof expiresIn !== "number") {
-    throw new ShopifyAuthError("Token response was missing access_token or expires_in.");
+    throw new ShopifyError(
+      "Token response was missing access_token or expires_in.",
+    );
   }
 
   return {accessToken, expiresAt: Date.now() + expiresIn * 1000};
@@ -99,7 +124,11 @@ async function getAccessToken(): Promise<string> {
 
 type GraphQLResponse<Data> = {data?: Data; errors?: {message: string}[]};
 
-export async function adminGraphQL<Data>(query: string): Promise<Data> {
+// Pass user-supplied values through `variables`; never interpolate them into `query`.
+export async function adminGraphQL<Data>(
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<Data> {
   const {storeDomain} = readConfig();
   const accessToken = await getAccessToken();
 
@@ -107,20 +136,29 @@ export async function adminGraphQL<Data>(query: string): Promise<Data> {
     `https://${storeDomain}/admin/api/${ADMIN_API_VERSION}/graphql.json`,
     {
       method: "POST",
-      headers: {"Content-Type": "application/json", "X-Shopify-Access-Token": accessToken},
-      body: JSON.stringify({query}),
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": accessToken,
+      },
+      body: JSON.stringify({query, variables}),
       cache: "no-store",
     },
   );
 
   if (!response.ok) {
-    throw new ShopifyAuthError(`Admin API request failed (HTTP ${response.status}).`);
+    throw new ShopifyError(
+      `Admin API request failed (HTTP ${response.status}).`,
+    );
   }
 
   const result = (await response.json()) as GraphQLResponse<Data>;
+
   if (result.errors?.length || !result.data) {
     const messages = result.errors?.map((error) => error.message).join("; ");
-    throw new ShopifyAuthError(`Admin API returned errors: ${messages ?? "no data"}.`);
+
+    throw new ShopifyError(
+      `Admin API returned errors: ${messages ?? "no data"}.`,
+    );
   }
 
   return result.data;

@@ -19,12 +19,14 @@ export default function CoverSheen({children}: {children: ReactNode}) {
 
   useEffect(() => {
     const element = ref.current;
+
     if (!element) {
       return;
     }
     const canFollow = window.matchMedia(
       "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
     ).matches;
+
     if (!canFollow) {
       return;
     }
