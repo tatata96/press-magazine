@@ -19,11 +19,17 @@ export default function CoverSheen({children}: {children: ReactNode}) {
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+
+    if (!element) {
+      return;
+    }
     const canFollow = window.matchMedia(
       "(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)",
     ).matches;
-    if (!canFollow) return;
+
+    if (!canFollow) {
+      return;
+    }
 
     gsap.set(element, {transformPerspective: PERSPECTIVE_PX});
     const follow = {duration: 0.8, ease: "power3.out"};
