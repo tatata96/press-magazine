@@ -1,0 +1,256 @@
+.main {
+  // Approximate header height (logo + padding + rules), so the stage fills the
+  // first screen and the footer sits just below the fold.
+  --header-height: 66px;
+  position: relative;
+  flex: none;
+  // Pulled up under the (transparent, sticky) header so the images run behind
+  // it instead of stopping at its bottom edge.
+  margin-top: calc(-1 * var(--header-height));
+  // The footer starts with a 48px gap of plain background above its rule. The
+  // page is 48px taller and pulled down over that gap, so the images run to the
+  // bottom of the first screen and on to the rule, with no white band between.
+  margin-bottom: -48px;
+  min-height: calc(100svh + 48px);
+  display: flex;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    --header-height: 78px;
+  }
+}
+
+// Collage of tilted, overlapping photos bleeding off every edge, with the form
+// clear in the middle. With motion allowed they slide in from the nearest edge.
+.images {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.image {
+  position: absolute;
+  left: var(--left);
+  top: var(--top);
+  width: calc(var(--width) * 2.4%);
+  height: auto;
+  transform: rotate(var(--rotate));
+
+  @media (min-width: 900px) {
+    width: calc(var(--width) * 1%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: slide-in 1.3s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}
+
+// On phones, top-edge images sit just below the header instead of behind it,
+// forming a cluster above the intro text. See getImageLayoutClass in page.tsx.
+.topEdge {
+  top: calc(var(--top) + var(--header-height) + 12%);
+
+  @media (min-width: 900px) {
+    top: var(--top);
+  }
+}
+
+// Hidden on phones; see getImageLayoutClass in page.tsx.
+.desktopOnly {
+  display: none;
+
+  @media (min-width: 900px) {
+    display: block;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translate(var(--from-x), var(--from-y))
+      rotate(calc(var(--rotate) + var(--spin-in))) scale(0.85);
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+  // Top padding clears the header so the form stays centred in the visible area.
+  padding: calc(32px + var(--header-height)) 16px calc(32px + 48px);
+  text-align: center;
+  // On phones, lift the form 10% of the screen above centre so there is less
+  // empty space under the header. A transform, so the page height is unchanged.
+  transform: translateY(-10svh);
+
+  @media (min-width: 900px) {
+    transform: none;
+  }
+}
+
+.lead {
+  margin: 0;
+  padding: 16px;
+  background: var(--background);
+  font-family: var(--font-family-mono);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+// Underlined fields spanning the centre, each on a white background.
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  // Fills the centre of the stage.
+  width: 100%;
+  max-width: 640px;
+  text-align: left;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 32px 64px;
+}
+
+.emailRow {
+  // Email takes 70% of the row, age 30%.
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  gap: 24px;
+}
+
+// A field plus its error message, so a message doesn't stretch the row.
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.error,
+.notice,
+.status p {
+  margin: 0;
+  padding: 4px 0;
+  background: var(--background);
+}
+
+// An empty live region still takes a flex gap; cancel it.
+.status:empty {
+  margin-top: -40px;
+}
+
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 480px;
+  padding: 32px;
+  background: var(--background);
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+
+  // Focus is moved here programmatically; it isn't an interactive control.
+  &:focus {
+    outline: none;
+  }
+}
+
+// Off-screen rather than display:none so naive bots still see and fill it.
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.field {
+  position: relative;
+  background: var(--background);
+}
+
+// The shared Button, smaller and aligned right.
+// Consent notice on the left, button on the right; they stack on narrow screens.
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+
+.submitRow .notice {
+  flex: 1 1 240px;
+}
+
+.form .button {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 20px;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding: 14px 0 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  color: inherit;
+  background: var(--background);
+  border: 0;
+  border-bottom: 1.5px solid var(--foreground);
+  border-radius: 0;
+  appearance: none;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  // Hide native number spinners; they clash with the underlined look.
+  &[type="number"] {
+    -moz-appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+// A real <label> sitting on the line like a placeholder; it shrinks once the
+// field is focused or filled.
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  pointer-events: none;
+  transition: font-size 0.15s ease;
+
+  .input:focus + &,
+  .input:not(:placeholder-shown) + & {
+    height: auto;
+    top: 0;
+    font-size: 11px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

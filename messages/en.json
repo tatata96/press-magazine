@@ -9,6 +9,7 @@
     "closeMenu": "Close menu",
     "about": "About",
     "newsletter": "Newsletter",
+    "newsletter2": "Newsletter2",
     "logoAlt": "Press",
     "languageLabel": "Language"
   },
@@ -29,10 +30,7 @@
   "AboutPage": {
     "title": "About",
     "hero": {
-      "tagline": [
-        "A magazine",
-        "by September"
-      ],
+      "tagline": ["A magazine", "by September"],
       "issue": "Issue 01",
       "description": "An earth-culture publication by September Company, based in Istanbul. Explore the framework of the first issue."
     },
@@ -96,11 +94,14 @@
     "emailRequired": "Enter your email address.",
     "emailInvalid": "Enter a valid email address, for example name@example.com.",
     "ageLabel": "Age",
-    "ageHelper": "Optional.",
-    "ageInvalid": "Enter your age as a whole number greater than zero.",
+    "ageInvalid": "Enter a valid age.",
     "submit": "Sign up",
-    "notAvailable": "Signup is not available yet. Your details were not saved.",
     "nameLabel": "First name",
-    "surnameLabel": "Last name"
+    "surnameLabel": "Last name",
+    "consentNotice": "By signing up you agree to receive the weekly Press newsletter by email.",
+    "submitting": "Signing up…",
+    "successTitle": "Thank you for subscribing.",
+    "success": "You are signed up.",
+    "error": "Something went wrong. Please try again later."
   }
 }

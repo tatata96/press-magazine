@@ -121,8 +121,9 @@ export default async function NewsletterPage() {
       </div>
       <section className={styles.content} aria-labelledby="newsletter-heading">
         <div className={styles.panel}>
-          <p className={styles.lead}>{t("lead")}</p>
-          <NewsletterForm />
+          <NewsletterForm>
+            <p className={styles.lead}>{t("lead")}</p>
+          </NewsletterForm>
         </div>
       </section>
     </main>

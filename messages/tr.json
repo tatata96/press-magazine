@@ -9,6 +9,7 @@
     "closeMenu": "Menüyü kapat",
     "about": "Hakkında",
     "newsletter": "Bülten",
+    "newsletter2": "Bülten2",
     "logoAlt": "Press",
     "languageLabel": "Dil"
   },
@@ -29,10 +30,7 @@
   "AboutPage": {
     "title": "Hakkında",
     "hero": {
-      "tagline": [
-        "September'dan",
-        "bir dergi"
-      ],
+      "tagline": ["September'dan", "bir dergi"],
       "issue": "Sayı 01",
       "description": "İstanbul merkezli September Company'den bir yeryüzü kültürü yayını. İlk sayının çerçevesini keşfedin."
     },
@@ -96,11 +94,14 @@
     "emailRequired": "E-posta adresini gir.",
     "emailInvalid": "Geçerli bir e-posta adresi gir, örneğin ad@ornek.com.",
     "ageLabel": "Yaş",
-    "ageHelper": "İsteğe bağlı.",
-    "ageInvalid": "Yaşını sıfırdan büyük bir tam sayı olarak gir.",
+    "ageInvalid": "Geçerli bir yaş gir.",
     "submit": "Kaydol",
-    "notAvailable": "Kayıt henüz kullanılamıyor. Bilgilerin kaydedilmedi.",
     "nameLabel": "Ad",
-    "surnameLabel": "Soyad"
+    "surnameLabel": "Soyad",
+    "consentNotice": "Kaydolarak haftalık Press bültenini e-posta ile almayı kabul etmiş olursun.",
+    "submitting": "Kaydediliyor…",
+    "successTitle": "Abone olduğun için teşekkürler.",
+    "success": "Kaydın alındı.",
+    "error": "Bir şeyler ters gitti. Lütfen daha sonra tekrar dene."
   }
 }
