@@ -6,7 +6,7 @@
 
   --font-weight-light: 300;
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
   // Display title
@@ -85,7 +85,7 @@ b {
 .type-label {
   font-family: var(--font-family-crit);
   font-size: var(--type-label-size);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--type-label-line-height);
   letter-spacing: var(--type-label-letter-spacing);
 }

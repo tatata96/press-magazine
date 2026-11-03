@@ -41,19 +41,11 @@ const register = localFont({
 
 const crit = localFont({
   src: [
-    {path: "../style/fonts/Crit-Light.otf", weight: "300", style: "normal"},
+    {path: "../style/fonts/Crit-Regular.woff2", weight: "400", style: "normal"},
     {
-      path: "../style/fonts/Crit-Light-Italic.otf",
-      weight: "300",
-      style: "italic",
-    },
-    {path: "../style/fonts/Crit-Regular.otf", weight: "400", style: "normal"},
-    {path: "../style/fonts/Crit-Italic.otf", weight: "400", style: "italic"},
-    {path: "../style/fonts/Crit-Medium.otf", weight: "500", style: "normal"},
-    {
-      path: "../style/fonts/Crit-Medium-Italic.otf",
-      weight: "500",
-      style: "italic",
+      path: "../style/fonts/Crit-Semibold.woff2",
+      weight: "600",
+      style: "normal",
     },
   ],
   variable: "--font-crit",
@@ -61,7 +53,7 @@ const crit = localFont({
 });
 
 const critMono = localFont({
-  src: "../style/fonts/CritMono-Light.otf",
+  src: "../style/fonts/CritMono-Light.woff2",
   weight: "300",
   variable: "--font-crit-mono",
   display: "swap",
