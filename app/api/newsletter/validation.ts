@@ -19,6 +19,9 @@ const MAX_EMAIL_LENGTH = 254;
 const MAX_NAME_LENGTH = 100;
 const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
+// Also checked in the browser forms, which import it from here.
+export const MAX_AGE = 110;
+
 export function parseSignup(payload: unknown): ParsedSignup {
   const body =
     typeof payload === "object" && payload !== null
@@ -49,7 +52,7 @@ export function parseSignup(payload: unknown): ParsedSignup {
 
   if (
     ageText &&
-    (!POSITIVE_INTEGER.test(ageText) || !Number.isSafeInteger(age))
+    (!POSITIVE_INTEGER.test(ageText) || !Number.isSafeInteger(age) || age > MAX_AGE)
   ) {
     fields.push("age");
   }

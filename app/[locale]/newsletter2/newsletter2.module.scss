@@ -136,7 +136,7 @@
 .notice,
 .status p {
   margin: 0;
-  padding: 4px 8px;
+  padding: 4px 0;
   background: var(--background);
 }
 
@@ -179,8 +179,21 @@
 }
 
 // The shared Button, smaller and aligned right.
+// Consent notice on the left, button on the right; they stack on narrow screens.
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+
+.submitRow .notice {
+  flex: 1 1 240px;
+}
+
 .form .button {
-  align-self: flex-end;
+  margin-left: auto;
   min-height: 40px;
   padding: 0 20px;
 }

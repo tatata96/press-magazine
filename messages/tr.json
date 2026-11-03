@@ -94,7 +94,7 @@
     "emailRequired": "E-posta adresini gir.",
     "emailInvalid": "Geçerli bir e-posta adresi gir, örneğin ad@ornek.com.",
     "ageLabel": "Yaş",
-    "ageInvalid": "Yaşını sıfırdan büyük bir tam sayı olarak gir.",
+    "ageInvalid": "Geçerli bir yaş gir.",
     "submit": "Kaydol",
     "nameLabel": "Ad",
     "surnameLabel": "Soyad",

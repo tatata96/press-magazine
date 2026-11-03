@@ -3,14 +3,15 @@
 import {useEffect, useRef, useState} from "react";
 import type {FormEvent, ReactNode} from "react";
 import {useTranslations} from "next-intl";
+import {MAX_AGE} from "@/app/api/newsletter/validation";
 import Button from "../../components/button/Button";
 import styles from "./newsletter2.module.scss";
 
 type FieldErrors = {email?: string; age?: string};
 type Status = "idle" | "pending" | "success" | "error";
 
-// Provisional: age is optional, and when given must be a positive whole number.
-// There is no upper bound until the allowed range is confirmed.
+// Provisional: age is optional, and when given must be a whole number from 1 to
+// MAX_AGE (the upper limit is a provisional product decision).
 const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 // A copy of NewsletterForm's submit flow with this page's underlined layout,
@@ -60,7 +61,8 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
 
     if (
       age.validity.badInput ||
-      (ageValue !== "" && !POSITIVE_INTEGER.test(ageValue))
+      (ageValue !== "" &&
+        (!POSITIVE_INTEGER.test(ageValue) || Number(ageValue) > MAX_AGE))
     ) {
       validationErrors.age = t("ageInvalid");
     }
@@ -208,6 +210,7 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
                 name="age"
                 inputMode="numeric"
                 min={1}
+                max={MAX_AGE}
                 step={1}
                 placeholder=" "
                 aria-invalid={errors.age ? true : undefined}
@@ -241,16 +244,18 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
             />
           </label>
         </div>
-        <Button
-          type="submit"
-          className={styles.button}
-          loading={status === "pending"}
-          loadingLabel={t("submitting")}
-        >
-          {t("submit")}
-        </Button>
-        {/* Provisional notice wording until the final consent copy is confirmed. */}
-        <p className={`${styles.notice} type-caption`}>{t("consentNotice")}</p>
+        <div className={styles.submitRow}>
+          {/* Provisional notice wording until the final consent copy is confirmed. */}
+          <p className={`${styles.notice} type-caption`}>{t("consentNotice")}</p>
+          <Button
+            type="submit"
+            className={styles.button}
+            loading={status === "pending"}
+            loadingLabel={t("submitting")}
+          >
+            {t("submit")}
+          </Button>
+        </div>
         <div role="status" className={styles.status}>
           {status === "error" && <p className="type-body">{t("error")}</p>}
         </div>

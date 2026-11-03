@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState} from "react";
 import type {FormEvent, ReactNode} from "react";
 import {useTranslations} from "next-intl";
+import {MAX_AGE} from "@/app/api/newsletter/validation";
 import Button from "../button/Button";
 import TextField from "../text-field/TextField";
 import styles from "./newsletter-form.module.scss";
@@ -10,8 +11,8 @@ import styles from "./newsletter-form.module.scss";
 type FieldErrors = {email?: string; age?: string};
 type Status = "idle" | "pending" | "success" | "error";
 
-// Provisional: age is optional, and when given must be a positive whole number.
-// There is no upper bound until the allowed range is confirmed.
+// Provisional: age is optional, and when given must be a whole number from 1 to
+// MAX_AGE (the upper limit is a provisional product decision).
 const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 // `children` is the intro shown above the form; it is dropped with the form on
@@ -59,7 +60,8 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
 
     if (
       age.validity.badInput ||
-      (ageValue !== "" && !POSITIVE_INTEGER.test(ageValue))
+      (ageValue !== "" &&
+        (!POSITIVE_INTEGER.test(ageValue) || Number(ageValue) > MAX_AGE))
     ) {
       validationErrors.age = t("ageInvalid");
     }
@@ -151,25 +153,28 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
             label={t("surnameLabel")}
           />
         </div>
-        <TextField
-          ref={emailRef}
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          label={t("emailLabel")}
-          error={errors.email}
-        />
-        <TextField
-          ref={ageRef}
-          name="age"
-          type="number"
-          inputMode="numeric"
-          min={1}
-          step={1}
-          label={t("ageLabel")}
-          error={errors.age}
-        />
+        <div className={styles.emailRow}>
+          <TextField
+            ref={emailRef}
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            label={t("emailLabel")}
+            error={errors.email}
+          />
+          <TextField
+            ref={ageRef}
+            name="age"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={MAX_AGE}
+            step={1}
+            label={t("ageLabel")}
+            error={errors.age}
+          />
+        </div>
         {/* Honeypot: hidden from people and assistive tech; bots that fill it are ignored. */}
         <div className={styles.honeypot} aria-hidden="true">
           <label>
