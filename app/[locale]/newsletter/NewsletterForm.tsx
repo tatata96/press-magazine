@@ -8,7 +8,7 @@ import {
   MAX_COUNTRY_LENGTH,
 } from "@/app/api/newsletter/validation";
 import Button from "../../components/button/Button";
-import styles from "./newsletter2.module.scss";
+import styles from "./newsletter.module.scss";
 
 type FieldErrors = { email?: string; birthYear?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
@@ -17,7 +17,7 @@ type Status = "idle" | "pending" | "success" | "error";
 // kept separate while the two designs are compared; one of them will be dropped.
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
-export default function Newsletter2Form({
+export default function NewsletterForm({
   children,
 }: {
   children?: ReactNode;
@@ -151,25 +151,25 @@ export default function Newsletter2Form({
         <div className={styles.row}>
           <div className={styles.field}>
             <input
-              id="newsletter2-name"
+              id="newsletter-name"
               className={styles.input}
               name="name"
               autoComplete="given-name"
               placeholder=" "
             />
-            <label className={styles.label} htmlFor="newsletter2-name">
+            <label className={styles.label} htmlFor="newsletter-name">
               {t("nameLabel")}
             </label>
           </div>
           <div className={styles.field}>
             <input
-              id="newsletter2-surname"
+              id="newsletter-surname"
               className={styles.input}
               name="surname"
               autoComplete="family-name"
               placeholder=" "
             />
-            <label className={styles.label} htmlFor="newsletter2-surname">
+            <label className={styles.label} htmlFor="newsletter-surname">
               {t("surnameLabel")}
             </label>
           </div>
@@ -178,7 +178,7 @@ export default function Newsletter2Form({
           <div className={styles.field}>
             <input
               ref={emailRef}
-              id="newsletter2-email"
+              id="newsletter-email"
               className={styles.input}
               type="email"
               name="email"
@@ -187,10 +187,10 @@ export default function Newsletter2Form({
               placeholder=" "
               aria-invalid={errors.email ? true : undefined}
               aria-describedby={
-                errors.email ? "newsletter2-email-error" : undefined
+                errors.email ? "newsletter-email-error" : undefined
               }
             />
-            <label className={styles.label} htmlFor="newsletter2-email">
+            <label className={styles.label} htmlFor="newsletter-email">
               {t("emailLabel")}
               {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
               <span aria-hidden="true"> *</span>
@@ -198,7 +198,7 @@ export default function Newsletter2Form({
           </div>
           {errors.email && (
             <p
-              id="newsletter2-email-error"
+              id="newsletter-email-error"
               className={`${styles.error} type-caption`}
             >
               {errors.email}
@@ -210,7 +210,7 @@ export default function Newsletter2Form({
           <div className={styles.fieldGroup}>
             <div className={styles.field}>
               <input
-                id="newsletter2-country"
+                id="newsletter-country"
                 className={styles.input}
                 name="country"
                 autoComplete="country-name"
@@ -218,16 +218,16 @@ export default function Newsletter2Form({
                 placeholder=" "
                 aria-invalid={errors.country ? true : undefined}
                 aria-describedby={
-                  errors.country ? "newsletter2-country-error" : undefined
+                  errors.country ? "newsletter-country-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-country">
+              <label className={styles.label} htmlFor="newsletter-country">
                 {t("countryLabel")}
               </label>
             </div>
             {errors.country && (
               <p
-                id="newsletter2-country-error"
+                id="newsletter-country-error"
                 className={`${styles.error} type-caption`}
               >
                 {errors.country}
@@ -238,7 +238,7 @@ export default function Newsletter2Form({
             <div className={styles.field}>
               <input
                 ref={birthYearRef}
-                id="newsletter2-birth-year"
+                id="newsletter-birth-year"
                 className={styles.input}
                 type="number"
                 name="birthYear"
@@ -248,16 +248,16 @@ export default function Newsletter2Form({
                 placeholder=" "
                 aria-invalid={errors.birthYear ? true : undefined}
                 aria-describedby={
-                  errors.birthYear ? "newsletter2-birth-year-error" : undefined
+                  errors.birthYear ? "newsletter-birth-year-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-birth-year">
+              <label className={styles.label} htmlFor="newsletter-birth-year">
                 {t("birthYearLabel")}
               </label>
             </div>
             {errors.birthYear && (
               <p
-                id="newsletter2-birth-year-error"
+                id="newsletter-birth-year-error"
                 className={`${styles.error} type-caption`}
               >
                 {errors.birthYear}
