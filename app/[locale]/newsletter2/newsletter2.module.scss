@@ -41,7 +41,10 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    animation: slide-in 1.3s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    // Each image starts a little after the previous one; the delay is capped so
+    // a long collage doesn't keep the last images waiting.
+    animation: slide-in 2.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: min(calc(var(--index) * 0.15s), 1.5s);
   }
 }
 
@@ -108,14 +111,14 @@
   gap: 40px;
   // Fills the centre of the stage.
   width: 100%;
-  max-width: 640px;
+  max-width: 480px;
   text-align: left;
 }
 
 .row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 32px 64px;
+  gap: 32px 24px;
 }
 
 .detailsRow {

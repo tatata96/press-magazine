@@ -61,7 +61,8 @@ export default async function Newsletter2Page() {
                 "--rotate": `${image.rotate}deg`,
                 "--from-x": image.fromX,
                 "--from-y": image.fromY,
-                "--spin-in": `${SPIN_IN[index % SPIN_IN.length]}deg`,
+                "--index": index,
+                "--spin-in":`${SPIN_IN[index % SPIN_IN.length]}deg`,
               } as CSSProperties
             }
           />
