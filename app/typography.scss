@@ -45,6 +45,13 @@ body {
   font-family: var(--font-family-body);
 }
 
+// Crimson Text Bold (the bold face of the body family) renders a gap after the
+// "ff" ligature, as in "effortless". Spell the letters out instead.
+strong,
+b {
+  font-variant-ligatures: none;
+}
+
 .type-display {
   margin: 0;
   font-family: var(--font-family-title);

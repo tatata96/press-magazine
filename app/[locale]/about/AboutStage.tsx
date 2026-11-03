@@ -17,8 +17,12 @@ const COVERED_DRIFT_PERCENT = 12;
 // hero is the visible section.
 function setHeaderLogoHidden(hidden: boolean) {
   const header = document.querySelector("header");
-  if (hidden) header?.setAttribute("data-hide-logo", "true");
-  else header?.removeAttribute("data-hide-logo");
+
+  if (hidden) {
+    header?.setAttribute("data-hide-logo", "true");
+  } else {
+    header?.removeAttribute("data-hide-logo");
+  }
 }
 
 // On desktop the sections inside the stage are pinned: scrolling slides the next
@@ -33,7 +37,10 @@ export default function AboutStage({children}: {children: ReactNode}) {
   useEffect(() => {
     const stage = stageRef.current;
     const header = document.querySelector("header");
-    if (!stage || !header) return;
+
+    if (!stage || !header) {
+      return;
+    }
 
     const syncHeaderHeight = () => {
       stage.style.setProperty(
@@ -43,6 +50,7 @@ export default function AboutStage({children}: {children: ReactNode}) {
       ScrollTrigger.refresh();
     };
     const headerObserver = new ResizeObserver(syncHeaderHeight);
+
     headerObserver.observe(header);
 
     return () => {
@@ -51,13 +59,36 @@ export default function AboutStage({children}: {children: ReactNode}) {
     };
   }, []);
 
+  // Fonts swap in after the first measurement and change the sections' heights.
+  // Re-measure so the pinned stage does not overlap the section below it.
+  useEffect(() => {
+    let cancelled = false;
+
+    document.fonts.ready.then(() => {
+      if (!cancelled) {
+        ScrollTrigger.refresh();
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     const stage = stageRef.current;
-    if (!stage) return;
+
+    if (!stage) {
+      return;
+    }
     const panels = Array.from(stage.children) as HTMLElement[];
-    if (panels.length < 2) return;
+
+    if (panels.length < 2) {
+      return;
+    }
 
     const mm = gsap.matchMedia();
+
     mm.add(
       "(min-width: 900px) and (prefers-reduced-motion: no-preference)",
       () => {
@@ -118,6 +149,7 @@ export default function AboutStage({children}: {children: ReactNode}) {
         ([entry]) => setHeaderLogoHidden(entry.isIntersecting),
         {rootMargin: "-80px 0px 0px 0px"},
       );
+
       observer.observe(panels[0]);
 
       return () => {

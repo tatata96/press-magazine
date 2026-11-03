@@ -17,17 +17,22 @@ const pressed = localFont({
 
 const register = localFont({
   src: [
-    {path: "../style/fonts/Register.otf", weight: "400", style: "normal"},
     {
-      path: "../style/fonts/Register-Italic.otf",
+      path: "../style/fonts/Register_-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../style/fonts/Register_-RegularItalic.otf",
       weight: "400",
       style: "italic",
     },
-    {path: "../style/fonts/Register-Bold.otf", weight: "700", style: "normal"},
+    // Bold text uses Crimson Text instead of a Register bold. It is registered
+    // in the Register family so <strong> and <b> pick it up without CSS changes.
     {
-      path: "../style/fonts/Register-BoldItalic.otf",
+      path: "../style/fonts/CrimsonText-Bold.ttf",
       weight: "700",
-      style: "italic",
+      style: "normal",
     },
   ],
   variable: "--font-register",
@@ -68,6 +73,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata");
+
   return {
     title: {default: t("title"), template: `%s | ${t("title")}`},
     description: t("description"),
