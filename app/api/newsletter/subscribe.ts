@@ -70,7 +70,7 @@ function assertNoUserErrors(operation: string, userErrors: UserError[]) {
   throw new ShopifyError(`${operation} rejected: ${detail.join(", ")}.`);
 }
 
-// Callers must have recorded explicit consent before calling this. The outcome is
+// Submitting the form is the consent (the notice sits beside the button). The outcome is
 // deliberately not returned so responses cannot reveal whether a customer already exists.
 export async function subscribeToNewsletter(input: SignupInput): Promise<void> {
   const {customerByIdentifier: existingCustomer} =

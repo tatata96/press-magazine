@@ -40,6 +40,8 @@ export default function TextField({
         {/* After the input so CSS can float it when the field is focused or filled. */}
         <label htmlFor={id} className={styles.label}>
           {label}
+          {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
+          {inputProps.required && <span aria-hidden="true"> *</span>}
         </label>
       </div>
       {helperText && (

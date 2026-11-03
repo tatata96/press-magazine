@@ -20,6 +20,15 @@
   width: 100%;
 }
 
+// Off-screen rather than display:none so naive bots still see and fill it.
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .status p {
   margin: 0;
 }

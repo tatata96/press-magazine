@@ -1,6 +1,6 @@
 import {getTrimmedString} from "@/app/utils/string";
 
-export type SignupField = "email" | "age" | "consent" | "name";
+export type SignupField = "email" | "age" | "name";
 
 export type SignupInput = {
   email: string;
@@ -52,11 +52,6 @@ export function parseSignup(payload: unknown): ParsedSignup {
     (!POSITIVE_INTEGER.test(ageText) || !Number.isSafeInteger(age))
   ) {
     fields.push("age");
-  }
-
-  // Consent must be an explicit true; absence or any other value means no consent.
-  if (body.consent !== true) {
-    fields.push("consent");
   }
 
   if (fields.length > 0) {
