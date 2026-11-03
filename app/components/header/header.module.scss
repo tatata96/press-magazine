@@ -26,6 +26,10 @@
   display: flex;
   gap: 16px;
   justify-self: start;
+
+  @media (min-width: 768px) {
+    background: var(--background);
+  }
 }
 
 .current {
@@ -72,7 +76,8 @@
   display: block;
   padding: 0;
   border: 0;
-  background: none;
+  // Same white-behind-content treatment as the links and language switcher.
+  background: var(--background);
   color: inherit;
   cursor: pointer;
 
@@ -117,6 +122,8 @@
 
   @media (min-width: 768px) {
     padding: 0;
+    // Desktop: white sits behind the item text only, not the whole header.
+    background: var(--background);
   }
 
   &:hover {
