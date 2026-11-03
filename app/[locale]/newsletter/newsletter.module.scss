@@ -87,7 +87,9 @@
   transform: translateY(-10svh);
 
   @media (min-width: 900px) {
-    transform: none;
+    // A gentler lift than on phones: the form is centred in a stage that also
+    // covers the footer gap, so it otherwise sits low under the header.
+    transform: translateY(-6svh);
   }
 }
 

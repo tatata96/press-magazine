@@ -8,8 +8,17 @@
   gap: 16px;
   padding: 12px 16px;
 
+  // Mobile: the bar turns white together with the open menu panel.
+  &:has(.open) {
+    background: #fff;
+  }
+
   @media (min-width: 768px) {
     padding: 12px 32px;
+
+    &:has(.open) {
+      background: none;
+    }
   }
 }
 
@@ -83,7 +92,7 @@
   margin: 0;
   padding: 8px 16px 16px;
   list-style: none;
-  background: var(--background);
+  background: #fff;
   border-bottom: var(--rule-width) solid var(--foreground);
 
   &.open {
@@ -96,6 +105,7 @@
     flex-direction: row;
     gap: 32px;
     padding: 0;
+    background: none;
     border-bottom: 0;
   }
 }
