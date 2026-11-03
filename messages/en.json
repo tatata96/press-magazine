@@ -99,7 +99,8 @@
     "surnameLabel": "Last name",
     "consentNotice": "By signing up you agree to receive the weekly Press newsletter by email.",
     "submitting": "Signing up…",
-    "success": "Thank you. You are signed up.",
+    "successTitle": "Thank you for subscribing.",
+    "success": "You are signed up.",
     "error": "Something went wrong. Please try again later."
   }
 }

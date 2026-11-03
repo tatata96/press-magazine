@@ -13,6 +13,24 @@
   }
 }
 
+.confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 32px 0;
+  border-top: var(--rule-width) solid var(--foreground);
+  border-bottom: var(--rule-width) solid var(--foreground);
+
+  p {
+    margin: 0;
+  }
+
+  // Focus is moved here programmatically; it isn't an interactive control.
+  &:focus {
+    outline: none;
+  }
+}
+
 .nameRow {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,7 +1,7 @@
 "use client";
 
-import {useRef, useState} from "react";
-import type {FormEvent} from "react";
+import {useEffect, useRef, useState} from "react";
+import type {FormEvent, ReactNode} from "react";
 import {useTranslations} from "next-intl";
 import Button from "../button/Button";
 import TextField from "../text-field/TextField";
@@ -14,14 +14,25 @@ type Status = "idle" | "pending" | "success" | "error";
 // There is no upper bound until the allowed range is confirmed.
 const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
-export default function NewsletterForm() {
+// `children` is the intro shown above the form; it is dropped with the form on
+// success so the whole panel becomes the confirmation.
+export default function NewsletterForm({children}: {children?: ReactNode}) {
   const t = useTranslations("NewsletterForm");
   const emailRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
   // A ref, not state: it blocks a second submit fired before the pending render lands.
   const submitting = useRef(false);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const confirmationRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("idle");
+
+  // The form unmounts on success, so move focus to the confirmation or keyboard
+  // and screen reader users are left on a vanished button.
+  useEffect(() => {
+    if (status === "success") {
+      confirmationRef.current?.focus();
+    }
+  }, [status]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -81,7 +92,6 @@ export default function NewsletterForm() {
       });
 
       if (response.ok) {
-        form.reset();
         setStatus("success");
         return;
       }
@@ -110,60 +120,81 @@ export default function NewsletterForm() {
     }
   }
 
-  return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      {/* Provisional: name and surname are optional and not validated. */}
-      <div className={styles.nameRow}>
-        <TextField
-          name="name"
-          autoComplete="given-name"
-          label={t("nameLabel")}
-        />
-        <TextField
-          name="surname"
-          autoComplete="family-name"
-          label={t("surnameLabel")}
-        />
-      </div>
-      <TextField
-        ref={emailRef}
-        name="email"
-        type="email"
-        autoComplete="email"
-        required
-        label={t("emailLabel")}
-        error={errors.email}
-      />
-      <TextField
-        ref={ageRef}
-        name="age"
-        type="number"
-        inputMode="numeric"
-        min={1}
-        step={1}
-        label={t("ageLabel")}
-        error={errors.age}
-      />
-      {/* Honeypot: hidden from people and assistive tech; bots that fill it are ignored. */}
-      <div className={styles.honeypot} aria-hidden="true">
-        <label>
-          Website
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-      <Button
-        type="submit"
-        loading={status === "pending"}
-        loadingLabel={t("submitting")}
+  if (status === "success") {
+    return (
+      <div
+        ref={confirmationRef}
+        className={styles.confirmation}
+        role="status"
+        tabIndex={-1}
       >
-        {t("submit")}
-      </Button>
-      {/* Provisional notice wording until the final consent copy is confirmed. */}
-      <p className="type-caption">{t("consentNotice")}</p>
-      <div role="status" className={styles.status}>
-        {status === "success" && <p className="type-body">{t("success")}</p>}
-        {status === "error" && <p className="type-body">{t("error")}</p>}
+        <p className="type-title">{t("successTitle")}</p>
+        <p className="type-body">{t("success")}</p>
       </div>
-    </form>
+    );
+  }
+
+  return (
+    <>
+      {children}
+      <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {/* Provisional: name and surname are optional and not validated. */}
+        <div className={styles.nameRow}>
+          <TextField
+            name="name"
+            autoComplete="given-name"
+            label={t("nameLabel")}
+          />
+          <TextField
+            name="surname"
+            autoComplete="family-name"
+            label={t("surnameLabel")}
+          />
+        </div>
+        <TextField
+          ref={emailRef}
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          label={t("emailLabel")}
+          error={errors.email}
+        />
+        <TextField
+          ref={ageRef}
+          name="age"
+          type="number"
+          inputMode="numeric"
+          min={1}
+          step={1}
+          label={t("ageLabel")}
+          error={errors.age}
+        />
+        {/* Honeypot: hidden from people and assistive tech; bots that fill it are ignored. */}
+        <div className={styles.honeypot} aria-hidden="true">
+          <label>
+            Website
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </label>
+        </div>
+        <Button
+          type="submit"
+          loading={status === "pending"}
+          loadingLabel={t("submitting")}
+        >
+          {t("submit")}
+        </Button>
+        {/* Provisional notice wording until the final consent copy is confirmed. */}
+        <p className="type-caption">{t("consentNotice")}</p>
+        <div role="status" className={styles.status}>
+          {status === "error" && <p className="type-body">{t("error")}</p>}
+        </div>
+      </form>
+    </>
   );
 }

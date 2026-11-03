@@ -99,7 +99,8 @@
     "surnameLabel": "Soyad",
     "consentNotice": "Kaydolarak haftalık Press bültenini e-posta ile almayı kabul etmiş olursun.",
     "submitting": "Kaydediliyor…",
-    "success": "Teşekkürler. Kaydın alındı.",
+    "successTitle": "Abone olduğun için teşekkürler.",
+    "success": "Kaydın alındı.",
     "error": "Bir şeyler ters gitti. Lütfen daha sonra tekrar dene."
   }
 }
