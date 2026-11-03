@@ -34,14 +34,27 @@
 // Each image sits in its own column at a fixed spot (`--start`, in % of the
 // height) and, with motion allowed, loops top to bottom. Negative delays spread them out on load.
 .image {
+  // Two strips either side of the form. `--zone` is the width of one strip:
+  // half the stage on phones (the form fills the width, so images pass behind
+  // it); from tablet up, half the stage minus half the form plus a margin.
+  --zone: 50cqw;
+  --zone-start: 0cqw;
   position: absolute;
-  left: var(--left);
+  left: calc(var(--zone-start) + var(--zone) * var(--left));
   top: calc(var(--start) * 1%);
-  width: calc(var(--width) * 2vw);
+  width: calc(var(--zone) * var(--width));
   height: auto;
 
-  @media (min-width: 900px) {
-    width: calc(var(--width) * 1vw);
+  @media (min-width: 768px) {
+    --zone: calc(50cqw - 256px);
+  }
+
+  &.right {
+    --zone-start: 50cqw;
+
+    @media (min-width: 768px) {
+      --zone-start: calc(50cqw + 256px);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -102,5 +115,7 @@
   margin: 0;
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
-  font-weight: 700;
+  // Only Crit Mono Light is loaded, so a bold weight would be faux-bolded.
+  font-family: var(--font-family-mono);
+  font-weight: 300;
 }

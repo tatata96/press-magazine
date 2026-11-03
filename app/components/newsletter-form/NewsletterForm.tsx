@@ -187,15 +187,17 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
             />
           </label>
         </div>
-        <Button
-          type="submit"
-          loading={status === "pending"}
-          loadingLabel={t("submitting")}
-        >
-          {t("submit")}
-        </Button>
-        {/* Provisional notice wording until the final consent copy is confirmed. */}
-        <p className="type-caption">{t("consentNotice")}</p>
+        <div className={styles.submitRow}>
+          {/* Provisional notice wording until the final consent copy is confirmed. */}
+          <p className={`${styles.notice} type-caption`}>{t("consentNotice")}</p>
+          <Button
+            type="submit"
+            loading={status === "pending"}
+            loadingLabel={t("submitting")}
+          >
+            {t("submit")}
+          </Button>
+        </div>
         <div role="status" className={styles.status}>
           {status === "error" && <p className="type-body">{t("error")}</p>}
         </div>
