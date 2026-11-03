@@ -1,13 +1,13 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
-import type {FormEvent, ReactNode} from "react";
-import {useTranslations} from "next-intl";
-import {MAX_AGE} from "@/app/api/newsletter/validation";
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
+import { useTranslations } from "next-intl";
+import { MAX_AGE, MAX_COUNTRY_LENGTH } from "@/app/api/newsletter/validation";
 import Button from "../../components/button/Button";
 import styles from "./newsletter2.module.scss";
 
-type FieldErrors = {email?: string; age?: string};
+type FieldErrors = { email?: string; age?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
 
 // Provisional: age is optional, and when given must be a whole number from 1 to
@@ -18,7 +18,11 @@ const POSITIVE_INTEGER = /^[1-9]\d*$/;
 // kept separate while the two designs are compared; one of them will be dropped.
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
-export default function Newsletter2Form({children}: {children?: ReactNode}) {
+export default function Newsletter2Form({
+  children,
+}: {
+  children?: ReactNode;
+}) {
   const t = useTranslations("NewsletterForm");
   const emailRef = useRef<HTMLInputElement>(null);
   const ageRef = useRef<HTMLInputElement>(null);
@@ -84,12 +88,13 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
     try {
       const response = await fetch("/api/newsletter", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
           surname: data.get("surname"),
           email: data.get("email"),
           age: data.get("age"),
+          country: data.get("country"),
           website: data.get("website"),
         }),
       });
@@ -100,7 +105,7 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
       }
 
       // The browser checks should already have caught these; map any the server still rejects.
-      const body: {fields?: string[]} | null = await response
+      const body: { fields?: string[] } | null = await response
         .json()
         .catch(() => null);
 
@@ -112,6 +117,9 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
         }
         if (body.fields.includes("age")) {
           serverErrors.age = t("ageInvalid");
+        }
+        if (body.fields.includes("country")) {
+          serverErrors.country = t("countryInvalid");
         }
         setErrors(serverErrors);
       }
@@ -168,35 +176,63 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
             </label>
           </div>
         </div>
-        <div className={styles.emailRow}>
+        <div className={styles.fieldGroup}>
+          <div className={styles.field}>
+            <input
+              ref={emailRef}
+              id="newsletter2-email"
+              className={styles.input}
+              type="email"
+              name="email"
+              autoComplete="email"
+              required
+              placeholder=" "
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={
+                errors.email ? "newsletter2-email-error" : undefined
+              }
+            />
+            <label className={styles.label} htmlFor="newsletter2-email">
+              {t("emailLabel")}
+              {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
+              <span aria-hidden="true"> *</span>
+            </label>
+          </div>
+          {errors.email && (
+            <p
+              id="newsletter2-email-error"
+              className={`${styles.error} type-caption`}
+            >
+              {errors.email}
+            </p>
+          )}
+        </div>
+        {/* Provisional: country is optional free text. */}
+        <div className={styles.detailsRow}>
           <div className={styles.fieldGroup}>
             <div className={styles.field}>
               <input
-                ref={emailRef}
-                id="newsletter2-email"
+                id="newsletter2-country"
                 className={styles.input}
-                type="email"
-                name="email"
-                autoComplete="email"
-                required
+                name="country"
+                autoComplete="country-name"
+                maxLength={MAX_COUNTRY_LENGTH}
                 placeholder=" "
-                aria-invalid={errors.email ? true : undefined}
+                aria-invalid={errors.country ? true : undefined}
                 aria-describedby={
-                  errors.email ? "newsletter2-email-error" : undefined
+                  errors.country ? "newsletter2-country-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-email">
-                {t("emailLabel")}
-                {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
-                <span aria-hidden="true"> *</span>
+              <label className={styles.label} htmlFor="newsletter2-country">
+                {t("countryLabel")}
               </label>
             </div>
-            {errors.email && (
+            {errors.country && (
               <p
-                id="newsletter2-email-error"
+                id="newsletter2-country-error"
                 className={`${styles.error} type-caption`}
               >
-                {errors.email}
+                {errors.country}
               </p>
             )}
           </div>
@@ -246,7 +282,9 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
         </div>
         <div className={styles.submitRow}>
           {/* Provisional notice wording until the final consent copy is confirmed. */}
-          <p className={`${styles.notice} type-caption`}>{t("consentNotice")}</p>
+          <p className={`${styles.notice} type-caption`}>
+            {t("consentNotice")}
+          </p>
           <Button
             type="submit"
             className={styles.button}

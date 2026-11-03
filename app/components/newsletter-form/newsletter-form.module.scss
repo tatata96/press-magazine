@@ -50,9 +50,9 @@
   width: 100%;
 }
 
-// Email takes 70% of the row, age 30%. Top-aligned so an error message under
+// Country takes 70% of the row, age 30%. Top-aligned so an error message under
 // one field doesn't stretch the other.
-.emailRow {
+.detailsRow {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   align-items: start;

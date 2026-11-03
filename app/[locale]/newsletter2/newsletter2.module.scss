@@ -118,8 +118,8 @@
   gap: 32px 64px;
 }
 
-.emailRow {
-  // Email takes 70% of the row, age 30%.
+.detailsRow {
+  // Country takes 70% of the row, age 30%.
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   gap: 24px;

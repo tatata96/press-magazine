@@ -95,6 +95,8 @@
     "emailInvalid": "Enter a valid email address, for example name@example.com.",
     "ageLabel": "Age",
     "ageInvalid": "Enter a valid age.",
+    "countryLabel": "Country",
+    "countryInvalid": "Enter a valid country.",
     "submit": "Sign up",
     "nameLabel": "First name",
     "surnameLabel": "Last name",

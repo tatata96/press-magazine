@@ -1,12 +1,13 @@
 import {getTrimmedString} from "@/app/utils/string";
 
-export type SignupField = "email" | "age" | "name";
+export type SignupField = "email" | "age" | "name" | "country";
 
 export type SignupInput = {
   email: string;
   firstName?: string;
   lastName?: string;
   age?: number;
+  country?: string;
 };
 
 export type ParsedSignup =
@@ -19,8 +20,10 @@ const MAX_EMAIL_LENGTH = 254;
 const MAX_NAME_LENGTH = 100;
 const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
-// Also checked in the browser forms, which import it from here.
+// Also checked in the browser forms, which import them from here.
 export const MAX_AGE = 110;
+// Provisional: country is optional free text until the field format is confirmed.
+export const MAX_COUNTRY_LENGTH = 100;
 
 export function parseSignup(payload: unknown): ParsedSignup {
   const body =
@@ -57,6 +60,12 @@ export function parseSignup(payload: unknown): ParsedSignup {
     fields.push("age");
   }
 
+  const country = getTrimmedString(body.country);
+
+  if (country.length > MAX_COUNTRY_LENGTH) {
+    fields.push("country");
+  }
+
   if (fields.length > 0) {
     return {kind: "invalid", fields};
   }
@@ -68,6 +77,7 @@ export function parseSignup(payload: unknown): ParsedSignup {
       firstName: firstName || undefined,
       lastName: lastName || undefined,
       age: ageText ? age : undefined,
+      country: country || undefined,
     },
   };
 }
