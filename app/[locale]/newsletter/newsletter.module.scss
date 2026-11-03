@@ -11,7 +11,10 @@
   // page is 48px taller and pulled down over that gap, so the images run to the
   // bottom of the first screen and on to the rule, with no white band between.
   margin-bottom: -48px;
-  min-height: calc(100svh - var(--header-height) + 48px);
+  // Pulled up under the sticky header (which has no background) so images pass
+  // behind it; `overflow: hidden` would otherwise clip them at the header's edge.
+  margin-top: calc(-1 * var(--header-height));
+  min-height: calc(100svh + 48px);
   display: flex;
   overflow: hidden;
 
@@ -69,12 +72,13 @@
   justify-content: center;
   gap: 32px;
   width: 100%;
-  padding: 32px 16px calc(32px + 48px);
+  padding: calc(var(--header-height) + 32px) 16px calc(32px + 48px);
   text-align: center;
   pointer-events: none;
 }
 
-// Opaque, so images passing behind never reduce the form's legibility.
+// No box: the fields and text carry their own background, so images passing
+// behind never reduce the form's legibility.
 .panel {
   display: flex;
   flex-direction: column;
@@ -82,10 +86,11 @@
   gap: 24px;
   width: 100%;
   max-width: 480px;
-  padding: 24px;
-  background: var(--background);
-  border: var(--rule-width) solid var(--foreground);
   pointer-events: auto;
+
+  p {
+    background: var(--background);
+  }
 
   form {
     width: 100%;
