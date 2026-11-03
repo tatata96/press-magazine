@@ -1,4 +1,5 @@
 .field {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -26,9 +27,23 @@
   border-radius: 0;
   appearance: none;
 
+  // Browsers paint autofilled fields pale blue and ignore `background`; an
+  // inset shadow is the only way to cover it.
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+    -webkit-text-fill-color: var(--foreground);
+  }
+
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--field-focus-background) inset;
+  }
+
+  // The tint replaces the default outline as the focus indicator.
   &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
+    outline: none;
+    background: var(--field-focus-background);
   }
 
   // Thicker underline and the message text carry the error state; colour
@@ -81,6 +96,14 @@
   margin: 0;
 }
 
+// Overlaid under the field instead of in the flow, so showing or clearing an
+// error never moves the rest of the form. It sits in the form's row gap; keep
+// messages short enough for one or two lines.
 .error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
   font-weight: var(--font-weight-semibold);
 }

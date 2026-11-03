@@ -119,17 +119,26 @@
 }
 
 .detailsRow {
-  // Country takes 70% of the row, age 30%.
+  // Country takes 70% of the row, birth year 30%.
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   gap: 24px;
 }
 
-// A field plus its error message, so a message doesn't stretch the row.
+// A field plus its error message, so a message doesn't stretch the row. The
+// error is overlaid under the field (see .error), so it never shifts the form.
 .fieldGroup {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
 }
 
 .error,
@@ -212,9 +221,10 @@
   border-radius: 0;
   appearance: none;
 
+  // The tint replaces the default outline as the focus indicator.
   &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
+    outline: none;
+    background: var(--field-focus-background);
   }
 
   // Hide native number spinners; they clash with the underlined look.

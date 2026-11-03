@@ -61,12 +61,12 @@ function createSingleOptInConsent() {
 function createSignupMetafields(input: SignupInput) {
   const metafields = [];
 
-  if (input.age !== undefined) {
+  if (input.birthYear !== undefined) {
     metafields.push({
       namespace: "press",
-      key: "age",
+      key: "birth_year",
       type: "number_integer",
-      value: String(input.age),
+      value: String(input.birthYear),
     });
   }
   if (input.country !== undefined) {

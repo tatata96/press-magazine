@@ -3,16 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { MAX_AGE, MAX_COUNTRY_LENGTH } from "@/app/api/newsletter/validation";
+import {
+  isValidBirthYear,
+  MAX_COUNTRY_LENGTH,
+} from "@/app/api/newsletter/validation";
 import Button from "../../components/button/Button";
 import styles from "./newsletter2.module.scss";
 
-type FieldErrors = { email?: string; age?: string; country?: string };
+type FieldErrors = { email?: string; birthYear?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
-
-// Provisional: age is optional, and when given must be a whole number from 1 to
-// MAX_AGE (the upper limit is a provisional product decision).
-const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 // A copy of NewsletterForm's submit flow with this page's underlined layout,
 // kept separate while the two designs are compared; one of them will be dropped.
@@ -25,7 +24,7 @@ export default function Newsletter2Form({
 }) {
   const t = useTranslations("NewsletterForm");
   const emailRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
+  const birthYearRef = useRef<HTMLInputElement>(null);
   // A ref, not state: it blocks a second submit fired before the pending render lands.
   const submitting = useRef(false);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -47,9 +46,9 @@ export default function Newsletter2Form({
     }
     const form = event.currentTarget;
     const email = emailRef.current;
-    const age = ageRef.current;
+    const birthYear = birthYearRef.current;
 
-    if (!email || !age) {
+    if (!email || !birthYear) {
       return;
     }
 
@@ -61,14 +60,13 @@ export default function Newsletter2Form({
       validationErrors.email = t("emailInvalid");
     }
     // A number input reports unparsable text as badInput with an empty value.
-    const ageValue = age.value.trim();
+    const birthYearValue = birthYear.value.trim();
 
     if (
-      age.validity.badInput ||
-      (ageValue !== "" &&
-        (!POSITIVE_INTEGER.test(ageValue) || Number(ageValue) > MAX_AGE))
+      birthYear.validity.badInput ||
+      (birthYearValue !== "" && !isValidBirthYear(birthYearValue))
     ) {
-      validationErrors.age = t("ageInvalid");
+      validationErrors.birthYear = t("birthYearInvalid");
     }
 
     setErrors(validationErrors);
@@ -77,8 +75,8 @@ export default function Newsletter2Form({
     if (validationErrors.email) {
       return email.focus();
     }
-    if (validationErrors.age) {
-      return age.focus();
+    if (validationErrors.birthYear) {
+      return birthYear.focus();
     }
 
     const data = new FormData(form);
@@ -93,7 +91,7 @@ export default function Newsletter2Form({
           name: data.get("name"),
           surname: data.get("surname"),
           email: data.get("email"),
-          age: data.get("age"),
+          birthYear: data.get("birthYear"),
           country: data.get("country"),
           website: data.get("website"),
         }),
@@ -115,8 +113,8 @@ export default function Newsletter2Form({
         if (body.fields.includes("email")) {
           serverErrors.email = t("emailInvalid");
         }
-        if (body.fields.includes("age")) {
-          serverErrors.age = t("ageInvalid");
+        if (body.fields.includes("birthYear")) {
+          serverErrors.birthYear = t("birthYearInvalid");
         }
         if (body.fields.includes("country")) {
           serverErrors.country = t("countryInvalid");
@@ -239,31 +237,30 @@ export default function Newsletter2Form({
           <div className={styles.fieldGroup}>
             <div className={styles.field}>
               <input
-                ref={ageRef}
-                id="newsletter2-age"
+                ref={birthYearRef}
+                id="newsletter2-birth-year"
                 className={styles.input}
                 type="number"
-                name="age"
+                name="birthYear"
+                autoComplete="bday-year"
                 inputMode="numeric"
-                min={1}
-                max={MAX_AGE}
                 step={1}
                 placeholder=" "
-                aria-invalid={errors.age ? true : undefined}
+                aria-invalid={errors.birthYear ? true : undefined}
                 aria-describedby={
-                  errors.age ? "newsletter2-age-error" : undefined
+                  errors.birthYear ? "newsletter2-birth-year-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-age">
-                {t("ageLabel")}
+              <label className={styles.label} htmlFor="newsletter2-birth-year">
+                {t("birthYearLabel")}
               </label>
             </div>
-            {errors.age && (
+            {errors.birthYear && (
               <p
-                id="newsletter2-age-error"
+                id="newsletter2-birth-year-error"
                 className={`${styles.error} type-caption`}
               >
-                {errors.age}
+                {errors.birthYear}
               </p>
             )}
           </div>
