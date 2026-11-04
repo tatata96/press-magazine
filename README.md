@@ -1,37 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="public/images/logo.svg" alt="Press" width="160">
+</p>
 
-## Getting Started
+# Press
 
-First, run the development server:
+Website for Press, a cultural magazine with a minimal, print-inspired editorial design.
+
+The first release is the QR-to-newsletter flow: a printed QR link opens the magazine information page, where visitors can sign up for the free newsletter and see a clear result. Commerce, accounts, PDF access, and a blog are planned for later work.
+
+## Tech stack
+
+- [Next.js](https://nextjs.org) (App Router) with strict TypeScript and React
+- SCSS Modules for component styles, global SCSS for resets and typography
+- [next-intl](https://next-intl.dev) for localisation (`en`, `tr`)
+- [GSAP](https://gsap.com) for animation
+- Shopify Admin API for newsletter signups (server-side only)
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env   # then fill in the values (see below)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command         | Description                  |
+| --------------- | ---------------------------- |
+| `npm run dev`   | Start the development server |
+| `npm run build` | Create a production build    |
+| `npm run start` | Serve the production build   |
+| `npm run lint`  | Run ESLint                   |
 
-## Learn More
+### Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Read on the server only by [lib/shopify/admin-client.ts](lib/shopify/admin-client.ts). Never commit real values or expose them via `NEXT_PUBLIC_*`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable                | Purpose                         |
+| ----------------------- | ------------------------------- |
+| `SHOPIFY_STORE_DOMAIN`  | Shopify store domain            |
+| `SHOPIFY_CLIENT_ID`     | Shopify app client ID           |
+| `SHOPIFY_CLIENT_SECRET` | Shopify app client secret       |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project structure
 
-## Deploy on Vercel
+```
+app/
+  [locale]/        Localised routes: home, about, newsletter
+  api/newsletter/  Signup route handler (validation, rate limit, Shopify call)
+  components/      Shared components (header, footer, form fields, ...)
+  style/           Fonts
+  utils/           Small shared helpers
+i18n/              next-intl routing, navigation, and request config
+lib/shopify/       Server-only Shopify Admin API client
+messages/          Translations (en.json, tr.json)
+public/            Static assets
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Conventions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# press-magazine
+- Project rules for contributors and coding assistants: [CLAUDE.md](CLAUDE.md)
+- Naming, structure, and style conventions: [CODING_CONVENTIONS.md](CODING_CONVENTIONS.md)
+
+## Open decisions
+
+Not final yet, so no behaviour should be assumed: newsletter provider and consent copy, form fields, payment setup, PDF download limits, and archive access rules.
