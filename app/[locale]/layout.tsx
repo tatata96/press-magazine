@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
+import {Crimson_Text} from "next/font/google";
 import localFont from "next/font/local";
 import {locale} from "next/root-params";
 import {NextIntlClientProvider} from "next-intl";
@@ -15,27 +16,11 @@ const pressed = localFont({
   display: "swap",
 });
 
-const register = localFont({
-  src: [
-    {
-      path: "../style/fonts/Register_-Regular.otf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../style/fonts/Register_-RegularItalic.otf",
-      weight: "400",
-      style: "italic",
-    },
-    // Bold text uses Crimson Text instead of a Register bold. It is registered
-    // in the Register family so <strong> and <b> pick it up without CSS changes.
-    {
-      path: "../style/fonts/CrimsonText-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-register",
+const crimson = Crimson_Text({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-crimson",
   display: "swap",
 });
 
@@ -76,7 +61,7 @@ export default async function RootLayout({children}: LayoutProps<"/[locale]">) {
   return (
     <html
       lang={await locale()}
-      className={`${pressed.variable} ${register.variable} ${crit.variable} ${critMono.variable}`}
+      className={`${pressed.variable} ${crimson.variable} ${crit.variable} ${critMono.variable}`}
     >
       <body>
         <NextIntlClientProvider>
