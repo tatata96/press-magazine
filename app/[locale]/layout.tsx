@@ -10,7 +10,7 @@ import Header from "../components/header/Header";
 import SiteFooter from "../components/site-footer/SiteFooter";
 
 const pressed = localFont({
-  src: "../style/fonts/Pressed.otf",
+  src: "../style/fonts/Pressed.woff2",
   variable: "--font-pressed",
   display: "swap",
 });
