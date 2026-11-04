@@ -1,27 +1,30 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
-import type {FormEvent, ReactNode} from "react";
-import {useTranslations} from "next-intl";
-import {MAX_AGE} from "@/app/api/newsletter/validation";
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
+import { useTranslations } from "next-intl";
+import {
+  isValidBirthYear,
+  MAX_COUNTRY_LENGTH,
+} from "@/app/api/newsletter/validation";
 import Button from "../../components/button/Button";
-import styles from "./newsletter2.module.scss";
+import styles from "./newsletter.module.scss";
 
-type FieldErrors = {email?: string; age?: string};
+type FieldErrors = { email?: string; birthYear?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
-
-// Provisional: age is optional, and when given must be a whole number from 1 to
-// MAX_AGE (the upper limit is a provisional product decision).
-const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 // A copy of NewsletterForm's submit flow with this page's underlined layout,
 // kept separate while the two designs are compared; one of them will be dropped.
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
-export default function Newsletter2Form({children}: {children?: ReactNode}) {
+export default function NewsletterForm({
+  children,
+}: {
+  children?: ReactNode;
+}) {
   const t = useTranslations("NewsletterForm");
   const emailRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
+  const birthYearRef = useRef<HTMLInputElement>(null);
   // A ref, not state: it blocks a second submit fired before the pending render lands.
   const submitting = useRef(false);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -43,9 +46,9 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
     }
     const form = event.currentTarget;
     const email = emailRef.current;
-    const age = ageRef.current;
+    const birthYear = birthYearRef.current;
 
-    if (!email || !age) {
+    if (!email || !birthYear) {
       return;
     }
 
@@ -57,14 +60,13 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
       validationErrors.email = t("emailInvalid");
     }
     // A number input reports unparsable text as badInput with an empty value.
-    const ageValue = age.value.trim();
+    const birthYearValue = birthYear.value.trim();
 
     if (
-      age.validity.badInput ||
-      (ageValue !== "" &&
-        (!POSITIVE_INTEGER.test(ageValue) || Number(ageValue) > MAX_AGE))
+      birthYear.validity.badInput ||
+      (birthYearValue !== "" && !isValidBirthYear(birthYearValue))
     ) {
-      validationErrors.age = t("ageInvalid");
+      validationErrors.birthYear = t("birthYearInvalid");
     }
 
     setErrors(validationErrors);
@@ -73,8 +75,8 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
     if (validationErrors.email) {
       return email.focus();
     }
-    if (validationErrors.age) {
-      return age.focus();
+    if (validationErrors.birthYear) {
+      return birthYear.focus();
     }
 
     const data = new FormData(form);
@@ -84,12 +86,13 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
     try {
       const response = await fetch("/api/newsletter", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
           surname: data.get("surname"),
           email: data.get("email"),
-          age: data.get("age"),
+          birthYear: data.get("birthYear"),
+          country: data.get("country"),
           website: data.get("website"),
         }),
       });
@@ -100,7 +103,7 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
       }
 
       // The browser checks should already have caught these; map any the server still rejects.
-      const body: {fields?: string[]} | null = await response
+      const body: { fields?: string[] } | null = await response
         .json()
         .catch(() => null);
 
@@ -110,8 +113,11 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
         if (body.fields.includes("email")) {
           serverErrors.email = t("emailInvalid");
         }
-        if (body.fields.includes("age")) {
-          serverErrors.age = t("ageInvalid");
+        if (body.fields.includes("birthYear")) {
+          serverErrors.birthYear = t("birthYearInvalid");
+        }
+        if (body.fields.includes("country")) {
+          serverErrors.country = t("countryInvalid");
         }
         setErrors(serverErrors);
       }
@@ -145,89 +151,116 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
         <div className={styles.row}>
           <div className={styles.field}>
             <input
-              id="newsletter2-name"
+              id="newsletter-name"
               className={styles.input}
               name="name"
               autoComplete="given-name"
               placeholder=" "
             />
-            <label className={styles.label} htmlFor="newsletter2-name">
+            <label className={styles.label} htmlFor="newsletter-name">
               {t("nameLabel")}
             </label>
           </div>
           <div className={styles.field}>
             <input
-              id="newsletter2-surname"
+              id="newsletter-surname"
               className={styles.input}
               name="surname"
               autoComplete="family-name"
               placeholder=" "
             />
-            <label className={styles.label} htmlFor="newsletter2-surname">
+            <label className={styles.label} htmlFor="newsletter-surname">
               {t("surnameLabel")}
             </label>
           </div>
         </div>
-        <div className={styles.emailRow}>
+        <div className={styles.fieldGroup}>
+          <div className={styles.field}>
+            <input
+              ref={emailRef}
+              id="newsletter-email"
+              className={styles.input}
+              type="email"
+              name="email"
+              autoComplete="email"
+              required
+              placeholder=" "
+              aria-invalid={errors.email ? true : undefined}
+              aria-describedby={
+                errors.email ? "newsletter-email-error" : undefined
+              }
+            />
+            <label className={styles.label} htmlFor="newsletter-email">
+              {t("emailLabel")}
+              {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
+              <span aria-hidden="true"> *</span>
+            </label>
+          </div>
+          {errors.email && (
+            <p
+              id="newsletter-email-error"
+              className={`${styles.error} type-caption`}
+            >
+              {errors.email}
+            </p>
+          )}
+        </div>
+        {/* Provisional: country is optional free text. */}
+        <div className={styles.detailsRow}>
           <div className={styles.fieldGroup}>
             <div className={styles.field}>
               <input
-                ref={emailRef}
-                id="newsletter2-email"
+                id="newsletter-country"
                 className={styles.input}
-                type="email"
-                name="email"
-                autoComplete="email"
-                required
+                name="country"
+                autoComplete="country-name"
+                maxLength={MAX_COUNTRY_LENGTH}
                 placeholder=" "
-                aria-invalid={errors.email ? true : undefined}
+                aria-invalid={errors.country ? true : undefined}
                 aria-describedby={
-                  errors.email ? "newsletter2-email-error" : undefined
+                  errors.country ? "newsletter-country-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-email">
-                {t("emailLabel")}
-                {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
-                <span aria-hidden="true"> *</span>
+              <label className={styles.label} htmlFor="newsletter-country">
+                {t("countryLabel")}
               </label>
             </div>
-            {errors.email && (
+            {errors.country && (
               <p
-                id="newsletter2-email-error"
+                id="newsletter-country-error"
                 className={`${styles.error} type-caption`}
               >
-                {errors.email}
+                {errors.country}
               </p>
             )}
           </div>
           <div className={styles.fieldGroup}>
             <div className={styles.field}>
               <input
-                ref={ageRef}
-                id="newsletter2-age"
+                ref={birthYearRef}
+                id="newsletter-birth-year"
                 className={styles.input}
                 type="number"
-                name="age"
+                name="birthYear"
+                autoComplete="bday-year"
                 inputMode="numeric"
-                min={1}
-                max={MAX_AGE}
                 step={1}
                 placeholder=" "
-                aria-invalid={errors.age ? true : undefined}
+                aria-invalid={errors.birthYear ? true : undefined}
                 aria-describedby={
-                  errors.age ? "newsletter2-age-error" : undefined
+                  errors.birthYear ? "newsletter-birth-year-error" : undefined
                 }
               />
-              <label className={styles.label} htmlFor="newsletter2-age">
-                {t("ageLabel")}
+              <label className={styles.label} htmlFor="newsletter-birth-year">
+                {t("birthYearLabel")}
               </label>
             </div>
-            {errors.age && (
+            {errors.birthYear && (
               <p
-                id="newsletter2-age-error"
+                id="newsletter-birth-year-error"
                 className={`${styles.error} type-caption`}
               >
-                {errors.age}
+                {errors.birthYear}
               </p>
             )}
           </div>
@@ -246,7 +279,9 @@ export default function Newsletter2Form({children}: {children?: ReactNode}) {
         </div>
         <div className={styles.submitRow}>
           {/* Provisional notice wording until the final consent copy is confirmed. */}
-          <p className={`${styles.notice} type-caption`}>{t("consentNotice")}</p>
+          <p className={`${styles.notice} type-caption`}>
+            {t("consentNotice")}
+          </p>
           <Button
             type="submit"
             className={styles.button}

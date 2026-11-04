@@ -8,8 +8,17 @@
   gap: 16px;
   padding: 12px 16px;
 
+  // Mobile: the bar turns white together with the open menu panel.
+  &:has(.open) {
+    background: #fff;
+  }
+
   @media (min-width: 768px) {
     padding: 12px 32px;
+
+    &:has(.open) {
+      background: none;
+    }
   }
 }
 
@@ -17,6 +26,10 @@
   display: flex;
   gap: 16px;
   justify-self: start;
+
+  @media (min-width: 768px) {
+    background: var(--background);
+  }
 }
 
 .current {
@@ -63,7 +76,8 @@
   display: block;
   padding: 0;
   border: 0;
-  background: none;
+  // Same white-behind-content treatment as the links and language switcher.
+  background: var(--background);
   color: inherit;
   cursor: pointer;
 
@@ -83,7 +97,7 @@
   margin: 0;
   padding: 8px 16px 16px;
   list-style: none;
-  background: var(--background);
+  background: #fff;
   border-bottom: var(--rule-width) solid var(--foreground);
 
   &.open {
@@ -96,6 +110,7 @@
     flex-direction: row;
     gap: 32px;
     padding: 0;
+    background: none;
     border-bottom: 0;
   }
 }
@@ -107,6 +122,8 @@
 
   @media (min-width: 768px) {
     padding: 0;
+    // Desktop: white sits behind the item text only, not the whole header.
+    background: var(--background);
   }
 
   &:hover {

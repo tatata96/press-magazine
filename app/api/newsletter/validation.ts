@@ -1,12 +1,13 @@
 import {getTrimmedString} from "@/app/utils/string";
 
-export type SignupField = "email" | "age" | "name";
+export type SignupField = "email" | "birthYear" | "name" | "country";
 
 export type SignupInput = {
   email: string;
   firstName?: string;
   lastName?: string;
-  age?: number;
+  birthYear?: number;
+  country?: string;
 };
 
 export type ParsedSignup =
@@ -17,10 +18,30 @@ export type ParsedSignup =
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 254;
 const MAX_NAME_LENGTH = 100;
-const POSITIVE_INTEGER = /^[1-9]\d*$/;
+const FOUR_DIGIT_YEAR = /^\d{4}$/;
 
-// Also checked in the browser forms, which import it from here.
-export const MAX_AGE = 110;
+// Also checked in the browser forms, which import them from here.
+// Provisional: the oldest accepted birth year is 110 years back; the limit is a product decision.
+const MAX_YEARS_BACK = 110;
+
+export function getBirthYearRange(now = new Date()) {
+  const currentYear = now.getFullYear();
+
+  return {min: currentYear - MAX_YEARS_BACK, max: currentYear};
+}
+
+// Birth year is optional; when given it must be a four-digit year within the range.
+export function isValidBirthYear(text: string) {
+  if (!FOUR_DIGIT_YEAR.test(text)) {
+    return false;
+  }
+  const {min, max} = getBirthYearRange();
+  const year = Number(text);
+
+  return year >= min && year <= max;
+}
+// Provisional: country is optional free text until the field format is confirmed.
+export const MAX_COUNTRY_LENGTH = 100;
 
 export function parseSignup(payload: unknown): ParsedSignup {
   const body =
@@ -47,14 +68,16 @@ export function parseSignup(payload: unknown): ParsedSignup {
     fields.push("name");
   }
 
-  const ageText = getTrimmedString(body.age);
-  const age = Number(ageText);
+  const birthYearText = getTrimmedString(body.birthYear);
 
-  if (
-    ageText &&
-    (!POSITIVE_INTEGER.test(ageText) || !Number.isSafeInteger(age) || age > MAX_AGE)
-  ) {
-    fields.push("age");
+  if (birthYearText && !isValidBirthYear(birthYearText)) {
+    fields.push("birthYear");
+  }
+
+  const country = getTrimmedString(body.country);
+
+  if (country.length > MAX_COUNTRY_LENGTH) {
+    fields.push("country");
   }
 
   if (fields.length > 0) {
@@ -67,7 +90,8 @@ export function parseSignup(payload: unknown): ParsedSignup {
       email,
       firstName: firstName || undefined,
       lastName: lastName || undefined,
-      age: ageText ? age : undefined,
+      birthYear: birthYearText ? Number(birthYearText) : undefined,
+      country: country || undefined,
     },
   };
 }

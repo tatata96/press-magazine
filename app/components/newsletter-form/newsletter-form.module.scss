@@ -3,10 +3,25 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;
+}
+
+// Consent notice on the left, button on the right; they stack on narrow screens.
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  width: 100%;
 
   button {
-    align-self: flex-end;
+    margin-left: auto;
   }
+}
+
+.notice {
+  flex: 1 1 240px;
+  margin: 0;
 }
 
 .confirmation {
@@ -14,6 +29,7 @@
   flex-direction: column;
   gap: 16px;
   padding: 32px 0;
+  background: var(--background);
   border-top: var(--rule-width) solid var(--foreground);
   border-bottom: var(--rule-width) solid var(--foreground);
 
@@ -34,9 +50,9 @@
   width: 100%;
 }
 
-// Email takes 70% of the row, age 30%. Top-aligned so an error message under
+// Country takes 70% of the row, birth year 30%. Top-aligned so an error message under
 // one field doesn't stretch the other.
-.emailRow {
+.detailsRow {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   align-items: start;

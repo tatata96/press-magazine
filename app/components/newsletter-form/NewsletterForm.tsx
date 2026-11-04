@@ -1,26 +1,26 @@
 "use client";
 
-import {useEffect, useRef, useState} from "react";
-import type {FormEvent, ReactNode} from "react";
-import {useTranslations} from "next-intl";
-import {MAX_AGE} from "@/app/api/newsletter/validation";
+import { useEffect, useRef, useState } from "react";
+import type { FormEvent, ReactNode } from "react";
+import { useTranslations } from "next-intl";
+import {
+  isValidBirthYear,
+  MAX_COUNTRY_LENGTH,
+} from "@/app/api/newsletter/validation";
+import BirthYearField from "../birth-year-field/BirthYearField";
 import Button from "../button/Button";
 import TextField from "../text-field/TextField";
 import styles from "./newsletter-form.module.scss";
 
-type FieldErrors = {email?: string; age?: string};
+type FieldErrors = { email?: string; birthYear?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
-
-// Provisional: age is optional, and when given must be a whole number from 1 to
-// MAX_AGE (the upper limit is a provisional product decision).
-const POSITIVE_INTEGER = /^[1-9]\d*$/;
 
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
-export default function NewsletterForm({children}: {children?: ReactNode}) {
+export default function NewsletterForm({ children }: { children?: ReactNode }) {
   const t = useTranslations("NewsletterForm");
   const emailRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
+  const birthYearRef = useRef<HTMLInputElement>(null);
   // A ref, not state: it blocks a second submit fired before the pending render lands.
   const submitting = useRef(false);
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -42,9 +42,9 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
     }
     const form = event.currentTarget;
     const email = emailRef.current;
-    const age = ageRef.current;
+    const birthYear = birthYearRef.current;
 
-    if (!email || !age) {
+    if (!email || !birthYear) {
       return;
     }
 
@@ -56,14 +56,13 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
       validationErrors.email = t("emailInvalid");
     }
     // A number input reports unparsable text as badInput with an empty value.
-    const ageValue = age.value.trim();
+    const birthYearValue = birthYear.value.trim();
 
     if (
-      age.validity.badInput ||
-      (ageValue !== "" &&
-        (!POSITIVE_INTEGER.test(ageValue) || Number(ageValue) > MAX_AGE))
+      birthYear.validity.badInput ||
+      (birthYearValue !== "" && !isValidBirthYear(birthYearValue))
     ) {
-      validationErrors.age = t("ageInvalid");
+      validationErrors.birthYear = t("birthYearInvalid");
     }
 
     setErrors(validationErrors);
@@ -72,8 +71,8 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
     if (validationErrors.email) {
       return email.focus();
     }
-    if (validationErrors.age) {
-      return age.focus();
+    if (validationErrors.birthYear) {
+      return birthYear.focus();
     }
 
     const data = new FormData(form);
@@ -83,12 +82,13 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
     try {
       const response = await fetch("/api/newsletter", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: data.get("name"),
           surname: data.get("surname"),
           email: data.get("email"),
-          age: data.get("age"),
+          birthYear: data.get("birthYear"),
+          country: data.get("country"),
           website: data.get("website"),
         }),
       });
@@ -99,7 +99,7 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
       }
 
       // The browser checks should already have caught these; map any the server still rejects.
-      const body: {fields?: string[]} | null = await response
+      const body: { fields?: string[] } | null = await response
         .json()
         .catch(() => null);
 
@@ -109,8 +109,11 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
         if (body.fields.includes("email")) {
           serverErrors.email = t("emailInvalid");
         }
-        if (body.fields.includes("age")) {
-          serverErrors.age = t("ageInvalid");
+        if (body.fields.includes("birthYear")) {
+          serverErrors.birthYear = t("birthYearInvalid");
+        }
+        if (body.fields.includes("country")) {
+          serverErrors.country = t("countryInvalid");
         }
         setErrors(serverErrors);
       }
@@ -153,26 +156,28 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
             label={t("surnameLabel")}
           />
         </div>
-        <div className={styles.emailRow}>
+        <TextField
+          ref={emailRef}
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          label={t("emailLabel")}
+          error={errors.email}
+        />
+        {/* Provisional: country is optional free text. */}
+        <div className={styles.detailsRow}>
           <TextField
-            ref={emailRef}
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            label={t("emailLabel")}
-            error={errors.email}
+            name="country"
+            autoComplete="country-name"
+            maxLength={MAX_COUNTRY_LENGTH}
+            label={t("countryLabel")}
+            error={errors.country}
           />
-          <TextField
-            ref={ageRef}
-            name="age"
-            type="number"
-            inputMode="numeric"
-            min={1}
-            max={MAX_AGE}
-            step={1}
-            label={t("ageLabel")}
-            error={errors.age}
+          <BirthYearField
+            ref={birthYearRef}
+            label={t("birthYearLabel")}
+            error={errors.birthYear}
           />
         </div>
         {/* Honeypot: hidden from people and assistive tech; bots that fill it are ignored. */}
@@ -187,15 +192,19 @@ export default function NewsletterForm({children}: {children?: ReactNode}) {
             />
           </label>
         </div>
-        <Button
-          type="submit"
-          loading={status === "pending"}
-          loadingLabel={t("submitting")}
-        >
-          {t("submit")}
-        </Button>
-        {/* Provisional notice wording until the final consent copy is confirmed. */}
-        <p className="type-caption">{t("consentNotice")}</p>
+        <div className={styles.submitRow}>
+          {/* Provisional notice wording until the final consent copy is confirmed. */}
+          <p className={`${styles.notice} type-caption`}>
+            {t("consentNotice")}
+          </p>
+          <Button
+            type="submit"
+            loading={status === "pending"}
+            loadingLabel={t("submitting")}
+          >
+            {t("submit")}
+          </Button>
+        </div>
         <div role="status" className={styles.status}>
           {status === "error" && <p className="type-body">{t("error")}</p>}
         </div>

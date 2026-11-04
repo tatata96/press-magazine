@@ -1,42 +1,58 @@
 .field {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
   width: 100%;
 }
 
-// Boxed field with the label sitting inside like a placeholder. The label is a
-// real <label>; it shrinks to the top edge once the field is focused or filled.
+// Underlined field with the label sitting on the line like a placeholder. The
+// label is a real <label>; it shrinks once the field is focused or filled.
 .control {
   position: relative;
+  background: var(--background);
 }
 
 .input {
   display: block;
   width: 100%;
-  height: 50px;
-  padding: 16px 20px 0;
+  height: 40px;
+  padding: 14px 0 0;
   font-family: var(--font-family-mono);
   font-size: var(--type-label-size);
   color: inherit;
-  background: transparent;
-  border: var(--rule-width) solid var(--border-subtle);
+  background: var(--background);
+  border: 0;
+  border-bottom: 1.5px solid var(--foreground);
   border-radius: 0;
   appearance: none;
 
-  &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-    border-color: var(--foreground);
+  // Browsers paint autofilled fields pale blue and ignore `background`; an
+  // inset shadow is the only way to cover it.
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+    -webkit-text-fill-color: var(--foreground);
   }
 
-  // Thicker black border and the message text carry the error state; colour
+  &:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px var(--field-focus-background) inset;
+  }
+
+  // The tint replaces the default outline as the focus indicator.
+  &:focus-visible {
+    outline: none;
+    background: var(--field-focus-background);
+  }
+
+  // Thicker underline and the message text carry the error state; colour
   // is not the only signal.
   &[aria-invalid="true"] {
-    border: 2px solid var(--foreground);
+    border-bottom-width: 3px;
   }
 
-  // Hide native number spinners; they clash with the boxed look.
+  // Hide native number spinners; they clash with the underlined look.
   &[type="number"] {
     -moz-appearance: textfield;
 
@@ -51,8 +67,8 @@
 .label {
   position: absolute;
   top: 0;
-  left: 20px;
-  height: 50px;
+  left: 0;
+  height: 40px;
   display: flex;
   align-items: center;
   font-family: var(--font-family-mono);
@@ -66,7 +82,7 @@
   .input:focus + &,
   .input:not(:placeholder-shown) + & {
     height: auto;
-    top: 6px;
+    top: 0;
     font-size: 11px;
   }
 
@@ -80,6 +96,14 @@
   margin: 0;
 }
 
+// Overlaid under the field instead of in the flow, so showing or clearing an
+// error never moves the rest of the form. It sits in the form's row gap; keep
+// messages short enough for one or two lines.
 .error {
-  font-weight: var(--font-weight-medium);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  font-weight: var(--font-weight-semibold);
 }

@@ -57,6 +57,30 @@ function createSingleOptInConsent() {
   };
 }
 
+// Optional answers are stored as customer metafields; empty ones are left out.
+function createSignupMetafields(input: SignupInput) {
+  const metafields = [];
+
+  if (input.birthYear !== undefined) {
+    metafields.push({
+      namespace: "press",
+      key: "birth_year",
+      type: "number_integer",
+      value: String(input.birthYear),
+    });
+  }
+  if (input.country !== undefined) {
+    metafields.push({
+      namespace: "press",
+      key: "country",
+      type: "single_line_text_field",
+      value: input.country,
+    });
+  }
+
+  return metafields.length > 0 ? metafields : undefined;
+}
+
 // Messages are left out on purpose: Shopify may echo the submitted email in them. Only the
 // failing field (and the error code, where the mutation has one) is reported.
 function assertNoUserErrors(operation: string, userErrors: UserError[]) {
@@ -87,17 +111,7 @@ export async function subscribeToNewsletter(input: SignupInput): Promise<void> {
         firstName: input.firstName,
         lastName: input.lastName,
         emailMarketingConsent: createSingleOptInConsent(),
-        metafields:
-          input.age === undefined
-            ? undefined
-            : [
-                {
-                  namespace: "press",
-                  key: "age",
-                  type: "number_integer",
-                  value: String(input.age),
-                },
-              ],
+        metafields: createSignupMetafields(input),
       },
     });
 
