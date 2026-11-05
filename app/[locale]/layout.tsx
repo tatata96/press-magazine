@@ -5,6 +5,7 @@ import {locale} from "next/root-params";
 import {NextIntlClientProvider} from "next-intl";
 import {getTranslations} from "next-intl/server";
 import {routing} from "../../i18n/routing";
+import {SITE_URL} from "@/lib/seo";
 import "../globals.scss";
 import "../typography.scss";
 import Header from "../components/header/Header";
@@ -51,9 +52,22 @@ export function generateStaticParams() {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata");
 
+  // Per-page title, description, canonical and share tags come from
+  // getPageMetadata; this holds only what is shared by every route.
   return {
-    title: {default: t("title"), template: `%s | ${t("title")}`},
+    metadataBase: new URL(SITE_URL),
+    title: {default: t("title"), template: `%s — ${t("siteName")}`},
     description: t("description"),
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
   };
 }
 

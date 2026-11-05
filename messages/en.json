@@ -1,7 +1,8 @@
 {
   "Metadata": {
-    "title": "Press",
-    "description": "An earth-culture publication by September Company, based in Istanbul."
+    "siteName": "Press Magazine",
+    "title": "Press Magazine — Earth, Culture & Contemporary Life",
+    "description": "Press is an independent earth-culture publication by September Company, based in Istanbul."
   },
   "Header": {
     "navigationLabel": "Main",
@@ -86,7 +87,9 @@
     "heading": "Letter",
     "lead": "Stay in the loop between issues.",
     "body": "Carefully curated selections, in your inbox with our weekly newsletter.",
-    "signupTitle": "Sign up for our newsletter"
+    "signupTitle": "Sign up for our newsletter",
+    "metaTitle": "Newsletter",
+    "metaDescription": "Carefully curated selections, in your inbox with our weekly newsletter."
   },
   "NewsletterForm": {
     "emailLabel": "Email",
