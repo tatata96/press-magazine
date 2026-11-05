@@ -4,7 +4,8 @@ import type {ReactNode} from "react";
 import {getPageMetadata} from "@/lib/seo";
 import Logo from "@/app/components/logo/Logo";
 import AboutStage from "./AboutStage";
-import {team} from "./team";
+import {followLinks} from "@/lib/social-links";
+import Team from "@/app/components/team/Team";
 import styles from "./about.module.scss";
 
 function toStrings(value: unknown): string[] {
@@ -119,14 +120,21 @@ export default async function AboutPage() {
             ))}
           </div>
         </div>
-        <ul className={styles.team} aria-label={t("who.teamLabel")}>
-          {team.map(({name, roleKey}) => (
-            <li key={roleKey} className={styles.member}>
-              <span className={`type-mono ${styles.upperCase}`}>{name}</span>
-              <span>{t(`who.roles.${roleKey}`)}</span>
-            </li>
+        <Team className={styles.team} />
+        <div className={styles.follow}>
+          <p>{t("who.followLabel")}</p>
+          {followLinks.map(({label, href}) => (
+            <a
+              key={label}
+              href={href}
+              className={styles.followLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {label}
+            </a>
           ))}
-        </ul>
+        </div>
       </section>
     </main>
   );

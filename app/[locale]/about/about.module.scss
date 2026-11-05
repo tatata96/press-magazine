@@ -144,18 +144,53 @@
   gap: 24px;
 }
 
+// Placement of the shared team list: below the intro on mobile, in the right
+// column beside "Who?" on desktop.
 .team {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  padding-top: 32px;
+
+  @media (min-width: 900px) {
+    align-self: center;
+    padding-top: 0;
+  }
 }
 
-.member {
+// Closing call to follow, centered under the whole section.
+.follow {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
-  padding: 16px 0;
-  border-top: var(--rule-width) solid currentColor;
+  padding-top: 48px;
+  text-align: center;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  font-weight: var(--font-weight-bold);
+
+  @media (min-width: 900px) {
+    grid-column: 1 / -1;
+    padding-top: 96px;
+    font-size: clamp(18px, 1.6vw, 28px);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.followLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
 }
 
 // A spread nested inside another section: spans both of its columns.

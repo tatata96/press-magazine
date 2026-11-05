@@ -1,11 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import Logo from "../logo/Logo";
 import LogoMark from "../logo/LogoMark";
+import Team from "../team/Team";
 import styles from "./site-footer.module.scss";
 
-const contactHref = "mailto:hello@pressmagazine.com.tr";
-const instagramHref = "https://www.instagram.com/septembercompany/";
+const inquiryEmail = "hello@septembercompany.com";
 const septemberHref = "https://www.septembercompany.com/";
+
+function toStrings(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
 
 export default async function SiteFooter() {
   const t = await getTranslations("SiteFooter");
@@ -29,29 +35,23 @@ export default async function SiteFooter() {
             })}
           </p>
         </div>
-        <ul className={`${styles.column} ${styles.links}`}>
-          <li>
-            <a href={contactHref} className={`${styles.link} type-mono`}>
-              {t("contact")}
-            </a>
-          </li>
-          <li>
-            <a
-              href={instagramHref}
-              className={`${styles.link} type-mono`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("instagram")}
-            </a>
-          </li>
-        </ul>
+        <p className={`${styles.column} ${styles.inquiries} type-mono`}>
+          {t("inquiries")}{" "}
+          <a href={`mailto:${inquiryEmail}`} className={styles.link}>
+            {inquiryEmail}
+          </a>
+        </p>
         <p className={`${styles.upper} ${styles.location} type-mono`}>
           {t("location")}
         </p>
       </div>
+      <Team className={styles.team} />
       <LogoMark className={styles.mark} />
-      <p className={`${styles.year} type-mono`}>2026</p>
+      <address className={`${styles.address} ${styles.upper} type-mono`}>
+        {toStrings(t.raw("address")).map((line) => (
+          <span key={line}>{line}</span>
+        ))}
+      </address>
       {/* Decorative: fixed to the viewport bottom and clipped by the footer,
           so it is uncovered as the page scrolls to the end. */}
       <div className={styles.wordmark} aria-hidden="true">

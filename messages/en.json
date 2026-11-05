@@ -23,9 +23,9 @@
   },
   "SiteFooter": {
     "byline": "A magazine by <link>September</link>",
-    "contact": "Contact",
-    "instagram": "Instagram",
-    "location": "Istanbul / Worldwide"
+    "inquiries": "For Inquiries:",
+    "location": "Istanbul / Worldwide",
+    "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
   },
   "AboutPage": {
     "title": "About",
@@ -73,6 +73,7 @@
         "We are people who have worked at every level of the publishing industry in Turkey for 25 years, produced publications, developed content, and loved this profession.",
         "We are crowning the fashion and image agency activities we conduct under September Company with Press."
       ],
+      "followLabel": "Follow Press on:",
       "teamLabel": "Team",
       "roles": {
         "ensarAltun": "Founder, Creative Director",

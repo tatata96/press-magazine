@@ -1,0 +1,36 @@
+.team {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+// Role above name, as in a masthead; two per row on desktop.
+.member {
+  display: flex;
+  flex: 1 1 100%;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (min-width: 900px) {
+    flex: 0 1 calc((100% - 16px) / 2);
+
+    // The first person leads on a row of their own; the rest follow two per row.
+    &:first-child {
+      flex-basis: 100%;
+      margin-bottom: 24px;
+    }
+  }
+}
+
+.role {
+  text-transform: uppercase;
+}
+
+.name {
+  font-weight: var(--font-weight-bold);
+}
