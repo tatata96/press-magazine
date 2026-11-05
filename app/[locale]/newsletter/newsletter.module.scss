@@ -119,9 +119,9 @@
 }
 
 .detailsRow {
-  // Country takes 70% of the row, birth year 30%.
+  // Country and birth year each take half the row.
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 24px;
 }
 
@@ -139,6 +139,32 @@
   top: 100%;
   left: 0;
   right: 0;
+}
+
+// Coloured text with an icon, so the error doesn't rely on colour alone.
+// Nested under .fieldGroup to outrank the global .type-caption weight.
+.fieldGroup .error {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 4px 0;
+  font-weight: var(--font-weight-semibold);
+  color: #c70505;
+  background: none;
+
+  // Decorative icon, drawn as a mask so it takes the text colour; the message
+  // text is what assistive tech reads.
+  &::before {
+    content: "";
+    flex: none;
+    align-self: center;
+    width: 1.4em;
+    height: 1.4em;
+    background: currentColor;
+    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+  }
 }
 
 .error,
@@ -195,6 +221,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px 24px;
+  margin-top: 25px;
 }
 
 .submitRow .notice {
@@ -238,6 +265,12 @@
   &:focus-visible {
     outline: none;
     background: var(--field-focus-background);
+  }
+
+  // The inverted message below marks the error without
+  // relying on colour.
+  &[aria-invalid="true"] {
+    border-bottom-width: 1px;
   }
 
   // Hide native number spinners; they clash with the underlined look.

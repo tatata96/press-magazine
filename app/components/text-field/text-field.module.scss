@@ -46,10 +46,10 @@
     background: var(--field-focus-background);
   }
 
-  // Thicker underline and the message text carry the error state; colour
-  // is not the only signal.
+  // The inverted message below marks the error without
+  // relying on colour.
   &[aria-invalid="true"] {
-    border-bottom-width: 3px;
+    border-bottom-width: 1px;
   }
 
   // Hide native number spinners; they clash with the underlined look.
@@ -98,12 +98,35 @@
 
 // Overlaid under the field instead of in the flow, so showing or clearing an
 // error never moves the rest of the form. It sits in the form's row gap; keep
-// messages short enough for one or two lines.
-.error {
+// messages short enough for one or two lines. Nested under .field so it
+// outranks the global .type-caption weight regardless of stylesheet order.
+.field .error {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   margin-top: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 8px;
   font-weight: var(--font-weight-semibold);
+  color: var(--background);
+  background: var(--foreground);
+
+  // Decorative marker so the state is recognisable beyond colour contrast; the
+  // text itself is what assistive tech reads via aria-describedby.
+  &::before {
+    content: "!";
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 1em;
+    height: 1em;
+    font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-bold);
+    color: var(--foreground);
+    background: var(--background);
+    border-radius: 50%;
+  }
 }

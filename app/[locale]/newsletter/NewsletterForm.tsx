@@ -13,8 +13,6 @@ import styles from "./newsletter.module.scss";
 type FieldErrors = { email?: string; birthYear?: string; country?: string };
 type Status = "idle" | "pending" | "success" | "error";
 
-// A copy of NewsletterForm's submit flow with this page's underlined layout,
-// kept separate while the two designs are compared; one of them will be dropped.
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
 export default function NewsletterForm({

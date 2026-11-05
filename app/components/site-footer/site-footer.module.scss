@@ -67,6 +67,12 @@
   }
 }
 
+// Contact and Instagram sit side by side.
+.links {
+  flex-direction: row;
+  gap: 24px;
+}
+
 .year {
   position: absolute;
   inset: auto 16px 16px auto;
