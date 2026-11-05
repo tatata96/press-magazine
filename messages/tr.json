@@ -1,7 +1,8 @@
 {
   "Metadata": {
-    "title": "Press",
-    "description": "İstanbul merkezli September Company'den bir yeryüzü kültürü yayını."
+    "siteName": "Press Magazine",
+    "title": "Press Magazine — Yeryüzü, Kültür ve Çağdaş Yaşam",
+    "description": "Press, İstanbul merkezli September Company'den bağımsız bir yeryüzü kültürü yayınıdır."
   },
   "Header": {
     "navigationLabel": "Ana menü",
@@ -17,11 +18,11 @@
   },
   "HomeStage": {
     "issue": "Sayı 01",
-    "about": "İstanbul'da hazırlanan, September'dan bir dergi.",
+    "about": "İstanbul'da hazırlanan,\nSeptember'dan bir dergi.",
     "newsletter": "Ücretsiz bültene katılın."
   },
   "SiteFooter": {
-    "byline": "September'dan bir dergi",
+    "byline": "<link>September</link>'dan bir dergi",
     "contact": "İletişim",
     "instagram": "Instagram",
     "location": "İstanbul / Dünya"
@@ -86,12 +87,14 @@
     "heading": "Mektup",
     "lead": "Sayılar arasında haberdar kal.",
     "body": "Özenle seçilmiş içerikler, haftalık bültenimizle gelen kutunda.",
-    "signupTitle": "Bültenimize kaydol"
+    "signupTitle": "Bültenimize kaydol",
+    "metaTitle": "Bülten",
+    "metaDescription": "Özenle seçilmiş içerikler, haftalık bültenimizle gelen kutunda."
   },
   "NewsletterForm": {
     "emailLabel": "E-posta",
     "emailRequired": "E-posta adresini gir.",
-    "emailInvalid": "Geçerli bir e-posta adresi gir, örneğin ad@ornek.com.",
+    "emailInvalid": "Geçerli bir e-posta adresi gir.",
     "birthYearLabel": "Doğum yılı",
     "birthYearInvalid": "Geçerli bir yıl gir.",
     "countryLabel": "Ülke",

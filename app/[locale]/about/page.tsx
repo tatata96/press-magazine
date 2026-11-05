@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {getTranslations} from "next-intl/server";
 import type {ReactNode} from "react";
+import {getPageMetadata} from "@/lib/seo";
 import Logo from "@/app/components/logo/Logo";
 import AboutStage from "./AboutStage";
 import {team} from "./team";
@@ -16,7 +17,13 @@ const bold = (chunks: ReactNode) => <strong>{chunks}</strong>;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("AboutPage");
-  return {title: t("title")};
+
+  // The hero line is the page's existing summary, reused as the description.
+  return getPageMetadata({
+    title: t("title"),
+    description: t("hero.description"),
+    path: "/about",
+  });
 }
 
 export default async function AboutPage() {

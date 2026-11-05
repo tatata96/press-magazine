@@ -3,10 +3,9 @@ import Logo from "../logo/Logo";
 import LogoMark from "../logo/LogoMark";
 import styles from "./site-footer.module.scss";
 
-// TODO: placeholders until the real contact address and Instagram profile are
-// confirmed.
-const contactHref = "mailto:hello@example.com";
-const instagramHref = "https://www.instagram.com/";
+const contactHref = "mailto:hello@pressmagazine.com.tr";
+const instagramHref = "https://www.instagram.com/septembercompany/";
+const septemberHref = "https://www.septembercompany.com/";
 
 export default async function SiteFooter() {
   const t = await getTranslations("SiteFooter");
@@ -15,7 +14,20 @@ export default async function SiteFooter() {
     <footer className={styles.footer}>
       <div className={styles.columns}>
         <div className={styles.column}>
-          <p className={`${styles.upper} type-mono`}>{t("byline")}</p>
+          <p className={`${styles.upper} type-mono`}>
+            {t.rich("byline", {
+              link: (chunks) => (
+                <a
+                  href={septemberHref}
+                  className={styles.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
         </div>
         <ul className={`${styles.column} ${styles.links}`}>
           <li>
