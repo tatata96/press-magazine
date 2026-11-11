@@ -1,0 +1,249 @@
+// Split screen: a large image of the selected plan on the left, the plan
+// choice on a light panel on the right. On phones the image sits on top.
+.main {
+  flex: none;
+  display: grid;
+  width: 100%;
+  // The footer starts with a 48px gap of plain background above its rule. Pull
+  // the page down over it (and give the panel matching bottom padding) so no
+  // white strip shows between the page and the footer rule.
+  margin-bottom: -48px;
+
+  @media (min-width: 900px) {
+    grid-template-columns: minmax(0, 3fr) minmax(360px, 2fr);
+    // Fills the first screen below the header (~78px) on desktop, plus the
+    // 48px footer gap it covers.
+    min-height: calc(100svh - 78px + 48px);
+  }
+}
+
+.stage {
+  position: relative;
+  min-height: 40svh;
+  overflow: hidden;
+  background: var(--border-subtle);
+  color: #ffffff;
+}
+
+.stageImage {
+  object-fit: cover;
+  opacity: 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity 0.4s ease;
+  }
+}
+
+.stageImageActive {
+  opacity: 1;
+}
+
+// Scrim keeps the white caption legible on any photo.
+.stageCaption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 96px 16px 16px;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0));
+
+  p {
+    margin: 0;
+  }
+
+  @media (min-width: 900px) {
+    // Extra 48px: the stage's bottom edge runs under the footer gap (see .main).
+    padding: 120px 24px calc(24px + 48px);
+  }
+}
+
+.stageName {
+  font-family: var(--font-family-title);
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.stageTagline {
+  font-style: italic;
+  font-size: var(--type-body-size);
+}
+
+.stagePrice {
+  margin-top: 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-body-size);
+
+  span {
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 32px 16px 96px;
+  background: var(--field-focus-background);
+
+  @media (min-width: 900px) {
+    padding: 32px 48px 96px;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin: 0 0 4px;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+// Names the radio group for assistive tech without showing a label.
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// One selectable card per plan; the native radio is kept for keyboard and
+// screen-reader behaviour and sits in the card's corner.
+.choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 16px;
+  padding: 16px;
+  background: var(--background);
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &:has(.radio:checked) {
+    border-color: var(--foreground);
+  }
+
+  &:has(.radio:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.radio {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--foreground);
+}
+
+.thumb {
+  width: 72px;
+  height: 90px;
+  object-fit: cover;
+}
+
+.choiceText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 28px;
+}
+
+.choiceName {
+  font-family: var(--font-family-title);
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.choiceTagline {
+  font-style: italic;
+  line-height: var(--type-body-line-height);
+}
+
+.choicePrice {
+  margin-top: 8px;
+
+  span {
+    text-transform: uppercase;
+  }
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benefitsStack {
+  display: grid;
+}
+
+.benefits {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: var(--type-body-line-height);
+}
+
+// visibility (not display) keeps the hidden list's height and hides it from
+// assistive tech.
+.benefitsHidden {
+  visibility: hidden;
+}
+
+// Pinned to the bottom of the panel on desktop.
+.purchase {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.issueNote {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.cta {
+  width: 100%;
+}

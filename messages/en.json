@@ -10,6 +10,7 @@
     "closeMenu": "Close menu",
     "about": "About",
     "newsletter": "Newsletter",
+    "subscribe": "Shop",
     "logoAlt": "Press",
     "languageLabel": "Language"
   },
@@ -81,6 +82,35 @@
         "utkuPalamutcu": "General Coordinator, Fashion Director",
         "dogukanKarapinar": "Design Director",
         "elifSelinUnuvar": "Brand & Project Director"
+      }
+    }
+  },
+  "SubscribePage": {
+    "heading": "Shop",
+    "lead": "Press is published twice a year. Choose how you would like to read it.",
+    "issueNote": "Each purchase covers one issue. It does not renew automatically.",
+    "planChoice": "Choose your issue",
+    "includesLabel": "Includes",
+    "priceNote": "Per issue",
+    "cta": "Add to cart",
+    "metaTitle": "Shop",
+    "metaDescription": "Get an issue of Press, digital or in print. Each purchase covers one issue and does not renew automatically.",
+    "plans": {
+      "digital": {
+        "name": "Digital",
+        "tagline": "Read Press on any screen.",
+        "price": "€20",
+        "benefits": ["Access to the digital PDF edition", "Newsletter subscription"]
+      },
+      "print": {
+        "name": "Print + Digital",
+        "tagline": "The issue in your hands, and on your screen.",
+        "price": "€40",
+        "benefits": [
+          "A physical copy delivered to you",
+          "Access to the downloadable PDF edition",
+          "Newsletter subscription"
+        ]
       }
     }
   },
