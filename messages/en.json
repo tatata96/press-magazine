@@ -10,7 +10,7 @@
     "closeMenu": "Close menu",
     "about": "About",
     "newsletter": "Newsletter",
-    "subscribe": "Subscribe",
+    "subscribe": "Shop",
     "logoAlt": "Press",
     "languageLabel": "Language"
   },
@@ -86,14 +86,14 @@
     }
   },
   "SubscribePage": {
-    "heading": "Subscribe",
+    "heading": "Shop",
     "lead": "Press is published twice a year. Choose how you would like to read it.",
     "issueNote": "Each purchase covers one issue. It does not renew automatically.",
     "planChoice": "Choose your issue",
     "includesLabel": "Includes",
     "priceNote": "Per issue",
-    "cta": "Subscribe",
-    "metaTitle": "Subscribe",
+    "cta": "Add to cart",
+    "metaTitle": "Shop",
     "metaDescription": "Get an issue of Press, digital or in print. Each purchase covers one issue and does not renew automatically.",
     "plans": {
       "digital": {

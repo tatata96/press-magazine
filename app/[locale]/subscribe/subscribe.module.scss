@@ -53,7 +53,8 @@
   }
 
   @media (min-width: 900px) {
-    padding: 120px 24px 24px;
+    // Extra 48px: the stage's bottom edge runs under the footer gap (see .main).
+    padding: 120px 24px calc(24px + 48px);
   }
 }
 
@@ -209,7 +210,12 @@
   gap: 8px;
 }
 
+.benefitsStack {
+  display: grid;
+}
+
 .benefits {
+  grid-area: 1 / 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -217,6 +223,12 @@
   padding: 0;
   list-style: none;
   line-height: var(--type-body-line-height);
+}
+
+// visibility (not display) keeps the hidden list's height and hides it from
+// assistive tech.
+.benefitsHidden {
+  visibility: hidden;
 }
 
 // Pinned to the bottom of the panel on desktop.

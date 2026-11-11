@@ -10,7 +10,7 @@
     "closeMenu": "Menüyü kapat",
     "about": "Hakkında",
     "newsletter": "Bülten",
-    "subscribe": "Abone ol",
+    "subscribe": "Mağaza",
     "logoAlt": "Press",
     "languageLabel": "Dil"
   },
@@ -86,14 +86,14 @@
     }
   },
   "SubscribePage": {
-    "heading": "Abone ol",
+    "heading": "Mağaza",
     "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
     "issueNote": "Her satın alma tek bir sayıyı kapsar. Otomatik olarak yenilenmez.",
     "planChoice": "Sayını seç",
     "includesLabel": "İçerik",
     "priceNote": "Sayı başına",
-    "cta": "Abone ol",
-    "metaTitle": "Abone ol",
+    "cta": "Sepete ekle",
+    "metaTitle": "Mağaza",
     "metaDescription": "Press'in bir sayısını dijital ya da basılı olarak edin. Her satın alma tek bir sayıyı kapsar ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {

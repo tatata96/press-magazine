@@ -98,11 +98,20 @@ export default function SubscribePlans({plans, copy}: SubscribePlansProps) {
 
         <div className={styles.summary}>
           <p className={`type-mono ${styles.legend}`}>{copy.includesLabel}</p>
-          <ul className={styles.benefits}>
-            {selected.benefits.map((benefit) => (
-              <li key={benefit}>{benefit}</li>
+          {/* Every plan's list shares one grid cell, so the cell is as tall as the
+              longest list and switching plans never moves the purchase section. */}
+          <div className={styles.benefitsStack}>
+            {plans.map((plan) => (
+              <ul
+                key={plan.id}
+                className={`${styles.benefits} ${plan.id === selected.id ? "" : styles.benefitsHidden}`}
+              >
+                {plan.benefits.map((benefit) => (
+                  <li key={benefit}>{benefit}</li>
+                ))}
+              </ul>
             ))}
-          </ul>
+          </div>
         </div>
 
         <div className={styles.purchase}>
