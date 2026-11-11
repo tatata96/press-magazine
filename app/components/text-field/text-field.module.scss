@@ -46,7 +46,7 @@
     background: var(--field-focus-background);
   }
 
-  // The inverted message below marks the error without
+  // The message below (with its icon) marks the error without
   // relying on colour.
   &[aria-invalid="true"] {
     border-bottom-width: 1px;
@@ -98,35 +98,34 @@
 
 // Overlaid under the field instead of in the flow, so showing or clearing an
 // error never moves the rest of the form. It sits in the form's row gap; keep
-// messages short enough for one or two lines. Nested under .field so it
-// outranks the global .type-caption weight regardless of stylesheet order.
+// messages short enough for one or two lines. Same look as the newsletter page's
+// errors: coloured text with an icon, so the state doesn't rely on colour alone.
+// Nested under .field so it outranks the global .type-caption weight regardless
+// of stylesheet order.
 .field .error {
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  margin-top: 4px;
   display: flex;
   align-items: baseline;
   gap: 8px;
-  padding: 6px 8px;
+  margin-top: 4px;
+  padding: 4px 0;
   font-weight: var(--font-weight-semibold);
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--foreground);
+  background: var(--background);
 
-  // Decorative marker so the state is recognisable beyond colour contrast; the
-  // text itself is what assistive tech reads via aria-describedby.
+  // Decorative icon, drawn as a mask so it takes the text colour; the message
+  // text is what assistive tech reads via aria-describedby.
   &::before {
-    content: "!";
+    content: "";
     flex: none;
-    display: inline-grid;
-    place-items: center;
-    width: 1em;
-    height: 1em;
-    font-family: var(--font-family-mono);
-    font-weight: var(--font-weight-bold);
-    color: var(--foreground);
-    background: var(--background);
-    border-radius: 50%;
+    align-self: center;
+    width: 1.4em;
+    height: 1.4em;
+    background: currentColor;
+    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
   }
 }

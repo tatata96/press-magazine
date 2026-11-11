@@ -1,5 +1,7 @@
 import type {Metadata} from "next";
+import {notFound} from "next/navigation";
 import {getTranslations} from "next-intl/server";
+import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {getPageMetadata} from "@/lib/seo";
 import {legalDocuments, type LegalDocumentKey} from "./documents";
 import LegalDocument from "./LegalDocument";
@@ -22,6 +24,11 @@ export default async function LegalDocumentPage({
 }: {
   documentKey: LegalDocumentKey;
 }) {
+  // Placeholder text must not be reachable in production; see lib/legal/readiness.ts.
+  if (!isLegalContentPublishable()) {
+    notFound();
+  }
+
   const t = await getTranslations("LegalDocuments");
 
   return (

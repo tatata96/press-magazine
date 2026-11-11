@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { isLegalContentPublishable } from "@/lib/legal/readiness";
 import { Link } from "../../../i18n/navigation";
 import { legalDocuments } from "../legal-document/documents";
 import Logo from "../logo/Logo";
@@ -37,17 +38,19 @@ export default async function SiteFooter() {
               ),
             })}
           </p>
-          <ul className={`${styles.legalLinks} type-mono`}>
-            {(Object.keys(legalDocuments) as (keyof typeof legalDocuments)[]).map(
-              (key) => (
-                <li key={key}>
-                  <Link href={legalDocuments[key].path} className={styles.link}>
-                    {legalT(`${key}.title`)}
-                  </Link>
-                </li>
-              ),
-            )}
-          </ul>
+          {isLegalContentPublishable() ? (
+            <ul className={`${styles.legalLinks} type-mono`}>
+              {(Object.keys(legalDocuments) as (keyof typeof legalDocuments)[]).map(
+                (key) => (
+                  <li key={key}>
+                    <Link href={legalDocuments[key].path} className={styles.link}>
+                      {legalT(`${key}.title`)}
+                    </Link>
+                  </li>
+                ),
+              )}
+            </ul>
+          ) : null}
         </div>
         <p className={`${styles.column} ${styles.inquiries} type-mono`}>
           {t("inquiries")}{" "}

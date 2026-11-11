@@ -1,13 +1,18 @@
 import {Suspense} from "react";
 import type {Metadata} from "next";
 import {getLocale, getTranslations} from "next-intl/server";
-import {Link} from "../../../i18n/navigation";
-import {getCart, type Cart} from "@/lib/shopify/cart";
+import {Link, redirect} from "../../../i18n/navigation";
 import {getPageMetadata} from "@/lib/seo";
-import {readCartId} from "./cart-cookie";
+import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import LegalDocument from "@/app/components/legal-document/LegalDocument";
 import CartLines from "./CartLines";
 import CheckoutConsent from "./CheckoutConsent";
+import PersonalizedAgreement from "./PersonalizedAgreement";
+import {
+  loadCheckoutState,
+  readCheckoutCookies,
+  type CheckoutState,
+} from "./checkout-state";
 import styles from "./cart.module.scss";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,27 +30,25 @@ export async function generateMetadata(): Promise<Metadata> {
 async function CartContent() {
   const t = await getTranslations("CartPage");
   const locale = await getLocale();
-  const cartId = await readCartId();
-  let cart: Cart | null = null;
+  const cookies = await readCheckoutCookies();
+  let state: CheckoutState;
 
-  if (cartId) {
-    try {
-      cart = await getCart(cartId);
-    } catch (error) {
-      console.error(
-        "Could not load cart:",
-        error instanceof Error ? error.message : "unknown error",
-      );
+  try {
+    state = await loadCheckoutState(cookies);
+  } catch (error) {
+    console.error(
+      "Could not load cart:",
+      error instanceof Error ? error.message : "unknown error",
+    );
 
-      return (
-        <p role="alert" className={styles.message}>
-          {t("loadError")}
-        </p>
-      );
-    }
+    return (
+      <p role="alert" className={styles.message}>
+        {t("loadError")}
+      </p>
+    );
   }
 
-  if (!cart || cart.lines.length === 0) {
+  if (state.status === "empty") {
     return (
       <div className={styles.empty}>
         <p className={styles.message}>{t("empty")}</p>
@@ -56,10 +59,18 @@ async function CartContent() {
     );
   }
 
+  // The agreement needs the buyer's details; arriving here without them (or after the cart
+  // changed what is required) sends the visitor back to enter them.
+  if (state.status === "needs_details") {
+    redirect({href: "/buyer-details", locale});
+
+    return null;
+  }
+
   return (
     <>
       <CartLines
-        cart={cart}
+        cart={state.cart}
         locale={locale}
         copy={{
           itemsLabel: t("itemsLabel"),
@@ -72,14 +83,24 @@ async function CartContent() {
           updateError: t("updateError"),
         }}
       />
-      <CheckoutConsent
-        documents={{
-          distanceSalesAgreement: (
-            <LegalDocument documentKey="distanceSalesAgreement" />
-          ),
-          preInformation: <LegalDocument documentKey="preInformation" />,
-        }}
-      />
+      <Link href="/buyer-details" className={`${styles.link} ${styles.editDetails}`}>
+        {t("editDetails")}
+      </Link>
+      {isLegalContentPublishable() ? (
+        <CheckoutConsent
+          agreementFingerprint={state.fingerprint}
+          documents={{
+            distanceSalesAgreement: (
+              <PersonalizedAgreement snapshot={state.snapshot} />
+            ),
+            preInformation: <LegalDocument documentKey="preInformation" />,
+          }}
+        />
+      ) : (
+        <p role="status" className={styles.message}>
+          {t("checkoutUnavailable")}
+        </p>
+      )}
     </>
   );
 }

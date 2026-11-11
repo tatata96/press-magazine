@@ -68,3 +68,21 @@ public/            Static assets
 ## Open decisions
 
 Not final yet, so no behaviour should be assumed: newsletter provider and consent copy, form fields, payment setup, PDF download limits, and archive access rules.
+
+## Checkout flow and sales agreement
+
+Flow: Subscribe → `/buyer-details` → `/cart` (personalized Distance Sales Agreement) → Shopify hosted checkout. Shipping method is chosen by the buyer in Shopify checkout; there is no picker on our cart page.
+
+- **Buyer details** are saved by a Server Action. Email, phone, country and the delivery address go onto the Shopify cart (`cartBuyerIdentityUpdate`, `cartDeliveryAddressesReplace`) so checkout opens prefilled. Shopify's cart has no buyer name and no billing address, so only those two live in an AES-256-GCM encrypted cookie (`press_buyer_details`; httpOnly, Secure, SameSite=Lax, 48 hours). No database. Requires `BUYER_COOKIE_SECRET` (see `.env.example`).
+- **Delivery address** is only required when a cart line has `requiresShipping` in Shopify. Billing is never sent to Shopify (no cart field exists).
+- **Agreement**: `app/[locale]/cart/checkout-state.ts` builds a snapshot (buyer, lines, delivery option, total) on the server and fingerprints it. Consent is stored against that fingerprint, so any change to quantities, details or totals invalidates it. `proceedToCheckout` recomputes the fingerprint and only then returns the checkout URL, after writing the acceptance to cart attributes (`lib/legal/consent.ts`), which Shopify copies onto the order.
+- **Taxes**: Storefront API 2026-07 exposes no tax amount or tax-inclusive flag on a cart, so none is shown or computed. The agreement has a placeholder line for it.
+- **Go-live guard** (`lib/legal/readiness.ts`): while `LEGAL_DOCUMENTS_VERSION` is `"placeholder"` or any legal message still contains a `[PLACEHOLDER]` / `[YER TUTUCU]` marker, production has no legal pages or footer links, no buyer-details form, and no checkout. Development is unaffected. A staging deployment can opt in with `ALLOW_PLACEHOLDER_LEGAL=true`, which is read at **build** time because those pages are prerendered.
+
+### Unresolved limitation (needs a decision, not solved by the notice)
+
+The agreement is generated before Shopify's hosted checkout, and on the Basic plan checkout can still change the delivery address, shipping option, taxes and total. The estimate notice in the agreement states that final amounts are determined at Shopify checkout, but a notice is not a legal solution: the accepted agreement and the final order can differ. `consent_agreed_total` is stored on the order so the difference can at least be detected. Options to evaluate with legal advice include an agreement or confirmation after checkout, or Shopify Plus checkout controls.
+
+### Still placeholders
+
+Seller details, tax wording, the legal clauses and `LEGAL_DOCUMENTS_VERSION`.

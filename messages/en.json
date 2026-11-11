@@ -137,7 +137,12 @@
     "consentLabel": "I have read and agree to the <distanceSalesAgreement>Distance Sales Agreement</distanceSalesAgreement> and <preInformation>Pre-Information Form</preInformation>.",
     "consentRequired": "Please agree to the Distance Sales Agreement and Pre-Information Form to continue.",
     "checkoutEmpty": "Your cart is empty. Add an item to check out.",
-    "checkoutError": "We could not start checkout. Please try again."
+    "checkoutError": "We could not start checkout. Please try again.",
+    "editDetails": "Edit your details",
+    "agreementHint": "The agreement shows your details and this order. It updates if either changes.",
+    "agreementChanged": "The agreement has changed since you last saw it. Please review it and accept again.",
+    "needsDetails": "Please complete your details first.",
+    "checkoutUnavailable": "Checkout is not available yet."
   },
   "NewsletterPage": {
     "heading": "Letter",
@@ -219,5 +224,52 @@
         }
       ]
     }
+  },
+  "BuyerDetails": {
+    "metaTitle": "Your details",
+    "metaDescription": "Tell us who is buying and where to send your order.",
+    "heading": "Your details",
+    "lead": "We use these details to prepare your agreement and to prefill checkout. You can review them again on the next page.",
+    "loading": "Loading…",
+    "loadError": "We could not load this page right now. Please refresh or try again later.",
+    "emptyCart": "Your cart is empty.",
+    "browseShop": "Browse the shop",
+    "contact": "Contact",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHelper": "Include the country code, for example +90 …",
+    "country": "Country",
+    "shippingHeading": "Delivery address",
+    "digitalNote": "Digital issue: no delivery address is needed.",
+    "billingHeading": "Billing address",
+    "billingSame": "Same as the delivery address",
+    "address1": "Address",
+    "address2": "Apartment, floor, etc. (optional)",
+    "city": "City",
+    "zip": "Postal code",
+    "submit": "Continue to cart",
+    "saving": "Saving…",
+    "required": "This field is required.",
+    "invalid": "Please check this field.",
+    "emailInvalid": "Enter a valid email address.",
+    "phoneInvalid": "Enter a phone number with its country code, like +90 …",
+    "saveError": "We could not save your details. Please try again.",
+    "checkoutUnavailable": "Checkout is not available yet."
+  },
+  "Agreement": {
+    "sellerHeading": "Seller",
+    "sellerPlaceholder": "[PLACEHOLDER] Seller details will be supplied.",
+    "buyerHeading": "Buyer",
+    "deliveryHeading": "Delivery and billing",
+    "deliveryAddress": "Delivery address",
+    "billingAddress": "Billing address",
+    "digitalDelivery": "Digital issue: no physical delivery.",
+    "orderHeading": "Order",
+    "delivery": "Delivery ({option})",
+    "total": "Total",
+    "taxesPlaceholder": "[PLACEHOLDER] Tax information is not available before checkout. Wording to be supplied.",
+    "estimateNote": "Delivery cost, taxes and the total shown here are estimates. The final amounts are determined at Shopify checkout."
   }
 }

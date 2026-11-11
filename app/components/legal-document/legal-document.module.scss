@@ -45,3 +45,28 @@
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
 }
+
+.block {
+  display: block;
+}
+
+.orderList {
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule-width) solid var(--foreground);
+}
+
+.orderLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  border-bottom: var(--rule-width) solid var(--foreground);
+}
+
+.orderTotal {
+  font-weight: var(--font-weight-semibold);
+}

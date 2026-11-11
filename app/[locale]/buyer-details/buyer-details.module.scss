@@ -1,0 +1,175 @@
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: calc(100svh - 78px);
+  padding: 32px 16px 96px;
+
+  @media (min-width: 768px) {
+    padding: 48px 32px 128px;
+  }
+}
+
+.heading {
+  margin: 0 0 16px;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.lead {
+  margin: 0 0 32px;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+.message {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.link {
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  text-transform: uppercase;
+  text-underline-offset: 0.2em;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+// Wide row gap: TextField overlays its error message in the gap below the field.
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px 16px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.note {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.select {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selectLabel {
+  font-family: var(--font-family-mono);
+}
+
+.selectInput {
+  height: 40px;
+  padding: 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  color: inherit;
+  background: var(--background);
+  border: 0;
+  border-bottom: 1.5px solid var(--foreground);
+  border-radius: 0;
+
+  &:focus-visible {
+    outline: none;
+    background: var(--field-focus-background);
+  }
+}
+
+// Same look and overlay as the TextField and newsletter errors. Nested under .select to
+// outrank the global .type-caption weight.
+.select .selectError {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  font-weight: var(--font-weight-semibold);
+  background: var(--background);
+
+  &::before {
+    content: "";
+    flex: none;
+    align-self: center;
+    width: 1.4em;
+    height: 1.4em;
+    background: currentColor;
+    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+  }
+}
+
+.checkLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  cursor: pointer;
+}
+
+.checkbox {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--foreground);
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.submit {
+  align-self: stretch;
+
+  @media (min-width: 768px) {
+    align-self: flex-start;
+  }
+}

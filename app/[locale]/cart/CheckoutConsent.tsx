@@ -6,23 +6,41 @@ import {useTranslations} from "next-intl";
 import Button from "@/app/components/button/Button";
 import type {LegalDocumentKey} from "@/app/components/legal-document/documents";
 import LegalModal from "@/app/components/legal-modal/LegalModal";
+import {useRouter} from "../../../i18n/navigation";
 import {proceedToCheckout} from "./actions";
 import styles from "./cart.module.scss";
 
 type CheckoutConsentProps = {
-  /** Server-rendered document text, shared with the standalone legal pages. */
+  /** Identifies the exact agreement on screen; consent is only valid for this value. */
+  agreementFingerprint: string;
+  /** Server-rendered document text. The sales agreement is personalized for this order. */
   documents: Record<LegalDocumentKey, ReactNode>;
 };
 
-type CheckoutError = "consent_required" | "empty_cart" | "failed";
+type CheckoutError =
+  | "consent_required"
+  | "empty_cart"
+  | "needs_details"
+  | "agreement_changed"
+  | "unavailable"
+  | "failed";
 
 // Consent gate before leaving for Shopify's hosted checkout. The disabled button is only
 // a convenience: proceedToCheckout re-checks consent and records it on the cart.
-export default function CheckoutConsent({documents}: CheckoutConsentProps) {
+export default function CheckoutConsent({
+  agreementFingerprint,
+  documents,
+}: CheckoutConsentProps) {
   const t = useTranslations("CartPage");
   const legalT = useTranslations("LegalDocuments");
   const checkboxId = useId();
-  const [hasConsent, setHasConsent] = useState(false);
+  const router = useRouter();
+  // Consent belongs to one agreement. When quantities, details or the total change the
+  // fingerprint changes, and the old acceptance stops matching without any reset logic.
+  const [acceptedFingerprint, setAcceptedFingerprint] = useState<string | null>(
+    null,
+  );
+  const hasConsent = acceptedFingerprint === agreementFingerprint;
   const [openDocument, setOpenDocument] = useState<LegalDocumentKey | null>(
     null,
   );
@@ -47,7 +65,7 @@ export default function CheckoutConsent({documents}: CheckoutConsentProps) {
     setError(null);
     setIsRedirecting(true);
 
-    const result = await proceedToCheckout(hasConsent);
+    const result = await proceedToCheckout(agreementFingerprint);
 
     if (result.ok) {
       window.location.assign(result.checkoutUrl);
@@ -57,6 +75,11 @@ export default function CheckoutConsent({documents}: CheckoutConsentProps) {
 
     setIsRedirecting(false);
     setError(result.error);
+
+    if (result.error === "agreement_changed" || result.error === "needs_details") {
+      // The page showed a stale agreement; reload it so the buyer reviews the current one.
+      router.refresh();
+    }
   }
 
   // Rich-text renderer for a document name inside the consent label.
@@ -80,7 +103,11 @@ export default function CheckoutConsent({documents}: CheckoutConsentProps) {
           type="checkbox"
           className={styles.checkbox}
           checked={hasConsent}
-          onChange={(event) => setHasConsent(event.target.checked)}
+          onChange={(event) =>
+            setAcceptedFingerprint(
+              event.target.checked ? agreementFingerprint : null,
+            )
+          }
         />
         <label htmlFor={checkboxId} className={styles.consentLabel}>
           {t.rich("consentLabel", {
@@ -91,6 +118,7 @@ export default function CheckoutConsent({documents}: CheckoutConsentProps) {
           })}
         </label>
       </div>
+      <p className={`type-mono ${styles.agreementHint}`}>{t("agreementHint")}</p>
 
       <Button
         className={styles.checkoutButton}
@@ -108,7 +136,13 @@ export default function CheckoutConsent({documents}: CheckoutConsentProps) {
             ? t("consentRequired")
             : error === "empty_cart"
               ? t("checkoutEmpty")
-              : t("checkoutError")}
+              : error === "agreement_changed"
+                ? t("agreementChanged")
+                : error === "needs_details"
+                  ? t("needsDetails")
+                  : error === "unavailable"
+                    ? t("checkoutUnavailable")
+                    : t("checkoutError")}
         </p>
       ) : null}
 

@@ -3,6 +3,7 @@
 import {refresh} from "next/cache";
 import {getLocale} from "next-intl/server";
 import {CONSENT_ATTRIBUTE_KEYS, LEGAL_DOCUMENTS_VERSION} from "@/lib/legal/consent";
+import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {ShopifyError} from "@/lib/shopify/admin-client";
 import {
   addCartLine,
@@ -13,6 +14,7 @@ import {
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import {readCartId, writeCartId} from "./cart-cookie";
+import {loadCheckoutState, readCheckoutCookies} from "./checkout-state";
 
 export type CartActionResult = {ok: true} | {ok: false; error: "invalid" | "failed"};
 
@@ -111,30 +113,60 @@ export async function removeFromCart(
 
 export type CheckoutActionResult =
   | {ok: true; checkoutUrl: string}
-  | {ok: false; error: "consent_required" | "empty_cart" | "failed"};
+  | {
+      ok: false;
+      error:
+        | "consent_required"
+        | "empty_cart"
+        | "needs_details"
+        | "agreement_changed"
+        | "unavailable"
+        | "failed";
+    };
 
-// The only place the Shopify checkout URL is read. It is handed to the browser only after
-// consent is checked here and recorded on the cart, so the checkbox is not just a UI state.
-// Limit: this guards our own flow; Shopify's hosted checkout cannot be gated from this repo.
+// The only place the Shopify checkout URL is read. It is handed to the browser only when
+// the fingerprint of the agreement the buyer accepted still matches the agreement the
+// server builds right now, and the acceptance is recorded on the cart first. So the checkbox
+// is not just a UI state, and a changed cart or detail cannot ride on an old acceptance.
+// Limit: this guards our own flow. Shopify's hosted checkout can still change the delivery
+// address, option and total afterwards, and cannot be gated from this repo.
 export async function proceedToCheckout(
-  hasConsent: boolean,
+  acceptedFingerprint: string,
 ): Promise<CheckoutActionResult> {
-  if (hasConsent !== true) {
+  // Placeholder legal text must never reach a real checkout; see lib/legal/readiness.ts.
+  if (!isLegalContentPublishable()) {
+    return {ok: false, error: "unavailable"};
+  }
+
+  if (typeof acceptedFingerprint !== "string" || acceptedFingerprint === "") {
     return {ok: false, error: "consent_required"};
   }
 
-  try {
-    const cartId = await readCartId();
+  const cookies = await readCheckoutCookies();
 
-    if (!cartId) {
+  try {
+    const state = await loadCheckoutState(cookies);
+
+    if (state.status === "empty") {
       return {ok: false, error: "empty_cart"};
     }
 
-    const handoff = await setCartAttributesForCheckout(cartId, {
+    if (state.status === "needs_details") {
+      return {ok: false, error: "needs_details"};
+    }
+
+    if (state.fingerprint !== acceptedFingerprint) {
+      return {ok: false, error: "agreement_changed"};
+    }
+
+    const handoff = await setCartAttributesForCheckout(state.cart.id, {
       [CONSENT_ATTRIBUTE_KEYS.accepted]: "accepted",
       [CONSENT_ATTRIBUTE_KEYS.documentsVersion]: LEGAL_DOCUMENTS_VERSION,
       [CONSENT_ATTRIBUTE_KEYS.acceptedAt]: new Date().toISOString(),
       [CONSENT_ATTRIBUTE_KEYS.locale]: await getLocale(),
+      [CONSENT_ATTRIBUTE_KEYS.agreementFingerprint]: state.fingerprint,
+      [CONSENT_ATTRIBUTE_KEYS.cartReference]: state.cart.id.split("?")[0],
+      [CONSENT_ATTRIBUTE_KEYS.agreedTotal]: `${state.snapshot.total.amount} ${state.snapshot.total.currencyCode}`,
     });
 
     if (

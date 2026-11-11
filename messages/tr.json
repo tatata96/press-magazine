@@ -137,7 +137,12 @@
     "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
     "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
     "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
-    "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene."
+    "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene.",
+    "editDetails": "Bilgilerini düzenle",
+    "agreementHint": "Sözleşme, bilgilerini ve bu siparişi gösterir. Bunlardan biri değişirse güncellenir.",
+    "agreementChanged": "Sözleşme en son gördüğünden beri değişti. Lütfen tekrar incele ve yeniden kabul et.",
+    "needsDetails": "Lütfen önce bilgilerini tamamla.",
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
   },
   "NewsletterPage": {
     "heading": "Mektup",
@@ -219,5 +224,52 @@
         }
       ]
     }
+  },
+  "BuyerDetails": {
+    "metaTitle": "Bilgilerin",
+    "metaDescription": "Kimin satın aldığını ve siparişin nereye gönderileceğini bize bildir.",
+    "heading": "Bilgilerin",
+    "lead": "Bu bilgileri sözleşmeni hazırlamak ve ödeme sayfasını önceden doldurmak için kullanırız. Bir sonraki sayfada tekrar gözden geçirebilirsin.",
+    "loading": "Yükleniyor…",
+    "loadError": "Bu sayfa şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
+    "emptyCart": "Sepetin boş.",
+    "browseShop": "Mağazaya göz at",
+    "contact": "İletişim",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "phoneHelper": "Ülke kodunu ekle, örneğin +90 …",
+    "country": "Ülke",
+    "shippingHeading": "Teslimat adresi",
+    "digitalNote": "Dijital sayı: teslimat adresi gerekmez.",
+    "billingHeading": "Fatura adresi",
+    "billingSame": "Teslimat adresiyle aynı",
+    "address1": "Adres",
+    "address2": "Daire, kat vb. (isteğe bağlı)",
+    "city": "Şehir",
+    "zip": "Posta kodu",
+    "submit": "Sepete devam et",
+    "saving": "Kaydediliyor…",
+    "required": "Bu alan zorunludur.",
+    "invalid": "Lütfen bu alanı kontrol et.",
+    "emailInvalid": "Geçerli bir e-posta adresi gir.",
+    "phoneInvalid": "Telefon numarasını ülke koduyla gir, örneğin +90 …",
+    "saveError": "Bilgilerin kaydedilemedi. Lütfen tekrar dene.",
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
+  },
+  "Agreement": {
+    "sellerHeading": "Satıcı",
+    "sellerPlaceholder": "[YER TUTUCU] Satıcı bilgileri ayrıca iletilecektir.",
+    "buyerHeading": "Alıcı",
+    "deliveryHeading": "Teslimat ve fatura",
+    "deliveryAddress": "Teslimat adresi",
+    "billingAddress": "Fatura adresi",
+    "digitalDelivery": "Dijital sayı: fiziksel teslimat yoktur.",
+    "orderHeading": "Sipariş",
+    "delivery": "Teslimat ({option})",
+    "total": "Toplam",
+    "taxesPlaceholder": "[YER TUTUCU] Vergi bilgisi ödeme öncesinde mevcut değildir. İfade ayrıca iletilecektir.",
+    "estimateNote": "Burada gösterilen teslimat ücreti, vergiler ve toplam tahminidir. Nihai tutarlar Shopify ödeme sayfasında belirlenir."
   }
 }
