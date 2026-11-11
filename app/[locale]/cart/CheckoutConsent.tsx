@@ -15,6 +15,8 @@ type CheckoutConsentProps = {
   agreementFingerprint: string;
   /** Server-rendered document text. The sales agreement is personalized for this order. */
   documents: Record<LegalDocumentKey, ReactNode>;
+  /** Payment badges, shown on the same row as the checkout button. */
+  paymentMethods: ReactNode;
 };
 
 type CheckoutError =
@@ -30,6 +32,7 @@ type CheckoutError =
 export default function CheckoutConsent({
   agreementFingerprint,
   documents,
+  paymentMethods,
 }: CheckoutConsentProps) {
   const t = useTranslations("CartPage");
   const legalT = useTranslations("LegalDocuments");
@@ -119,15 +122,18 @@ export default function CheckoutConsent({
         </label>
       </div>
 
-      <Button
-        className={styles.checkoutButton}
-        disabled={!hasConsent}
-        loading={isRedirecting}
-        loadingLabel={t("redirecting")}
-        onClick={handleCheckout}
-      >
-        {t("checkout")}
-      </Button>
+      <div className={styles.checkoutActions}>
+        {paymentMethods}
+        <Button
+          className={styles.checkoutButton}
+          disabled={!hasConsent}
+          loading={isRedirecting}
+          loadingLabel={t("redirecting")}
+          onClick={handleCheckout}
+        >
+          {t("checkout")}
+        </Button>
+      </div>
 
       {error ? (
         <p role="alert" className={styles.message}>

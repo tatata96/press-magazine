@@ -98,13 +98,16 @@ async function CartContent() {
               <PersonalizedPreInformation snapshot={state.snapshot} />
             ),
           }}
+          paymentMethods={<PaymentMethods />}
         />
       ) : (
-        <p role="status" className={styles.message}>
-          {t("checkoutUnavailable")}
-        </p>
+        <>
+          <p role="status" className={styles.message}>
+            {t("checkoutUnavailable")}
+          </p>
+          <PaymentMethods />
+        </>
       )}
-      <PaymentMethods />
     </>
   );
 }

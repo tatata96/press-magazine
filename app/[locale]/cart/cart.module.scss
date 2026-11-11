@@ -241,11 +241,27 @@
   }
 }
 
+// Badges and button share one row on wider screens; on mobile the button comes first.
+.checkoutActions {
+  display: flex;
+  flex-direction: column-reverse;
+  align-self: stretch;
+  gap: 24px;
+  margin-top: 24px;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
 .checkoutButton {
   align-self: stretch;
 
   @media (min-width: 768px) {
-    align-self: flex-end;
+    align-self: auto;
+    flex: none;
   }
 }
 
@@ -259,7 +275,7 @@
   gap: 12px;
   // Both rows share the iyzico badge's width so the block reads as one unit.
   width: 120px;
-  margin: 32px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
