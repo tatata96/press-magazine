@@ -80,10 +80,10 @@ export default function AgreementEn({data}: {data: AgreementData}) {
       </p>
       <ul className={styles.bullets}>
         <li><strong>Digital Publication:</strong> A digital edition of Press Magazine in PDF format.</li>
-        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with a digital PDF version of the same issue.</li>
+        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with digital PDF versions of the same issues.</li>
       </ul>
       <p className={styles.paragraph}>
-        <strong>3.5.</strong> Press Magazine is published twice a year. Unless otherwise stated on the relevant product page, a package covering a six-month period includes one issue published during that period.
+        <strong>3.5.</strong> Press Magazine is published twice a year. Unless otherwise stated on the relevant product page, an annual package covers the two issues published during that year, as a one-time payment with no automatic renewal.
       </p>
       <p className={styles.paragraph}>
         <strong>3.6.</strong> Unless expressly stated otherwise on the product page, purchases are subject to a one-time payment. Packages do not renew automatically, and no additional payment will be charged at the end of the package period.

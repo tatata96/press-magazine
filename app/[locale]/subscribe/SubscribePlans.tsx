@@ -23,7 +23,6 @@ type SubscribePlansProps = {
   copy: {
     heading: string;
     lead: string;
-    issueNote: string;
     priceNote: string;
     planChoice: string;
     includesLabel: string;
@@ -154,7 +153,6 @@ export default function SubscribePlans({plans, copy}: SubscribePlansProps) {
         </div>
 
         <div className={styles.purchase}>
-          <p className={`type-mono ${styles.issueNote}`}>{copy.issueNote}</p>
           <Button
             className={styles.cta}
             loading={isAdding}

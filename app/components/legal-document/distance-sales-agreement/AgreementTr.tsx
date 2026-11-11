@@ -102,17 +102,18 @@ export default function AgreementTr({data}: {data: AgreementData}) {
       <ul className={styles.bullets}>
         <li>
           <strong>Dijital Yayın:</strong> Press Magazine'in PDF formatındaki
-          dijital sayısı.
+          dijital sayıları.
         </li>
         <li>
           <strong>Basılı + Dijital Yayın:</strong> Press Magazine'in fiziksel
-          dergisi ile aynı sayının PDF formatındaki dijital versiyonu.
+          dergisinin aynı sayılarının PDF formatındaki dijital versiyonları.
         </li>
       </ul>
       <p className={styles.paragraph}>
         <strong>3.5.</strong> Press Magazine yılda iki sayı yayımlanan bir
-        yayındır. Altı aylık dönem için sunulan bir paket, ürün sayfasında aksi
-        belirtilmedikçe ilgili döneme ait bir dergi sayısını kapsar.
+        yayındır. Yıllık olarak sunulan bir paket, ürün sayfasında aksi
+        belirtilmedikçe ilgili yıl yayımlanan iki dergi sayısını kapsar; ödeme
+        tek seferliktir ve otomatik olarak yenilenmez.
       </p>
       <p className={styles.paragraph}>
         <strong>3.6.</strong> Satın alma işlemi, ürün sayfasında açıkça aksi

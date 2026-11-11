@@ -110,11 +110,11 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
       <ul className={styles.bullets}>
         <li>
           <strong>Dijital Yayın:</strong> Press Magazine'in PDF formatındaki
-          dijital sayısı.
+          dijital sayıları.
         </li>
         <li>
           <strong>Basılı + Dijital Yayın:</strong> Press Magazine'in fiziksel
-          dergisi ile aynı sayının PDF formatındaki dijital versiyonu.
+          dergisinin aynı sayılarının PDF formatındaki dijital versiyonları.
         </li>
       </ul>
       <p className={styles.paragraph}>

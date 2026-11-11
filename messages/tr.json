@@ -98,30 +98,34 @@
   "SubscribePage": {
     "heading": "Mağaza",
     "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
-    "issueNote": "Her satın alma tek bir sayıyı kapsar. Otomatik olarak yenilenmez.",
-    "planChoice": "Sayını seç",
+    "planChoice": "Aboneliğini seç",
     "includesLabel": "İçerik",
-    "priceNote": "Sayı başına",
+    "priceNote": "Yılda 2 sayı",
     "cta": "Sepete ekle",
     "priceUnavailable": "Fiyat mevcut değil",
     "unavailable": "Şu anda mevcut değil",
     "adding": "Ekleniyor…",
     "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
-    "metaDescription": "Press'in bir sayısını dijital ya da basılı olarak edin. Her satın alma tek bir sayıyı kapsar ve otomatik olarak yenilenmez.",
+    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma yılda iki sayıyı kapsar; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
-        "name": "Dijital",
+        "name": "Yıllık Dijital",
         "tagline": "Press'i her ekranda oku.",
-        "benefits": ["Dijital PDF sürümüne erişim", "Bülten aboneliği"]
+        "benefits": [
+          "Yılda iki dijital PDF PRESS sayısı",
+          "Bülten erişimi",
+          "Tek seferlik ödeme, otomatik yenileme yok"
+        ]
       },
       "print": {
-        "name": "Basılı + Dijital",
-        "tagline": "Sayı elinde ve ekranında.",
+        "name": "Yıllık Basılı",
+        "tagline": "İki sayı da elinde ve ekranında.",
         "benefits": [
-          "Adresinize teslim edilen basılı bir nüsha",
-          "İndirilebilir PDF sürümüne erişim",
-          "Bülten aboneliği"
+          "Yılda iki basılı PRESS sayısı",
+          "Her iki sayının dijital PDF sürümleri",
+          "Bülten erişimi",
+          "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       }
     }
@@ -206,7 +210,7 @@
     "phoneHelper": "Ülke kodunu ekle, örneğin +90 …",
     "country": "Ülke",
     "shippingHeading": "Teslimat adresi",
-    "digitalNote": "Dijital sayı: teslimat adresi gerekmez.",
+    "digitalNote": "Dijital sayılar: teslimat adresi gerekmez.",
     "billingHeading": "Fatura adresi",
     "billingSame": "Teslimat adresiyle aynı",
     "address1": "Adres",
@@ -223,7 +227,7 @@
     "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
   },
   "Agreement": {
-    "digitalDelivery": "Dijital sayı: fiziksel teslimat yoktur.",
+    "digitalDelivery": "Dijital sayılar: fiziksel teslimat yoktur.",
     "determinedAtCheckout": "Ödeme sayfasında belirlenir",
     "placeholderValue": "[YER TUTUCU: {name}]",
     "productTypeDigital": "Dijital Yayın",

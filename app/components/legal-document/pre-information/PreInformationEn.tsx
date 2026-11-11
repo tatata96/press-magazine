@@ -82,7 +82,7 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
       <p className={styles.paragraph}>Paid products offered for sale fall into the following categories:</p>
       <ul className={styles.bullets}>
         <li><strong>Digital Publication:</strong> A digital edition of Press Magazine in PDF format.</li>
-        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with a digital PDF version of the same issue.</li>
+        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with digital PDF versions of the same issues.</li>
       </ul>
       <p className={styles.paragraph}>
         Unless expressly stated otherwise on the product page, purchases are subject to a one-time

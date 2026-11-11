@@ -47,7 +47,6 @@ export default async function SubscribePage() {
       copy={{
         heading: t("heading"),
         lead: t("lead"),
-        issueNote: t("issueNote"),
         priceNote: t("priceNote"),
         planChoice: t("planChoice"),
         includesLabel: t("includesLabel"),

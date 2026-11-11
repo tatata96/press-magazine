@@ -98,30 +98,34 @@
   "SubscribePage": {
     "heading": "Shop",
     "lead": "Press is published twice a year. Choose how you would like to read it.",
-    "issueNote": "Each purchase covers one issue. It does not renew automatically.",
-    "planChoice": "Choose your issue",
+    "planChoice": "Choose your subscription",
     "includesLabel": "Includes",
-    "priceNote": "Per issue",
+    "priceNote": "2 issues / year",
     "cta": "Add to cart",
     "priceUnavailable": "Price unavailable",
     "unavailable": "Currently unavailable",
     "adding": "Adding…",
     "addError": "We could not add this to your cart. Please try again.",
     "metaTitle": "Shop",
-    "metaDescription": "Get an issue of Press, digital or in print. Each purchase covers one issue and does not renew automatically.",
+    "metaDescription": "Subscribe to Press, digital or in print. Each purchase covers two issues per year, as a one-time payment with no automatic renewal.",
     "plans": {
       "digital": {
-        "name": "Digital",
+        "name": "Annual Digital",
         "tagline": "Read Press on any screen.",
-        "benefits": ["Access to the digital PDF edition", "Newsletter subscription"]
+        "benefits": [
+          "Two digital PDF issues of PRESS per year",
+          "Newsletter access",
+          "One-time payment, no automatic renewal"
+        ]
       },
       "print": {
-        "name": "Print + Digital",
-        "tagline": "The issue in your hands, and on your screen.",
+        "name": "Annual Print",
+        "tagline": "Both issues in your hands, and on your screen.",
         "benefits": [
-          "A physical copy delivered to you",
-          "Access to the downloadable PDF edition",
-          "Newsletter subscription"
+          "Two print issues of PRESS per year",
+          "Digital PDF editions of both issues",
+          "Newsletter access",
+          "One-time payment, no automatic renewal"
         ]
       }
     }
@@ -206,7 +210,7 @@
     "phoneHelper": "Include the country code, for example +90 …",
     "country": "Country",
     "shippingHeading": "Delivery address",
-    "digitalNote": "Digital issue: no delivery address is needed.",
+    "digitalNote": "Digital issues: no delivery address is needed.",
     "billingHeading": "Billing address",
     "billingSame": "Same as the delivery address",
     "address1": "Address",
@@ -223,7 +227,7 @@
     "checkoutUnavailable": "Checkout is not available yet."
   },
   "Agreement": {
-    "digitalDelivery": "Digital issue: no physical delivery.",
+    "digitalDelivery": "Digital issues: no physical delivery.",
     "determinedAtCheckout": "Determined at checkout",
     "placeholderValue": "[PLACEHOLDER: {name}]",
     "productTypeDigital": "Digital Publication",
