@@ -35,7 +35,7 @@ export default async function SiteFooter() {
               ),
             })}
           </p>
-          <p className="type-mono">
+          <p className={`${styles.upper} type-mono`}>
             <Link
               href="/privacy"
               className={styles.link}
@@ -43,6 +43,16 @@ export default async function SiteFooter() {
               rel="noopener noreferrer"
             >
               {t("privacy")}
+            </Link>
+          </p>
+          <p className={`${styles.upper} type-mono`}>
+            <Link
+              href="/shipping-and-returns"
+              className={styles.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("shippingAndReturns")}
             </Link>
           </p>
         </div>

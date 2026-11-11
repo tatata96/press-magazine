@@ -27,11 +27,16 @@
     "inquiries": "Bilgi için:",
     "location": "İstanbul / Dünya",
     "privacy": "gizlilik",
+    "shippingAndReturns": "teslimat ve iade",
     "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
   },
   "PrivacyPage": {
     "title": "Gizlilik Politikası",
     "metaDescription": "Press Magazine kişisel verilerinizi nasıl topluyor, kullanıyor ve koruyor."
+  },
+  "ShippingReturnsPage": {
+    "title": "Teslimat ve İade Şartları",
+    "metaDescription": "Press Magazine siparişleri için teslimat, iade ve geri ödeme koşulları."
   },
   "AboutPage": {
     "title": "Hakkında",

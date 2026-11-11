@@ -27,11 +27,16 @@
     "inquiries": "For Inquiries:",
     "location": "Istanbul / Worldwide",
     "privacy": "privacy",
+    "shippingAndReturns": "shipping & returns",
     "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
   },
   "PrivacyPage": {
     "title": "Privacy Policy",
     "metaDescription": "How Press Magazine collects, uses and protects your personal information."
+  },
+  "ShippingReturnsPage": {
+    "title": "Shipping & Returns",
+    "metaDescription": "Delivery, return and refund conditions for Press Magazine orders."
   },
   "AboutPage": {
     "title": "About",
