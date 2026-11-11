@@ -31,6 +31,8 @@
   text-transform: uppercase;
 }
 
+// Names in Pressed (the title face), in the footer and on the About page.
 .name {
-  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
 }
