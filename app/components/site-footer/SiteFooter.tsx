@@ -1,7 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { isLegalContentPublishable } from "@/lib/legal/readiness";
-import { Link } from "../../../i18n/navigation";
-import { legalDocuments } from "../legal-document/documents";
 import Logo from "../logo/Logo";
 import LogoMark from "../logo/LogoMark";
 import Team from "../team/Team";
@@ -18,7 +15,6 @@ function toStrings(value: unknown): string[] {
 
 export default async function SiteFooter() {
   const t = await getTranslations("SiteFooter");
-  const legalT = await getTranslations("LegalDocuments");
 
   return (
     <footer className={styles.footer}>
@@ -38,19 +34,6 @@ export default async function SiteFooter() {
               ),
             })}
           </p>
-          {isLegalContentPublishable() ? (
-            <ul className={`${styles.legalLinks} type-mono`}>
-              {(Object.keys(legalDocuments) as (keyof typeof legalDocuments)[]).map(
-                (key) => (
-                  <li key={key}>
-                    <Link href={legalDocuments[key].path} className={styles.link}>
-                      {legalT(`${key}.title`)}
-                    </Link>
-                  </li>
-                ),
-              )}
-            </ul>
-          ) : null}
         </div>
         <p className={`${styles.column} ${styles.inquiries} type-mono`}>
           {t("inquiries")}{" "}

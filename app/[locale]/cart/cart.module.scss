@@ -249,7 +249,36 @@
   }
 }
 
-
 .editDetails {
   align-self: flex-start;
+}
+
+.paymentMethods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  // Both rows share the iyzico badge's width so the block reads as one unit.
+  width: 120px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iyzicoBadge {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cardRow {
+  display: flex;
+  gap: 12px;
+}
+
+// Cards split the row evenly; contain keeps their proportions.
+.cardBadge {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 24px;
+  object-fit: contain;
 }

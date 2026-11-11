@@ -6,6 +6,7 @@ import {getPageMetadata} from "@/lib/seo";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import CartLines from "./CartLines";
 import CheckoutConsent from "./CheckoutConsent";
+import PaymentMethods from "./PaymentMethods";
 import PersonalizedAgreement from "./PersonalizedAgreement";
 import PersonalizedPreInformation from "./PersonalizedPreInformation";
 import {
@@ -103,6 +104,7 @@ async function CartContent() {
           {t("checkoutUnavailable")}
         </p>
       )}
+      <PaymentMethods />
     </>
   );
 }

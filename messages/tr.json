@@ -141,7 +141,8 @@
     "editDetails": "Bilgilerini düzenle",
     "agreementChanged": "Sözleşme en son gördüğünden beri değişti. Lütfen tekrar incele ve yeniden kabul et.",
     "needsDetails": "Lütfen önce bilgilerini tamamla.",
-    "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor.",
+    "paymentMethods": "Kabul edilen ödeme yöntemleri"
   },
   "NewsletterPage": {
     "heading": "Mektup",

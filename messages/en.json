@@ -141,7 +141,8 @@
     "editDetails": "Edit your details",
     "agreementChanged": "The agreement has changed since you last saw it. Please review it and accept again.",
     "needsDetails": "Please complete your details first.",
-    "checkoutUnavailable": "Checkout is not available yet."
+    "checkoutUnavailable": "Checkout is not available yet.",
+    "paymentMethods": "Accepted payment methods"
   },
   "NewsletterPage": {
     "heading": "Letter",
