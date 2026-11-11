@@ -1,9 +1,11 @@
 import type {Metadata} from "next";
 import {notFound} from "next/navigation";
 import {getTranslations} from "next-intl/server";
+import {getBlankAgreementData} from "@/lib/legal/agreement-data";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {getPageMetadata} from "@/lib/seo";
 import {legalDocuments, type LegalDocumentKey} from "./documents";
+import DistanceSalesAgreement from "./distance-sales-agreement/DistanceSalesAgreement";
 import LegalDocument from "./LegalDocument";
 import styles from "./legal-document.module.scss";
 
@@ -34,7 +36,11 @@ export default async function LegalDocumentPage({
   return (
     <main className={styles.main}>
       <h1 className={styles.heading}>{t(`${documentKey}.title`)}</h1>
-      <LegalDocument documentKey={documentKey} />
+      {documentKey === "distanceSalesAgreement" ? (
+        <DistanceSalesAgreement data={await getBlankAgreementData()} />
+      ) : (
+        <LegalDocument documentKey={documentKey} />
+      )}
     </main>
   );
 }

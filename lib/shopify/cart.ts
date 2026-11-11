@@ -8,6 +8,7 @@ export type CartLine = {
   id: string;
   quantity: number;
   productTitle: string;
+  productHandle: string;
   unitPrice: Money;
   totalPrice: Money;
 };
@@ -23,7 +24,7 @@ type CartLineNode = {
   id: string;
   quantity: number;
   cost: {amountPerQuantity: Money; totalAmount: Money};
-  merchandise: {product?: {title: string}};
+  merchandise: {product?: {title: string; handle: string}};
 };
 
 type CartNode = {
@@ -64,6 +65,7 @@ const CART_FIELDS = `
           ... on ProductVariant {
             product {
               title
+              handle
             }
           }
         }
@@ -81,6 +83,7 @@ function toCart(node: CartNode): Cart {
       id: line.id,
       quantity: line.quantity,
       productTitle: line.merchandise.product?.title ?? "",
+      productHandle: line.merchandise.product?.handle ?? "",
       unitPrice: line.cost.amountPerQuantity,
       totalPrice: line.cost.totalAmount,
     })),

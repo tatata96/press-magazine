@@ -19,6 +19,7 @@ export type AgreementSnapshot = {
   buyer: BuyerDetails;
   lines: {
     title: string;
+    productHandle: string;
     quantity: number;
     unitPrice: Money;
     totalPrice: Money;
@@ -81,6 +82,7 @@ export async function loadCheckoutState({
     buyer,
     lines: cart.lines.map((line) => ({
       title: line.productTitle,
+      productHandle: line.productHandle,
       quantity: line.quantity,
       unitPrice: line.unitPrice,
       totalPrice: line.totalPrice,

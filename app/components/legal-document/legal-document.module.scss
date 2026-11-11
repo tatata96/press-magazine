@@ -46,27 +46,68 @@
   line-height: var(--type-body-line-height);
 }
 
-.block {
-  display: block;
+// The agreement text: headings, paragraphs, bullets and the order table.
+.subHeading {
+  margin: 0;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: var(--type-title-letter-spacing);
 }
 
-.orderList {
-  margin: 0 0 16px;
-  padding: 0;
-  list-style: none;
-  border-top: var(--rule-width) solid var(--foreground);
-}
-
-.orderLine {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 8px 0;
+.paragraph {
+  margin: 0;
   font-size: var(--type-body-size);
   line-height: var(--type-body-line-height);
-  border-bottom: var(--rule-width) solid var(--foreground);
 }
 
-.orderTotal {
-  font-weight: var(--font-weight-semibold);
+// Seller and buyer details (1.1, 1.2): body text without bullets; the labels are bold.
+.details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+
+  li + li {
+    margin-top: 4px;
+  }
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+// Plain label / value table. On phones the long values wrap inside their column.
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+
+  th,
+  td {
+    padding: 8px 12px 8px 0;
+    text-align: left;
+    vertical-align: top;
+    font-weight: var(--font-weight-regular);
+    overflow-wrap: anywhere;
+    border-bottom: var(--rule-width) solid var(--foreground);
+  }
+
+  thead th {
+    font-family: var(--font-family-mono);
+    font-size: var(--type-label-size);
+    text-transform: uppercase;
+  }
+}
+
+// A second product's rows start a new group, so two products read as two products.
+.tableGroupStart th,
+.tableGroupStart td {
+  border-top: 2px solid var(--foreground);
 }

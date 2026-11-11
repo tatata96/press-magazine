@@ -1,11 +1,11 @@
 // Consent recorded on the Shopify cart (and carried onto the order as custom attributes)
 // when the visitor leaves our cart page for Shopify's hosted checkout.
 
-// PLACEHOLDER: the legal documents are dummy text for now. Replace this with the real
-// document version (for example a date) when the final texts are published, so each
-// order shows which version was accepted.
+// Version of the legal documents, shown as "Sözleşme Versiyonu" / "Agreement Version" in the
+// agreement and stored on every order that accepts it. Change it whenever the text changes.
+// "placeholder" is the sentinel readiness.ts treats as "not final".
 export const PLACEHOLDER_VERSION = "placeholder";
-export const LEGAL_DOCUMENTS_VERSION: string = PLACEHOLDER_VERSION;
+export const LEGAL_DOCUMENTS_VERSION: string = "1.0";
 
 export const CONSENT_ATTRIBUTE_KEYS = {
   accepted: "consent_distance_sales_and_pre_information",

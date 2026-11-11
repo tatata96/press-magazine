@@ -174,29 +174,7 @@
     "placeholderNotice": "[PLACEHOLDER] Dummy text. The final legal text will replace it.",
     "distanceSalesAgreement": {
       "title": "Distance Sales Agreement",
-      "metaDescription": "The Distance Sales Agreement for Press purchases.",
-      "sections": [
-        {
-          "heading": "[PLACEHOLDER] Article 1 — Parties",
-          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
-        },
-        {
-          "heading": "[PLACEHOLDER] Article 2 — Subject of the agreement",
-          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
-        },
-        {
-          "heading": "[PLACEHOLDER] Article 3 — Price and payment",
-          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
-        },
-        {
-          "heading": "[PLACEHOLDER] Article 4 — Delivery",
-          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
-        },
-        {
-          "heading": "[PLACEHOLDER] Article 5 — Right of withdrawal",
-          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
-        }
-      ]
+      "metaDescription": "The Distance Sales Agreement for Press purchases."
     },
     "preInformation": {
       "title": "Pre-Information Form",
@@ -259,17 +237,10 @@
     "checkoutUnavailable": "Checkout is not available yet."
   },
   "Agreement": {
-    "sellerHeading": "Seller",
-    "sellerPlaceholder": "[PLACEHOLDER] Seller details will be supplied.",
-    "buyerHeading": "Buyer",
-    "deliveryHeading": "Delivery and billing",
-    "deliveryAddress": "Delivery address",
-    "billingAddress": "Billing address",
     "digitalDelivery": "Digital issue: no physical delivery.",
-    "orderHeading": "Order",
-    "delivery": "Delivery ({option})",
-    "total": "Total",
-    "taxesPlaceholder": "[PLACEHOLDER] Tax information is not available before checkout. Wording to be supplied.",
-    "estimateNote": "Delivery cost, taxes and the total shown here are estimates. The final amounts are determined at Shopify checkout."
+    "determinedAtCheckout": "Determined at checkout",
+    "placeholderValue": "[PLACEHOLDER: {name}]",
+    "productTypeDigital": "Digital Publication",
+    "productTypePrint": "Print + Digital Publication"
   }
 }

@@ -174,29 +174,7 @@
     "placeholderNotice": "[YER TUTUCU] Örnek metin. Nihai hukuki metin bunun yerini alacaktır.",
     "distanceSalesAgreement": {
       "title": "Mesafeli Satış Sözleşmesi",
-      "metaDescription": "Press satın alımları için Mesafeli Satış Sözleşmesi.",
-      "sections": [
-        {
-          "heading": "[YER TUTUCU] Madde 1 — Taraflar",
-          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
-        },
-        {
-          "heading": "[YER TUTUCU] Madde 2 — Sözleşmenin konusu",
-          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
-        },
-        {
-          "heading": "[YER TUTUCU] Madde 3 — Bedel ve ödeme",
-          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
-        },
-        {
-          "heading": "[YER TUTUCU] Madde 4 — Teslimat",
-          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
-        },
-        {
-          "heading": "[YER TUTUCU] Madde 5 — Cayma hakkı",
-          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
-        }
-      ]
+      "metaDescription": "Press satın alımları için Mesafeli Satış Sözleşmesi."
     },
     "preInformation": {
       "title": "Ön Bilgilendirme Formu",
@@ -259,17 +237,10 @@
     "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
   },
   "Agreement": {
-    "sellerHeading": "Satıcı",
-    "sellerPlaceholder": "[YER TUTUCU] Satıcı bilgileri ayrıca iletilecektir.",
-    "buyerHeading": "Alıcı",
-    "deliveryHeading": "Teslimat ve fatura",
-    "deliveryAddress": "Teslimat adresi",
-    "billingAddress": "Fatura adresi",
     "digitalDelivery": "Dijital sayı: fiziksel teslimat yoktur.",
-    "orderHeading": "Sipariş",
-    "delivery": "Teslimat ({option})",
-    "total": "Toplam",
-    "taxesPlaceholder": "[YER TUTUCU] Vergi bilgisi ödeme öncesinde mevcut değildir. İfade ayrıca iletilecektir.",
-    "estimateNote": "Burada gösterilen teslimat ücreti, vergiler ve toplam tahminidir. Nihai tutarlar Shopify ödeme sayfasında belirlenir."
+    "determinedAtCheckout": "Ödeme sayfasında belirlenir",
+    "placeholderValue": "[YER TUTUCU: {name}]",
+    "productTypeDigital": "Dijital Yayın",
+    "productTypePrint": "Basılı + Dijital Yayın"
   }
 }

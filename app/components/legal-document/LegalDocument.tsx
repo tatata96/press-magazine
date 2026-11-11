@@ -1,5 +1,4 @@
 import {getTranslations} from "next-intl/server";
-import type {LegalDocumentKey} from "./documents";
 import styles from "./legal-document.module.scss";
 
 type LegalSection = {heading: string; body: string};
@@ -15,12 +14,12 @@ function toSections(value: unknown): LegalSection[] {
   );
 }
 
-// Document text only, with no page heading, so the standalone pages and the checkout
-// modals render exactly the same content.
+// Section-based placeholder text for the Pre-Information Form, shared by the standalone page
+// and the cart modal. The Distance Sales Agreement has its own components.
 export default async function LegalDocument({
   documentKey,
 }: {
-  documentKey: LegalDocumentKey;
+  documentKey: "preInformation";
 }) {
   const t = await getTranslations("LegalDocuments");
 
