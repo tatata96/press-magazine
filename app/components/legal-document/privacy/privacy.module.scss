@@ -1,0 +1,34 @@
+// Crit Mono accents for the policy, so labels and sub-headings stand apart from the serif
+// body text. Only the light weight of Crit Mono is loaded, so none of these are bold.
+// Space between the numbered sections; inside a section the shared 24px gap still applies.
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.updated,
+.subHeading,
+.lead {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-light);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.updated,
+.lead {
+  font-size: var(--type-label-size);
+}
+
+.subHeading {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.cookie {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-light);
+  font-size: var(--type-label-size);
+}

@@ -26,7 +26,12 @@
     "byline": "<link>September</link>'dan bir dergi",
     "inquiries": "Bilgi için:",
     "location": "İstanbul / Dünya",
+    "privacy": "gizlilik",
     "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
+  },
+  "PrivacyPage": {
+    "title": "Gizlilik Politikası",
+    "metaDescription": "Press Magazine kişisel verilerinizi nasıl topluyor, kullanıyor ve koruyor."
   },
   "AboutPage": {
     "title": "Hakkında",
