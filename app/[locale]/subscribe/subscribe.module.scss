@@ -168,10 +168,26 @@
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: var(--foreground);
+  // Drawn explicitly instead of relying on the browser's native radio, so the
+  // checked state is always visible: a filled dot inside a ring.
+  appearance: none;
+  border: 1px solid var(--foreground);
+  border-radius: 50%;
+  background: var(--background);
+
+  &:checked {
+    background: radial-gradient(
+      circle,
+      var(--foreground) 0 5px,
+      var(--background) 6px
+    );
+  }
 }
 
+// Also the placeholder (a plain span) for a product with no Shopify image.
 .thumb {
+  display: block;
+  background: var(--border-subtle);
   width: 72px;
   height: 90px;
   object-fit: cover;
@@ -239,11 +255,11 @@
   margin-top: auto;
 }
 
-.issueNote {
-  margin: 0;
-  text-transform: uppercase;
-}
-
 .cta {
   width: 100%;
+}
+
+.addError {
+  margin: 0;
+  line-height: var(--type-body-line-height);
 }

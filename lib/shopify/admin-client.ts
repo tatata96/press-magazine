@@ -22,21 +22,12 @@ export class ShopifyError extends Error {
   }
 }
 
-function readConfig() {
-  const {SHOPIFY_STORE_DOMAIN, SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET} =
-    process.env;
-  const missing = [
-    ["SHOPIFY_STORE_DOMAIN", SHOPIFY_STORE_DOMAIN],
-    ["SHOPIFY_CLIENT_ID", SHOPIFY_CLIENT_ID],
-    ["SHOPIFY_CLIENT_SECRET", SHOPIFY_CLIENT_SECRET],
-  ]
-    .filter(([, value]) => !value)
-    .map(([name]) => name);
+// Shared with the Storefront client, which needs the domain but not the Admin credentials.
+export function readStoreDomain(): string {
+  const {SHOPIFY_STORE_DOMAIN} = process.env;
 
-  if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_CLIENT_ID || !SHOPIFY_CLIENT_SECRET) {
-    throw new ShopifyError(
-      `Missing environment variables: ${missing.join(", ")}.`,
-    );
+  if (!SHOPIFY_STORE_DOMAIN) {
+    throw new ShopifyError("Missing environment variables: SHOPIFY_STORE_DOMAIN.");
   }
 
   const storeDomain = SHOPIFY_STORE_DOMAIN.trim()
@@ -49,8 +40,26 @@ function readConfig() {
     );
   }
 
+  return storeDomain;
+}
+
+function readConfig() {
+  const {SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET} = process.env;
+  const missing = [
+    ["SHOPIFY_CLIENT_ID", SHOPIFY_CLIENT_ID],
+    ["SHOPIFY_CLIENT_SECRET", SHOPIFY_CLIENT_SECRET],
+  ]
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+
+  if (!SHOPIFY_CLIENT_ID || !SHOPIFY_CLIENT_SECRET) {
+    throw new ShopifyError(
+      `Missing environment variables: ${missing.join(", ")}.`,
+    );
+  }
+
   return {
-    storeDomain,
+    storeDomain: readStoreDomain(),
     clientId: SHOPIFY_CLIENT_ID,
     clientSecret: SHOPIFY_CLIENT_SECRET,
   };

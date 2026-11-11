@@ -26,7 +26,17 @@
     "byline": "A magazine by <link>September</link>",
     "inquiries": "For Inquiries:",
     "location": "Istanbul / Worldwide",
+    "privacy": "privacy",
+    "shippingAndReturns": "shipping & returns",
     "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
+  },
+  "PrivacyPage": {
+    "title": "Privacy Policy",
+    "metaDescription": "How Press Magazine collects, uses and protects your personal information."
+  },
+  "ShippingReturnsPage": {
+    "title": "Shipping & Returns",
+    "metaDescription": "Delivery, return and refund conditions for Press Magazine orders."
   },
   "AboutPage": {
     "title": "About",
@@ -88,31 +98,65 @@
   "SubscribePage": {
     "heading": "Shop",
     "lead": "Press is published twice a year. Choose how you would like to read it.",
-    "issueNote": "Each purchase covers one issue. It does not renew automatically.",
-    "planChoice": "Choose your issue",
+    "planChoice": "Choose your subscription",
     "includesLabel": "Includes",
-    "priceNote": "Per issue",
+    "priceNote": "2 issues / year",
     "cta": "Add to cart",
+    "priceUnavailable": "Price unavailable",
+    "unavailable": "Currently unavailable",
+    "adding": "Adding…",
+    "addError": "We could not add this to your cart. Please try again.",
     "metaTitle": "Shop",
-    "metaDescription": "Get an issue of Press, digital or in print. Each purchase covers one issue and does not renew automatically.",
+    "metaDescription": "Subscribe to Press, digital or in print. Each purchase covers two issues per year, as a one-time payment with no automatic renewal.",
     "plans": {
       "digital": {
-        "name": "Digital",
+        "name": "Annual Digital",
         "tagline": "Read Press on any screen.",
-        "price": "€20",
-        "benefits": ["Access to the digital PDF edition", "Newsletter subscription"]
+        "benefits": [
+          "Two digital PDF issues of PRESS per year",
+          "Newsletter access",
+          "One-time payment, no automatic renewal"
+        ]
       },
       "print": {
-        "name": "Print + Digital",
-        "tagline": "The issue in your hands, and on your screen.",
-        "price": "€40",
+        "name": "Annual Print",
+        "tagline": "Both issues in your hands, and on your screen.",
         "benefits": [
-          "A physical copy delivered to you",
-          "Access to the downloadable PDF edition",
-          "Newsletter subscription"
+          "Two print issues of PRESS per year",
+          "Digital PDF editions of both issues",
+          "Newsletter access",
+          "One-time payment, no automatic renewal"
         ]
       }
     }
+  },
+  "CartPage": {
+    "metaTitle": "Cart",
+    "metaDescription": "Your Press cart.",
+    "heading": "Cart",
+    "loading": "Loading your cart…",
+    "loadError": "We could not load your cart right now. Please refresh the page or try again later.",
+    "empty": "Your cart is empty.",
+    "browseShop": "Browse the shop",
+    "itemsLabel": "Items in your cart",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "remove": "Remove",
+    "updating": "Updating…",
+    "subtotal": "Subtotal",
+    "updateError": "We could not update your cart. Please try again.",
+    "checkout": "Checkout",
+    "redirecting": "Taking you to checkout…",
+    "consentLabel": "I have read and agree to the <distanceSalesAgreement>Distance Sales Agreement</distanceSalesAgreement> and <preInformation>Pre-Information Form</preInformation>.",
+    "consentRequired": "Please agree to the Distance Sales Agreement and Pre-Information Form to continue.",
+    "checkoutEmpty": "Your cart is empty. Add an item to check out.",
+    "checkoutError": "We could not start checkout. Please try again.",
+    "editDetails": "Edit your details",
+    "agreementChanged": "The agreement has changed since you last saw it. Please review it and accept again.",
+    "needsDetails": "Please complete your details first.",
+    "checkoutUnavailable": "Checkout is not available yet.",
+    "paymentMethods": "Accepted payment methods"
   },
   "NewsletterPage": {
     "heading": "Letter",
@@ -138,5 +182,55 @@
     "successTitle": "Thank you for subscribing.",
     "success": "You are signed up.",
     "error": "Something went wrong. Please try again later."
+  },
+  "LegalDocuments": {
+    "close": "Close",
+    "distanceSalesAgreement": {
+      "title": "Distance Sales Agreement",
+      "metaDescription": "The Distance Sales Agreement for Press purchases."
+    },
+    "preInformation": {
+      "title": "Pre-Information Form",
+      "metaDescription": "The Pre-Information Form for Press purchases."
+    }
+  },
+  "BuyerDetails": {
+    "metaTitle": "Your details",
+    "metaDescription": "Tell us who is buying and where to send your order.",
+    "heading": "Your details",
+    "loading": "Loading…",
+    "loadError": "We could not load this page right now. Please refresh or try again later.",
+    "emptyCart": "Your cart is empty.",
+    "browseShop": "Browse the shop",
+    "contact": "Contact",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHelper": "Include the country code, for example +90 …",
+    "country": "Country",
+    "shippingHeading": "Delivery address",
+    "digitalNote": "Digital issues: no delivery address is needed.",
+    "billingHeading": "Billing address",
+    "billingSame": "Same as the delivery address",
+    "address1": "Address",
+    "address2": "Apartment, floor, etc. (optional)",
+    "city": "City",
+    "zip": "Postal code",
+    "submit": "Continue to cart",
+    "saving": "Saving…",
+    "required": "This field is required.",
+    "invalid": "Please check this field.",
+    "emailInvalid": "Enter a valid email address.",
+    "phoneInvalid": "Enter a phone number with its country code, like +90 …",
+    "saveError": "We could not save your details. Please try again.",
+    "checkoutUnavailable": "Checkout is not available yet."
+  },
+  "Agreement": {
+    "digitalDelivery": "Digital issues: no physical delivery.",
+    "determinedAtCheckout": "Determined at checkout",
+    "placeholderValue": "[PLACEHOLDER: {name}]",
+    "productTypeDigital": "Digital Publication",
+    "productTypePrint": "Print + Digital Publication"
   }
 }

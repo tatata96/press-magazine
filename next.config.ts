@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   experimental: {
     agentFeedback: true,
   },
+  images: {
+    // Product images are served from Shopify's CDN.
+    remotePatterns: [{protocol: "https", hostname: "cdn.shopify.com"}],
+  },
   cacheComponents: true,
   partialPrefetching: true,
 };

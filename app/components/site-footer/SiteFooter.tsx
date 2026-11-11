@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "../../../i18n/navigation";
 import Logo from "../logo/Logo";
 import LogoMark from "../logo/LogoMark";
 import Team from "../team/Team";
@@ -33,6 +34,26 @@ export default async function SiteFooter() {
                 </a>
               ),
             })}
+          </p>
+          <p className={`${styles.upper} type-mono`}>
+            <Link
+              href="/privacy"
+              className={styles.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("privacy")}
+            </Link>
+          </p>
+          <p className={`${styles.upper} type-mono`}>
+            <Link
+              href="/shipping-and-returns"
+              className={styles.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t("shippingAndReturns")}
+            </Link>
           </p>
         </div>
         <p className={`${styles.column} ${styles.inquiries} type-mono`}>

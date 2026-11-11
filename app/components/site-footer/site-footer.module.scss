@@ -88,9 +88,10 @@
   display: block;
 }
 
-// Emblem anchored to the bottom-left corner, mirroring the address on the right.
+// Emblem pinned to the viewport's bottom-left corner like the wordmark, so it stays put while
+// the page scrolls; the footer's clip-path reveals it with the rest of the footer.
 .mark {
-  position: absolute;
+  position: fixed;
   inset: auto auto 16px 16px;
   z-index: 1;
   display: block;

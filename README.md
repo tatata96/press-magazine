@@ -68,3 +68,37 @@ public/            Static assets
 ## Open decisions
 
 Not final yet, so no behaviour should be assumed: newsletter provider and consent copy, form fields, payment setup, PDF download limits, and archive access rules.
+
+## Checkout flow and sales agreement
+
+Flow: Subscribe → `/buyer-details` → `/cart` (personalized Distance Sales Agreement) → Shopify hosted checkout. Shipping method is chosen by the buyer in Shopify checkout; there is no picker on our cart page.
+
+- **Buyer details** are saved by a Server Action. Email, phone, country and the delivery address go onto the Shopify cart (`cartBuyerIdentityUpdate`, `cartDeliveryAddressesReplace`) so checkout opens prefilled. Shopify's cart has no buyer name and no billing address, so only those two live in an AES-256-GCM encrypted cookie (`press_buyer_details`; httpOnly, Secure, SameSite=Lax, 48 hours). No database. Requires `BUYER_COOKIE_SECRET` (see `.env.example`).
+- **Delivery address** is only required when a cart line has `requiresShipping` in Shopify. Billing is never sent to Shopify (no cart field exists).
+- **Agreement text**: the Distance Sales Agreement is plain JSX in `app/components/legal-document/distance-sales-agreement/` (`AgreementTr.tsx`, `AgreementEn.tsx`), exactly as supplied. Only the values in `{braces}` come from one `AgreementData` object (`lib/legal/agreement-data.ts`). Do not reword the text without approval. The standalone page passes blank buyer/order data (no personal data); `app/[locale]/cart/PersonalizedAgreement.tsx` fills it from the checkout snapshot for the cart modal.
+- **Agreement data**: `app/[locale]/cart/checkout-state.ts` builds a snapshot (buyer, lines, delivery option, total) on the server and fingerprints it. Consent is stored against that fingerprint, so any change to quantities, details or totals invalidates it. `proceedToCheckout` recomputes the fingerprint and only then returns the checkout URL, after writing the acceptance to cart attributes (`lib/legal/consent.ts`), which Shopify copies onto the order.
+- **Seller details and business terms** are configured in one place, `lib/legal/agreement-config.ts`.
+- **Pre-Contractual Information Form** (Ön Bilgilendirme Formu): plain JSX in `app/components/legal-document/pre-information/` (TR/EN), following Article 5(1) of the Regulation on Distance Contracts. `app/[locale]/cart/build-agreement-data.ts` fills both legal documents from the same checkout snapshot, so one fingerprint covers both. Where it repeats the Distance Sales Agreement it uses that wording. The standalone page shows the general form (blank buyer/order fields); the cart modal shows the personalized one.
+- **Values not known before checkout** (tax amount, payment method, discount amount) show "Determined at checkout"; nothing is guessed. Order and agreement date are the day the agreement is shown (Europe/Istanbul); the exact acceptance time is on the order.
+- **Taxes**: Storefront API 2026-07 exposes no tax amount or tax-inclusive flag on a cart, so none is shown or computed. The agreement has a placeholder line for it.
+- **Go-live guard** (`lib/legal/readiness.ts`): while `LEGAL_DOCUMENTS_VERSION` is `"placeholder"` or any legal message still contains a `[PLACEHOLDER]` / `[YER TUTUCU]` marker, production has no legal pages or footer links, no buyer-details form, and no checkout. Development is unaffected. A staging deployment can opt in with `ALLOW_PLACEHOLDER_LEGAL=true`, which is read at **build** time because those pages are prerendered.
+
+### Unresolved limitation (needs a decision, not solved by the notice)
+
+The agreement is generated before Shopify's hosted checkout, and on the Basic plan checkout can still change the delivery address, shipping option, taxes and total. The agreement carries no estimate notice (it was removed on request), so nothing on screen tells the buyer that checkout can change these amounts; the accepted agreement and the final order can differ. `consent_agreed_total` is stored on the order so the difference can at least be detected. Options to evaluate with legal advice include an agreement or confirmation after checkout, or Shopify Plus checkout controls.
+
+### Still placeholders (checkout stays closed in production until all are real)
+
+All in `BUSINESS_TERMS` in `lib/legal/agreement-config.ts`, in Turkish and English:
+
+- `physicalDeliveryTime`: delivery time for printed magazines.
+- `returnCarrier`: carrier for returns and who pays return shipping.
+- `digitalAccess`: how and from when the buyer can access the PDF.
+- `digitalProtection`: technical protection applied to the PDF, if any.
+
+### Open legal questions (for review, not decided in code)
+
+- Taxes, payment methods and discount amounts are not available from Shopify's cart before checkout, so the documents say they are determined at checkout. The regulation asks for the total price including taxes before the order; confirm this is acceptable.
+- Not included: the sample withdrawal form annexed to the regulation (Article 11), and items 5(1)(e) (extra communication costs) and 5(1)(ı) (deposits or guarantees), because no information was supplied.
+- The first-sentence wording of the Turkish agreement was edited by hand after generation (see "Sözleşmesisi").
+- The English documents call it the "Pre-Contractual Information Form" while the page title, modal, footer and checkbox say "Pre-Information Form".

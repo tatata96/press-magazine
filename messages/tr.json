@@ -26,7 +26,17 @@
     "byline": "<link>September</link>'dan bir dergi",
     "inquiries": "Bilgi için:",
     "location": "İstanbul / Dünya",
+    "privacy": "gizlilik",
+    "shippingAndReturns": "teslimat ve iade",
     "address": ["September", "Bade Sokak No. 1 Etiler, Beşiktaş", "İstanbul", "Türkiye"]
+  },
+  "PrivacyPage": {
+    "title": "Gizlilik Politikası",
+    "metaDescription": "Press Magazine kişisel verilerinizi nasıl topluyor, kullanıyor ve koruyor."
+  },
+  "ShippingReturnsPage": {
+    "title": "Teslimat ve İade Şartları",
+    "metaDescription": "Press Magazine siparişleri için teslimat, iade ve geri ödeme koşulları."
   },
   "AboutPage": {
     "title": "Hakkında",
@@ -88,31 +98,65 @@
   "SubscribePage": {
     "heading": "Mağaza",
     "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
-    "issueNote": "Her satın alma tek bir sayıyı kapsar. Otomatik olarak yenilenmez.",
-    "planChoice": "Sayını seç",
+    "planChoice": "Aboneliğini seç",
     "includesLabel": "İçerik",
-    "priceNote": "Sayı başına",
+    "priceNote": "Yılda 2 sayı",
     "cta": "Sepete ekle",
+    "priceUnavailable": "Fiyat mevcut değil",
+    "unavailable": "Şu anda mevcut değil",
+    "adding": "Ekleniyor…",
+    "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
-    "metaDescription": "Press'in bir sayısını dijital ya da basılı olarak edin. Her satın alma tek bir sayıyı kapsar ve otomatik olarak yenilenmez.",
+    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma yılda iki sayıyı kapsar; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
-        "name": "Dijital",
+        "name": "Yıllık Dijital",
         "tagline": "Press'i her ekranda oku.",
-        "price": "€20",
-        "benefits": ["Dijital PDF sürümüne erişim", "Bülten aboneliği"]
+        "benefits": [
+          "Yılda iki dijital PDF PRESS sayısı",
+          "Bülten erişimi",
+          "Tek seferlik ödeme, otomatik yenileme yok"
+        ]
       },
       "print": {
-        "name": "Basılı + Dijital",
-        "tagline": "Sayı elinde ve ekranında.",
-        "price": "€40",
+        "name": "Yıllık Basılı",
+        "tagline": "İki sayı da elinde ve ekranında.",
         "benefits": [
-          "Adresinize teslim edilen basılı bir nüsha",
-          "İndirilebilir PDF sürümüne erişim",
-          "Bülten aboneliği"
+          "Yılda iki basılı PRESS sayısı",
+          "Her iki sayının dijital PDF sürümleri",
+          "Bülten erişimi",
+          "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       }
     }
+  },
+  "CartPage": {
+    "metaTitle": "Sepet",
+    "metaDescription": "Press sepetin.",
+    "heading": "Sepet",
+    "loading": "Sepet yükleniyor…",
+    "loadError": "Sepetin şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
+    "empty": "Sepetin boş.",
+    "browseShop": "Mağazaya göz at",
+    "itemsLabel": "Sepetteki ürünler",
+    "quantity": "Adet",
+    "decrease": "Adedi azalt",
+    "increase": "Adedi artır",
+    "remove": "Kaldır",
+    "updating": "Güncelleniyor…",
+    "subtotal": "Ara toplam",
+    "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene.",
+    "checkout": "Ödemeye geç",
+    "redirecting": "Ödemeye yönlendiriliyorsun…",
+    "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
+    "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
+    "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
+    "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene.",
+    "editDetails": "Bilgilerini düzenle",
+    "agreementChanged": "Sözleşme en son gördüğünden beri değişti. Lütfen tekrar incele ve yeniden kabul et.",
+    "needsDetails": "Lütfen önce bilgilerini tamamla.",
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor.",
+    "paymentMethods": "Kabul edilen ödeme yöntemleri"
   },
   "NewsletterPage": {
     "heading": "Mektup",
@@ -138,5 +182,55 @@
     "successTitle": "Abone olduğun için teşekkürler.",
     "success": "Kaydın alındı.",
     "error": "Bir şeyler ters gitti. Lütfen daha sonra tekrar dene."
+  },
+  "LegalDocuments": {
+    "close": "Kapat",
+    "distanceSalesAgreement": {
+      "title": "Mesafeli Satış Sözleşmesi",
+      "metaDescription": "Press satın alımları için Mesafeli Satış Sözleşmesi."
+    },
+    "preInformation": {
+      "title": "Ön Bilgilendirme Formu",
+      "metaDescription": "Press satın alımları için Ön Bilgilendirme Formu."
+    }
+  },
+  "BuyerDetails": {
+    "metaTitle": "Bilgilerin",
+    "metaDescription": "Kimin satın aldığını ve siparişin nereye gönderileceğini bize bildir.",
+    "heading": "Bilgilerin",
+    "loading": "Yükleniyor…",
+    "loadError": "Bu sayfa şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
+    "emptyCart": "Sepetin boş.",
+    "browseShop": "Mağazaya göz at",
+    "contact": "İletişim",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "phoneHelper": "Ülke kodunu ekle, örneğin +90 …",
+    "country": "Ülke",
+    "shippingHeading": "Teslimat adresi",
+    "digitalNote": "Dijital sayılar: teslimat adresi gerekmez.",
+    "billingHeading": "Fatura adresi",
+    "billingSame": "Teslimat adresiyle aynı",
+    "address1": "Adres",
+    "address2": "Daire, kat vb. (isteğe bağlı)",
+    "city": "Şehir",
+    "zip": "Posta kodu",
+    "submit": "Sepete devam et",
+    "saving": "Kaydediliyor…",
+    "required": "Bu alan zorunludur.",
+    "invalid": "Lütfen bu alanı kontrol et.",
+    "emailInvalid": "Geçerli bir e-posta adresi gir.",
+    "phoneInvalid": "Telefon numarasını ülke koduyla gir, örneğin +90 …",
+    "saveError": "Bilgilerin kaydedilemedi. Lütfen tekrar dene.",
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
+  },
+  "Agreement": {
+    "digitalDelivery": "Dijital sayılar: fiziksel teslimat yoktur.",
+    "determinedAtCheckout": "Ödeme sayfasında belirlenir",
+    "placeholderValue": "[YER TUTUCU: {name}]",
+    "productTypeDigital": "Dijital Yayın",
+    "productTypePrint": "Basılı + Dijital Yayın"
   }
 }

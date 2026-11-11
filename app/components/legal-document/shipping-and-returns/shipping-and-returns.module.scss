@@ -1,0 +1,26 @@
+// Same Crit Mono accents as the Privacy Policy; only the light weight is loaded, so none
+// of these are bold. Space between the numbered sections; inside a section the shared
+// 24px gap still applies.
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.updated,
+.subHeading {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-light);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.updated {
+  font-size: var(--type-label-size);
+}
+
+.subHeading {
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.2;
+}

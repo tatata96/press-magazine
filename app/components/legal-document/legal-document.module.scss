@@ -1,0 +1,104 @@
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: calc(100svh - 78px);
+  padding: 32px 16px 96px;
+
+  @media (min-width: 768px) {
+    padding: 48px 32px 128px;
+  }
+}
+
+.heading {
+  margin: 0 0 32px;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+.sectionHeading {
+  margin: 0 0 8px;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+
+// The agreement text: headings, paragraphs, bullets and the order table.
+.subHeading {
+  margin: 0;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.paragraph {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+// Seller and buyer details (1.1, 1.2): body text without bullets; the labels are bold.
+.details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+
+  li + li {
+    margin-top: 4px;
+  }
+}
+
+.bullets {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+// Plain label / value table. On phones the long values wrap inside their column.
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+
+  th,
+  td {
+    padding: 8px 12px 8px 0;
+    text-align: left;
+    vertical-align: top;
+    font-weight: var(--font-weight-regular);
+    overflow-wrap: anywhere;
+    border-bottom: var(--rule-width) solid var(--foreground);
+  }
+
+  thead th {
+    font-family: var(--font-family-mono);
+    font-size: var(--type-label-size);
+    text-transform: uppercase;
+  }
+}
+
+// A second product's rows start a new group, so two products read as two products.
+.tableGroupStart th,
+.tableGroupStart td {
+  border-top: 2px solid var(--foreground);
+}
