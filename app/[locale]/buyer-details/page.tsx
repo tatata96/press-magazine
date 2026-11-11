@@ -111,7 +111,6 @@ export default async function BuyerDetailsPage() {
   return (
     <main className={styles.main}>
       <h1 className={styles.heading}>{t("heading")}</h1>
-      <p className={styles.lead}>{t("lead")}</p>
       <Suspense
         fallback={
           <p role="status" className={styles.message}>

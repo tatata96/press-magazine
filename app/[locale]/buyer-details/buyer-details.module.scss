@@ -12,18 +12,12 @@
 }
 
 .heading {
-  margin: 0 0 16px;
+  margin: 0 0 32px;
   font-family: var(--font-family-title);
   font-weight: var(--font-weight-regular);
   font-size: var(--type-title-size);
   line-height: var(--type-title-line-height);
   letter-spacing: var(--type-title-letter-spacing);
-}
-
-.lead {
-  margin: 0 0 32px;
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-line-height);
 }
 
 .message {
@@ -170,6 +164,6 @@
   align-self: stretch;
 
   @media (min-width: 768px) {
-    align-self: flex-start;
+    align-self: flex-end;
   }
 }
