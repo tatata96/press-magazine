@@ -131,7 +131,13 @@
     "remove": "Remove",
     "updating": "Updating…",
     "subtotal": "Subtotal",
-    "updateError": "We could not update your cart. Please try again."
+    "updateError": "We could not update your cart. Please try again.",
+    "checkout": "Checkout",
+    "redirecting": "Taking you to checkout…",
+    "consentLabel": "I have read and agree to the <distanceSalesAgreement>Distance Sales Agreement</distanceSalesAgreement> and <preInformation>Pre-Information Form</preInformation>.",
+    "consentRequired": "Please agree to the Distance Sales Agreement and Pre-Information Form to continue.",
+    "checkoutEmpty": "Your cart is empty. Add an item to check out.",
+    "checkoutError": "We could not start checkout. Please try again."
   },
   "NewsletterPage": {
     "heading": "Letter",
@@ -157,5 +163,61 @@
     "successTitle": "Thank you for subscribing.",
     "success": "You are signed up.",
     "error": "Something went wrong. Please try again later."
+  },
+  "LegalDocuments": {
+    "close": "Close",
+    "placeholderNotice": "[PLACEHOLDER] Dummy text. The final legal text will replace it.",
+    "distanceSalesAgreement": {
+      "title": "Distance Sales Agreement",
+      "metaDescription": "The Distance Sales Agreement for Press purchases.",
+      "sections": [
+        {
+          "heading": "[PLACEHOLDER] Article 1 — Parties",
+          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Article 2 — Subject of the agreement",
+          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Article 3 — Price and payment",
+          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Article 4 — Delivery",
+          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Article 5 — Right of withdrawal",
+          "body": "[PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Distance Sales Agreement text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        }
+      ]
+    },
+    "preInformation": {
+      "title": "Pre-Information Form",
+      "metaDescription": "The Pre-Information Form for Press purchases.",
+      "sections": [
+        {
+          "heading": "[PLACEHOLDER] Section 1 — Seller information",
+          "body": "[PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Section 2 — Product information",
+          "body": "[PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Section 3 — Total price",
+          "body": "[PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Section 4 — Delivery and payment",
+          "body": "[PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        },
+        {
+          "heading": "[PLACEHOLDER] Section 5 — Withdrawal and complaints",
+          "body": "[PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. [PLACEHOLDER] Dummy text. The final Pre-Information Form text will be supplied separately and will replace this paragraph. It contains no legal terms. "
+        }
+      ]
+    }
   }
 }

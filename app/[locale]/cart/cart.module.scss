@@ -190,3 +190,61 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+.checkout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.checkbox {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--foreground);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.consentLabel {
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  cursor: pointer;
+}
+
+.documentLink {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.checkoutButton {
+  align-self: stretch;
+
+  @media (min-width: 768px) {
+    align-self: flex-start;
+  }
+}

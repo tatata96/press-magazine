@@ -1,12 +1,15 @@
 "use server";
 
 import {refresh} from "next/cache";
+import {getLocale} from "next-intl/server";
+import {CONSENT_ATTRIBUTE_KEYS, LEGAL_DOCUMENTS_VERSION} from "@/lib/legal/consent";
 import {ShopifyError} from "@/lib/shopify/admin-client";
 import {
   addCartLine,
   createCart,
   getCart,
   removeCartLine,
+  setCartAttributesForCheckout,
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import {readCartId, writeCartId} from "./cart-cookie";
@@ -104,4 +107,50 @@ export async function removeFromCart(
 
     await removeCartLine(cartId, lineId);
   });
+}
+
+export type CheckoutActionResult =
+  | {ok: true; checkoutUrl: string}
+  | {ok: false; error: "consent_required" | "empty_cart" | "failed"};
+
+// The only place the Shopify checkout URL is read. It is handed to the browser only after
+// consent is checked here and recorded on the cart, so the checkbox is not just a UI state.
+// Limit: this guards our own flow; Shopify's hosted checkout cannot be gated from this repo.
+export async function proceedToCheckout(
+  hasConsent: boolean,
+): Promise<CheckoutActionResult> {
+  if (hasConsent !== true) {
+    return {ok: false, error: "consent_required"};
+  }
+
+  try {
+    const cartId = await readCartId();
+
+    if (!cartId) {
+      return {ok: false, error: "empty_cart"};
+    }
+
+    const handoff = await setCartAttributesForCheckout(cartId, {
+      [CONSENT_ATTRIBUTE_KEYS.accepted]: "accepted",
+      [CONSENT_ATTRIBUTE_KEYS.documentsVersion]: LEGAL_DOCUMENTS_VERSION,
+      [CONSENT_ATTRIBUTE_KEYS.acceptedAt]: new Date().toISOString(),
+      [CONSENT_ATTRIBUTE_KEYS.locale]: await getLocale(),
+    });
+
+    if (
+      handoff.totalQuantity < 1 ||
+      !handoff.checkoutUrl.startsWith("https://")
+    ) {
+      return {ok: false, error: "empty_cart"};
+    }
+
+    return {ok: true, checkoutUrl: handoff.checkoutUrl};
+  } catch (error) {
+    console.error(
+      "Checkout handoff failed:",
+      error instanceof ShopifyError ? error.message : "unexpected error",
+    );
+
+    return {ok: false, error: "failed"};
+  }
 }

@@ -230,3 +230,51 @@ export async function removeCartLine(
 
   return readMutationCart(data.cartLinesRemove, "cartLinesRemove");
 }
+
+export type CheckoutHandoff = {checkoutUrl: string; totalQuantity: number};
+
+// Writes attributes onto the cart and returns where to send the buyer to pay. The checkout
+// URL is deliberately not part of `Cart`: that object is passed to client components, and
+// the URL must only reach the browser once consent has been verified on the server.
+export async function setCartAttributesForCheckout(
+  cartId: string,
+  attributes: Record<string, string>,
+): Promise<CheckoutHandoff> {
+  const data = await requestShopifyStorefrontGraphQL<{
+    cartAttributesUpdate: {
+      cart: {checkoutUrl: string; totalQuantity: number} | null;
+      userErrors: UserError[];
+    };
+  }>(
+    `
+      mutation CartAttributesUpdate($cartId: ID!, $attributes: [AttributeInput!]!) {
+        cartAttributesUpdate(cartId: $cartId, attributes: $attributes) {
+          cart {
+            checkoutUrl
+            totalQuantity
+          }
+          userErrors {
+            message
+            code
+          }
+        }
+      }
+    `,
+    {
+      cartId,
+      attributes: Object.entries(attributes).map(([key, value]) => ({
+        key,
+        value,
+      })),
+    },
+  );
+  const {cart, userErrors} = data.cartAttributesUpdate;
+
+  if (userErrors.length > 0 || !cart) {
+    const codes = userErrors.map((error) => error.code ?? "UNKNOWN").join(", ");
+
+    throw new ShopifyError(`cartAttributesUpdate failed (${codes || "no cart"}).`);
+  }
+
+  return {checkoutUrl: cart.checkoutUrl, totalQuantity: cart.totalQuantity};
+}

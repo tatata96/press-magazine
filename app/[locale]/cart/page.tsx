@@ -5,7 +5,9 @@ import {Link} from "../../../i18n/navigation";
 import {getCart, type Cart} from "@/lib/shopify/cart";
 import {getPageMetadata} from "@/lib/seo";
 import {readCartId} from "./cart-cookie";
+import LegalDocument from "@/app/components/legal-document/LegalDocument";
 import CartLines from "./CartLines";
+import CheckoutConsent from "./CheckoutConsent";
 import styles from "./cart.module.scss";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -55,20 +57,30 @@ async function CartContent() {
   }
 
   return (
-    <CartLines
-      cart={cart}
-      locale={locale}
-      copy={{
-        itemsLabel: t("itemsLabel"),
-        quantity: t("quantity"),
-        decrease: t("decrease"),
-        increase: t("increase"),
-        remove: t("remove"),
-        updating: t("updating"),
-        subtotal: t("subtotal"),
-        updateError: t("updateError"),
-      }}
-    />
+    <>
+      <CartLines
+        cart={cart}
+        locale={locale}
+        copy={{
+          itemsLabel: t("itemsLabel"),
+          quantity: t("quantity"),
+          decrease: t("decrease"),
+          increase: t("increase"),
+          remove: t("remove"),
+          updating: t("updating"),
+          subtotal: t("subtotal"),
+          updateError: t("updateError"),
+        }}
+      />
+      <CheckoutConsent
+        documents={{
+          distanceSalesAgreement: (
+            <LegalDocument documentKey="distanceSalesAgreement" />
+          ),
+          preInformation: <LegalDocument documentKey="preInformation" />,
+        }}
+      />
+    </>
   );
 }
 

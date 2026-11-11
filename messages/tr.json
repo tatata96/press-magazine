@@ -131,7 +131,13 @@
     "remove": "Kaldır",
     "updating": "Güncelleniyor…",
     "subtotal": "Ara toplam",
-    "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene."
+    "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene.",
+    "checkout": "Ödemeye geç",
+    "redirecting": "Ödemeye yönlendiriliyorsun…",
+    "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
+    "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
+    "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
+    "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene."
   },
   "NewsletterPage": {
     "heading": "Mektup",
@@ -157,5 +163,61 @@
     "successTitle": "Abone olduğun için teşekkürler.",
     "success": "Kaydın alındı.",
     "error": "Bir şeyler ters gitti. Lütfen daha sonra tekrar dene."
+  },
+  "LegalDocuments": {
+    "close": "Kapat",
+    "placeholderNotice": "[YER TUTUCU] Örnek metin. Nihai hukuki metin bunun yerini alacaktır.",
+    "distanceSalesAgreement": {
+      "title": "Mesafeli Satış Sözleşmesi",
+      "metaDescription": "Press satın alımları için Mesafeli Satış Sözleşmesi.",
+      "sections": [
+        {
+          "heading": "[YER TUTUCU] Madde 1 — Taraflar",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Madde 2 — Sözleşmenin konusu",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Madde 3 — Bedel ve ödeme",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Madde 4 — Teslimat",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Madde 5 — Cayma hakkı",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Mesafeli Satış Sözleşmesi metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        }
+      ]
+    },
+    "preInformation": {
+      "title": "Ön Bilgilendirme Formu",
+      "metaDescription": "Press satın alımları için Ön Bilgilendirme Formu.",
+      "sections": [
+        {
+          "heading": "[YER TUTUCU] Bölüm 1 — Satıcı bilgileri",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Bölüm 2 — Ürün bilgileri",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Bölüm 3 — Toplam bedel",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Bölüm 4 — Teslimat ve ödeme",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        },
+        {
+          "heading": "[YER TUTUCU] Bölüm 5 — Cayma ve şikâyetler",
+          "body": "[YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. [YER TUTUCU] Örnek metin. Nihai Ön Bilgilendirme Formu metni ayrıca iletilecek ve bu paragrafın yerini alacaktır. Hukuki bir hüküm içermez. "
+        }
+      ]
+    }
   }
 }
