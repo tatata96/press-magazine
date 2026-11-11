@@ -93,19 +93,21 @@
     "includesLabel": "İçerik",
     "priceNote": "Sayı başına",
     "cta": "Sepete ekle",
+    "priceUnavailable": "Fiyat mevcut değil",
+    "unavailable": "Şu anda mevcut değil",
+    "adding": "Ekleniyor…",
+    "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
     "metaDescription": "Press'in bir sayısını dijital ya da basılı olarak edin. Her satın alma tek bir sayıyı kapsar ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
         "name": "Dijital",
         "tagline": "Press'i her ekranda oku.",
-        "price": "€20",
         "benefits": ["Dijital PDF sürümüne erişim", "Bülten aboneliği"]
       },
       "print": {
         "name": "Basılı + Dijital",
         "tagline": "Sayı elinde ve ekranında.",
-        "price": "€40",
         "benefits": [
           "Adresinize teslim edilen basılı bir nüsha",
           "İndirilebilir PDF sürümüne erişim",
@@ -113,6 +115,23 @@
         ]
       }
     }
+  },
+  "CartPage": {
+    "metaTitle": "Sepet",
+    "metaDescription": "Press sepetin.",
+    "heading": "Sepet",
+    "loading": "Sepet yükleniyor…",
+    "loadError": "Sepetin şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
+    "empty": "Sepetin boş.",
+    "browseShop": "Mağazaya göz at",
+    "itemsLabel": "Sepetteki ürünler",
+    "quantity": "Adet",
+    "decrease": "Adedi azalt",
+    "increase": "Adedi artır",
+    "remove": "Kaldır",
+    "updating": "Güncelleniyor…",
+    "subtotal": "Ara toplam",
+    "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene."
   },
   "NewsletterPage": {
     "heading": "Mektup",

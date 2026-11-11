@@ -171,7 +171,10 @@
   accent-color: var(--foreground);
 }
 
+// Also the placeholder (a plain span) for a product with no Shopify image.
 .thumb {
+  display: block;
+  background: var(--border-subtle);
   width: 72px;
   height: 90px;
   object-fit: cover;
@@ -246,4 +249,9 @@
 
 .cta {
   width: 100%;
+}
+
+.addError {
+  margin: 0;
+  line-height: var(--type-body-line-height);
 }

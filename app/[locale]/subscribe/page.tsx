@@ -1,16 +1,12 @@
 import type {Metadata} from "next";
-import {getTranslations} from "next-intl/server";
+import {getLocale, getTranslations} from "next-intl/server";
+import {formatMoney} from "@/lib/shopify/money";
+import {getPlanProducts} from "@/lib/shopify/products";
 import {getPageMetadata} from "@/lib/seo";
 import SubscribePlans, {type Plan} from "./SubscribePlans";
 
-// Message keys under SubscribePage.plans. Prices and benefits live in the
-// messages so editorial copy stays out of the component.
-// TODO: placeholder imagery; swap for dedicated digital / print artwork.
-const PLAN_IMAGES = {
-  digital: "/images/newsletter/newsletter-5.jpg",
-  print: "/images/cover.jpg",
-} as const;
-
+// Message keys under SubscribePage.plans hold the editorial copy. Prices, variants and
+// availability and imagery always come from Shopify (see lib/shopify/products.ts).
 function toStrings(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string")
@@ -29,14 +25,21 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function SubscribePage() {
   const t = await getTranslations("SubscribePage");
-  const plans: Plan[] = (["digital", "print"] as const).map((id) => ({
-    id,
-    image: PLAN_IMAGES[id],
-    name: t(`plans.${id}.name`),
-    tagline: t(`plans.${id}.tagline`),
-    price: t(`plans.${id}.price`),
-    benefits: toStrings(t.raw(`plans.${id}.benefits`)),
-  }));
+  const locale = await getLocale();
+  const result = await getPlanProducts();
+  const plans: Plan[] = (["digital", "print"] as const).map((id) => {
+    const product = result.status === "ok" ? result.products[id] : null;
+
+    return {
+      id,
+      image: product?.imageUrl ?? null,
+      name: t(`plans.${id}.name`),
+      tagline: t(`plans.${id}.tagline`),
+      price: product ? formatMoney(product.price, locale) : null,
+      variantId: product?.availableForSale ? product.variantId : null,
+      benefits: toStrings(t.raw(`plans.${id}.benefits`)),
+    };
+  });
 
   return (
     <SubscribePlans
@@ -49,6 +52,10 @@ export default async function SubscribePage() {
         planChoice: t("planChoice"),
         includesLabel: t("includesLabel"),
         cta: t("cta"),
+        adding: t("adding"),
+        priceUnavailable: t("priceUnavailable"),
+        unavailable: t("unavailable"),
+        addError: t("addError"),
       }}
     />
   );

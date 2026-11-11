@@ -93,19 +93,21 @@
     "includesLabel": "Includes",
     "priceNote": "Per issue",
     "cta": "Add to cart",
+    "priceUnavailable": "Price unavailable",
+    "unavailable": "Currently unavailable",
+    "adding": "Adding…",
+    "addError": "We could not add this to your cart. Please try again.",
     "metaTitle": "Shop",
     "metaDescription": "Get an issue of Press, digital or in print. Each purchase covers one issue and does not renew automatically.",
     "plans": {
       "digital": {
         "name": "Digital",
         "tagline": "Read Press on any screen.",
-        "price": "€20",
         "benefits": ["Access to the digital PDF edition", "Newsletter subscription"]
       },
       "print": {
         "name": "Print + Digital",
         "tagline": "The issue in your hands, and on your screen.",
-        "price": "€40",
         "benefits": [
           "A physical copy delivered to you",
           "Access to the downloadable PDF edition",
@@ -113,6 +115,23 @@
         ]
       }
     }
+  },
+  "CartPage": {
+    "metaTitle": "Cart",
+    "metaDescription": "Your Press cart.",
+    "heading": "Cart",
+    "loading": "Loading your cart…",
+    "loadError": "We could not load your cart right now. Please refresh the page or try again later.",
+    "empty": "Your cart is empty.",
+    "browseShop": "Browse the shop",
+    "itemsLabel": "Items in your cart",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "remove": "Remove",
+    "updating": "Updating…",
+    "subtotal": "Subtotal",
+    "updateError": "We could not update your cart. Please try again."
   },
   "NewsletterPage": {
     "heading": "Letter",
