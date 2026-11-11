@@ -10,6 +10,7 @@
     "closeMenu": "Menüyü kapat",
     "about": "Hakkında",
     "newsletter": "Bülten",
+    "subscribe": "Abone ol",
     "logoAlt": "Press",
     "languageLabel": "Dil"
   },
@@ -81,6 +82,35 @@
         "utkuPalamutcu": "Genel Koordinatör, Moda Direktörü",
         "dogukanKarapinar": "Tasarım Direktörü",
         "elifSelinUnuvar": "Marka & Projeler Direktörü"
+      }
+    }
+  },
+  "SubscribePage": {
+    "heading": "Abone ol",
+    "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
+    "issueNote": "Her satın alma tek bir sayıyı kapsar. Otomatik olarak yenilenmez.",
+    "planChoice": "Sayını seç",
+    "includesLabel": "İçerik",
+    "priceNote": "Sayı başına",
+    "cta": "Abone ol",
+    "metaTitle": "Abone ol",
+    "metaDescription": "Press'in bir sayısını dijital ya da basılı olarak edin. Her satın alma tek bir sayıyı kapsar ve otomatik olarak yenilenmez.",
+    "plans": {
+      "digital": {
+        "name": "Dijital",
+        "tagline": "Press'i her ekranda oku.",
+        "price": "€20",
+        "benefits": ["Dijital PDF sürümüne erişim", "Bülten aboneliği"]
+      },
+      "print": {
+        "name": "Basılı + Dijital",
+        "tagline": "Sayı elinde ve ekranında.",
+        "price": "€40",
+        "benefits": [
+          "Adresinize teslim edilen basılı bir nüsha",
+          "İndirilebilir PDF sürümüne erişim",
+          "Bülten aboneliği"
+        ]
       }
     }
   },

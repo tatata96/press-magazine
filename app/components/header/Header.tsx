@@ -11,6 +11,7 @@ export default async function Header() {
   const navigationItems = [
     { label: t("about"), href: "/about" },
     { label: t("newsletter"), href: "/newsletter" },
+    { label: t("subscribe"), href: "/subscribe" },
   ];
 
   return (
