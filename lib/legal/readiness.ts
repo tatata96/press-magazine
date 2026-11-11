@@ -2,7 +2,7 @@ import "server-only";
 
 import english from "@/messages/en.json";
 import turkish from "@/messages/tr.json";
-import {SELLER} from "./agreement-config";
+import {BUSINESS_TERMS, SELLER} from "./agreement-config";
 import {LEGAL_DOCUMENTS_VERSION, PLACEHOLDER_VERSION} from "./consent";
 
 // Text that must be replaced with real content before checkout can run in production.
@@ -27,13 +27,14 @@ function containsPlaceholder(value: unknown): boolean {
 }
 
 // True only when everything the agreement needs is real: the version is set, the seller
-// details are filled in, and no placeholder marker is left in the legal messages
+// details and business terms are filled in, and no placeholder marker is left in the legal messages
 // (the Pre-Information Form is still placeholder text). Checking the content itself, not just
 // the version, means finishing one piece cannot unlock the rest.
 function isLegalContentFinal(): boolean {
   return (
     LEGAL_DOCUMENTS_VERSION !== PLACEHOLDER_VERSION &&
     Object.values(SELLER).every((value) => value !== null) &&
+    Object.values(BUSINESS_TERMS).every((value) => value !== null) &&
     ![english, turkish].some((messages) =>
       LEGAL_MESSAGE_NAMESPACES.some((namespace) =>
         containsPlaceholder(messages[namespace]),

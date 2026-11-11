@@ -535,9 +535,6 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         Yönetmelik ve ilgili diğer mevzuat hükümleri uygulanır.
       </p>
       <p className={styles.paragraph}>
-        <strong>Sözleşme Versiyonu:</strong> {data.legalDocumentsVersion}
-      </p>
-      <p className={styles.paragraph}>
         <strong>Sözleşme Tarihi:</strong> {data.agreementDate}
       </p>
       <p className={styles.paragraph}>

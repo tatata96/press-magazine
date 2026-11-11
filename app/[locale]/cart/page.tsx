@@ -4,10 +4,10 @@ import {getLocale, getTranslations} from "next-intl/server";
 import {Link, redirect} from "../../../i18n/navigation";
 import {getPageMetadata} from "@/lib/seo";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
-import LegalDocument from "@/app/components/legal-document/LegalDocument";
 import CartLines from "./CartLines";
 import CheckoutConsent from "./CheckoutConsent";
 import PersonalizedAgreement from "./PersonalizedAgreement";
+import PersonalizedPreInformation from "./PersonalizedPreInformation";
 import {
   loadCheckoutState,
   readCheckoutCookies,
@@ -93,7 +93,9 @@ async function CartContent() {
             distanceSalesAgreement: (
               <PersonalizedAgreement snapshot={state.snapshot} />
             ),
-            preInformation: <LegalDocument documentKey="preInformation" />,
+            preInformation: (
+              <PersonalizedPreInformation snapshot={state.snapshot} />
+            ),
           }}
         />
       ) : (

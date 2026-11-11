@@ -388,9 +388,6 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>14.3.</strong> Matters not expressly addressed in this Agreement shall be governed by the Law, the Regulation, and other applicable legislation.
       </p>
       <p className={styles.paragraph}>
-        <strong>Agreement Version:</strong> {data.legalDocumentsVersion}
-      </p>
-      <p className={styles.paragraph}>
         <strong>Agreement Date:</strong> {data.agreementDate}
       </p>
       <p className={styles.paragraph}>

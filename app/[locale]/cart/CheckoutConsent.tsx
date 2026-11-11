@@ -118,7 +118,6 @@ export default function CheckoutConsent({
           })}
         </label>
       </div>
-      <p className={`type-mono ${styles.agreementHint}`}>{t("agreementHint")}</p>
 
       <Button
         className={styles.checkoutButton}

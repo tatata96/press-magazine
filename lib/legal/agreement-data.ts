@@ -1,8 +1,12 @@
 import "server-only";
 
-import {getTranslations} from "next-intl/server";
-import {SELLER, type SellerField} from "./agreement-config";
-import {LEGAL_DOCUMENTS_VERSION} from "./consent";
+import {getLocale, getTranslations} from "next-intl/server";
+import {
+  BUSINESS_TERMS,
+  SELLER,
+  type BusinessTermField,
+  type SellerField,
+} from "./agreement-config";
 
 // Every value the Distance Sales Agreement text fills in, already formatted for display.
 export type AgreementData = {
@@ -21,6 +25,7 @@ export type AgreementData = {
     type: string;
     quantity: string;
     unitPrice: string;
+    totalPrice: string;
   }[];
   order: {
     subtotal: string;
@@ -32,8 +37,12 @@ export type AgreementData = {
     paymentMethod: string;
     date: string;
   };
-  legalDocumentsVersion: string;
   agreementDate: string;
+};
+
+// The Pre-Contractual Information Form shows the same data plus the business terms.
+export type PreInformationData = AgreementData & {
+  terms: Record<BusinessTermField, string>;
 };
 
 // What an unfilled buyer or order value looks like on the standalone page.
@@ -74,6 +83,7 @@ export async function getBlankAgreementData(): Promise<AgreementData> {
         type: BLANK,
         quantity: BLANK,
         unitPrice: BLANK,
+        totalPrice: BLANK,
       },
     ],
     order: {
@@ -86,7 +96,28 @@ export async function getBlankAgreementData(): Promise<AgreementData> {
       paymentMethod: BLANK,
       date: BLANK,
     },
-    legalDocumentsVersion: LEGAL_DOCUMENTS_VERSION,
     agreementDate: BLANK,
   };
+}
+
+// Business terms come from one place. A missing value shows a visible marker, never a guess.
+export async function getBusinessTermValues(): Promise<PreInformationData["terms"]> {
+  const [t, locale] = await Promise.all([
+    getTranslations("Agreement"),
+    getLocale(),
+  ]);
+  const value = (field: BusinessTermField) =>
+    BUSINESS_TERMS[field]?.[locale === "en" ? "en" : "tr"] ??
+    t("placeholderValue", {name: `terms.${field}`});
+
+  return {
+    physicalDeliveryTime: value("physicalDeliveryTime"),
+    returnCarrier: value("returnCarrier"),
+    digitalAccess: value("digitalAccess"),
+    digitalProtection: value("digitalProtection"),
+  };
+}
+
+export async function getBlankPreInformationData(): Promise<PreInformationData> {
+  return {...(await getBlankAgreementData()), terms: await getBusinessTermValues()};
 }

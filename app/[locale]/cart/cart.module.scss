@@ -245,13 +245,10 @@
   align-self: stretch;
 
   @media (min-width: 768px) {
-    align-self: flex-start;
+    align-self: flex-end;
   }
 }
 
-.agreementHint {
-  margin: 0;
-}
 
 .editDetails {
   align-self: flex-start;
