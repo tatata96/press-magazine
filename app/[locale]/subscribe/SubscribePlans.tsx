@@ -55,7 +55,7 @@ export default function SubscribePlans({plans, copy}: SubscribePlansProps) {
       const result = await addToCart(variantId);
 
       if (result.ok) {
-        router.push("/buyer-details");
+        router.push("/cart");
       } else {
         setHasAddError(true);
       }

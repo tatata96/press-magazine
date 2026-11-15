@@ -2,10 +2,41 @@ import "server-only";
 
 import {getLocale, getTranslations} from "next-intl/server";
 import {PRODUCT_TYPE_BY_HANDLE} from "@/lib/legal/agreement-config";
-import {getSellerValues, type AgreementData} from "@/lib/legal/agreement-data";
+import {
+  getBusinessTermValues,
+  getSellerValues,
+  type AgreementData,
+  type PreInformationData,
+} from "@/lib/legal/agreement-data";
 import {formatMoney} from "@/lib/shopify/money";
 import type {PostalAddress} from "../buyer-details/buyer-details";
-import type {AgreementSnapshot} from "./checkout-state";
+import type {AgreementSnapshot, CheckoutState} from "./checkout-state";
+import {fingerprintCart} from "./checkout-state";
+
+export type PreparedCheckout = {
+  fingerprint: string;
+  cartVersion: string;
+  data: PreInformationData;
+};
+
+export async function buildPreparedCheckout(
+  state: Extract<CheckoutState, {status: "ready"}>,
+): Promise<PreparedCheckout> {
+  const [data, terms] = await Promise.all([
+    buildAgreementData(state.snapshot),
+    getBusinessTermValues(),
+  ]);
+
+  return {
+    fingerprint: state.fingerprint,
+    cartVersion: fingerprintCart(state.cart, {
+      total: state.snapshot.total,
+      delivery: state.snapshot.delivery,
+      requiresShipping: state.snapshot.buyer.shippingAddress !== null,
+    }),
+    data: {...data, terms},
+  };
+}
 
 function formatAddress(address: PostalAddress, countryName: string): string {
   return [address.address1, address.address2, `${address.zip} ${address.city}`, countryName]

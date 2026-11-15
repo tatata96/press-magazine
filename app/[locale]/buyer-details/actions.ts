@@ -9,9 +9,11 @@ import {readCartId} from "../cart/cart-cookie";
 import {parseBuyerDetails, type BuyerDetailsErrors} from "./buyer-details";
 import {BuyerCookieConfigError} from "./buyer-crypto";
 import {writeStoredBuyerDetails} from "./buyer-cookie";
+import {loadCheckoutState} from "../cart/checkout-state";
+import {buildPreparedCheckout, type PreparedCheckout} from "../cart/build-agreement-data";
 
 export type SaveBuyerDetailsResult =
-  | {ok: true}
+  | {ok: true; checkout: PreparedCheckout}
   | {ok: false; error: "invalid"; errors: BuyerDetailsErrors}
   | {ok: false; error: "empty_cart" | "unavailable" | "failed"};
 
@@ -67,14 +69,26 @@ export async function saveBuyerDetails(
           }
         : null,
     });
-    await writeStoredBuyerDetails({
+    const storedBuyer = {
       firstName: details.firstName,
       lastName: details.lastName,
       billingAddress: details.billingAddress,
-    });
+    };
+
+    await writeStoredBuyerDetails(storedBuyer);
+
+    // Re-read Shopify after saving: delivery estimates and totals may have changed.
+    const state = await loadCheckoutState({cartId, storedBuyer});
+
+    if (state.status !== "ready") {
+      return {ok: false, error: "failed"};
+    }
+
+    const checkout = await buildPreparedCheckout(state);
+
     refresh();
 
-    return {ok: true};
+    return {ok: true, checkout};
   } catch (error) {
     // Never log the submitted values; ShopifyError messages only carry error codes.
     console.error(

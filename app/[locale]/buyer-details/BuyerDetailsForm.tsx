@@ -1,12 +1,15 @@
 "use client";
 
-import {useState, useTransition} from "react";
-import type {FormEvent} from "react";
+import {useRef, useState} from "react";
+import type {ReactNode} from "react";
 import {useTranslations} from "next-intl";
-import Button from "@/app/components/button/Button";
 import TextField from "@/app/components/text-field/TextField";
-import {useRouter} from "../../../i18n/navigation";
+import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import {saveBuyerDetails} from "./actions";
+import {parseBuyerDetails} from "./buyer-details";
+import CheckoutConsent from "../cart/CheckoutConsent";
+import type {PreparedCheckout} from "../cart/build-agreement-data";
+import cartStyles from "../cart/cart.module.scss";
 import type {
   BuyerDetailsErrors,
   PostalAddress,
@@ -30,6 +33,10 @@ type BuyerDetailsFormProps = {
   requiresShipping: boolean;
   countries: {code: string; name: string}[];
   defaults: BuyerDetailsDefaults;
+  orderSummary: ReactNode;
+  paymentMethods: ReactNode;
+  initialCheckout: PreparedCheckout | null;
+  cartVersion: string;
 };
 
 const EMPTY_ADDRESS: PostalAddress = {
@@ -43,10 +50,20 @@ export default function BuyerDetailsForm({
   requiresShipping,
   countries,
   defaults,
+  orderSummary,
+  paymentMethods,
+  initialCheckout,
+  cartVersion,
 }: BuyerDetailsFormProps) {
   const t = useTranslations("BuyerDetails");
-  const router = useRouter();
-  const [isSaving, startSaving] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
+  const savingRef = useRef(false);
+  const preparedRef = useRef<{
+    signature: string;
+    checkout: PreparedCheckout;
+  } | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [detailsRevision, setDetailsRevision] = useState(0);
   const [errors, setErrors] = useState<BuyerDetailsErrors>({});
   const [saveError, setSaveError] = useState<"unavailable" | "failed" | null>(
     null,
@@ -70,21 +87,49 @@ export default function BuyerDetailsForm({
     return t(code === "required" ? "required" : "invalid");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function prepareCheckout(): Promise<PreparedCheckout | null> {
+    if (savingRef.current || !formRef.current) {
+      return null;
+    }
 
-    const formData = new FormData(event.currentTarget);
+    const form = formRef.current;
+    const formData = new FormData(form);
+    const parsed = parseBuyerDetails(formData, {
+      requiresShipping,
+      allowedCountryCodes: countries.map((country) => country.code),
+    });
 
     setErrors({});
     setSaveError(null);
-    // Not a <form action>: React would reset the fields after a failed submit.
-    startSaving(async () => {
+
+    if (!parsed.ok) {
+      setErrors(parsed.errors);
+      const firstInvalid = form.elements.namedItem(Object.keys(parsed.errors)[0]);
+
+      if (firstInvalid instanceof HTMLElement) {
+        firstInvalid.focus();
+      }
+
+      return null;
+    }
+
+    const signature = JSON.stringify(Array.from(formData.entries()));
+    const cached = preparedRef.current;
+
+    if (cached?.signature === signature && cached.checkout.cartVersion === cartVersion) {
+      return cached.checkout;
+    }
+
+    savingRef.current = true;
+    setIsSaving(true);
+
+    try {
       const result = await saveBuyerDetails(formData);
 
       if (result.ok) {
-        router.push("/cart");
+        preparedRef.current = {signature, checkout: result.checkout};
 
-        return;
+        return result.checkout;
       }
 
       if (result.error === "invalid") {
@@ -92,7 +137,20 @@ export default function BuyerDetailsForm({
       } else {
         setSaveError(result.error === "unavailable" ? "unavailable" : "failed");
       }
-    });
+    } catch {
+      setSaveError("failed");
+    } finally {
+      savingRef.current = false;
+      setIsSaving(false);
+    }
+
+    return null;
+  }
+
+  function getDetailsSignature(): string {
+    return formRef.current
+      ? JSON.stringify(Array.from(new FormData(formRef.current).entries()))
+      : "";
   }
 
   function renderAddressFields(
@@ -139,125 +197,154 @@ export default function BuyerDetailsForm({
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
-      <fieldset className={styles.group}>
-        <legend className={`type-mono ${styles.legend}`}>{t("contact")}</legend>
-        <div className={styles.row}>
-          <TextField
-            name="firstName"
-            label={t("firstName")}
-            autoComplete="given-name"
-            defaultValue={defaults.firstName}
-            required
-            error={errorText("firstName")}
-          />
-          <TextField
-            name="lastName"
-            label={t("lastName")}
-            autoComplete="family-name"
-            defaultValue={defaults.lastName}
-            required
-            error={errorText("lastName")}
-          />
-        </div>
-        <TextField
-          name="email"
-          type="email"
-          label={t("email")}
-          autoComplete="email"
-          defaultValue={defaults.email}
-          required
-          error={errorText("email")}
-        />
-        <TextField
-          name="phone"
-          type="tel"
-          label={t("phone")}
-          helperText={t("phoneHelper")}
-          autoComplete="tel"
-          defaultValue={defaults.phone}
-          required
-          error={errorText("phone")}
-        />
-        <div className={styles.select}>
-          <label htmlFor="buyer-country" className={`type-caption ${styles.selectLabel}`}>
-            {t("country")}
-          </label>
-          <select
-            id="buyer-country"
-            name="countryCode"
-            className={styles.selectInput}
-            defaultValue={defaults.countryCode || countries[0]?.code}
-            autoComplete="country"
-            required
-          >
-            {countries.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-          {errorText("countryCode") ? (
-            <p role="alert" className={`type-caption ${styles.selectError}`}>
-              {errorText("countryCode")}
-            </p>
-          ) : null}
-        </div>
-      </fieldset>
-
-      {requiresShipping ? (
-        <fieldset className={styles.group}>
-          <legend className={`type-mono ${styles.legend}`}>
-            {t("shippingHeading")}
-          </legend>
-          {renderAddressFields(
-            "shipping",
-            defaults.shippingAddress ?? EMPTY_ADDRESS,
-          )}
-        </fieldset>
-      ) : (
-        <p className={`type-mono ${styles.note}`}>{t("digitalNote")}</p>
-      )}
-
-      <fieldset className={styles.group}>
-        <legend className={`type-mono ${styles.legend}`}>
-          {t("billingHeading")}
-        </legend>
-        {requiresShipping ? (
-          <label className={styles.checkLabel}>
-            <input
-              type="checkbox"
-              name="billingSameAsShipping"
-              className={styles.checkbox}
-              checked={billingIsSameAsShipping}
-              onChange={(event) =>
-                setBillingIsSameAsShipping(event.target.checked)
-              }
-            />
-            <span>{t("billingSame")}</span>
-          </label>
-        ) : null}
-        {billingIsSameAsShipping
-          ? null
-          : renderAddressFields(
-              "billing",
-              defaults.billingAddress ?? EMPTY_ADDRESS,
-            )}
-      </fieldset>
-
-      <Button
-        type="submit"
-        className={styles.submit}
-        loading={isSaving}
-        loadingLabel={t("saving")}
+    <>
+      {isSaving ? <LoadingScreen label={t("preparingCart")} /> : null}
+      <form
+        ref={formRef}
+        className={cartStyles.layout}
+        onSubmit={(event) => event.preventDefault()}
+        noValidate
+        inert={isSaving}
+        aria-busy={isSaving}
       >
-        {t("submit")}
-      </Button>
-      {saveError ? (
-        <p role="alert" className={styles.message}>
-          {saveError === "unavailable" ? t("checkoutUnavailable") : t("saveError")}
-        </p>
-      ) : null}
-    </form>
+        <section
+          className={cartStyles.details}
+          onChange={() => setDetailsRevision((revision) => revision + 1)}
+          aria-labelledby="buyer-details-heading"
+        >
+          <h2 id="buyer-details-heading" className={`type-mono ${cartStyles.sectionHeading}`}>
+            {t("heading")}
+          </h2>
+          <div className={styles.form}>
+            <fieldset className={styles.group}>
+              <legend className={`type-mono ${styles.legend}`}>{t("contact")}</legend>
+              <div className={styles.row}>
+                <TextField
+                  name="firstName"
+                  label={t("firstName")}
+                  autoComplete="given-name"
+                  defaultValue={defaults.firstName}
+                  required
+                  error={errorText("firstName")}
+                />
+                <TextField
+                  name="lastName"
+                  label={t("lastName")}
+                  autoComplete="family-name"
+                  defaultValue={defaults.lastName}
+                  required
+                  error={errorText("lastName")}
+                />
+              </div>
+              <TextField
+                name="email"
+                type="email"
+                label={t("email")}
+                autoComplete="email"
+                defaultValue={defaults.email}
+                required
+                error={errorText("email")}
+              />
+              <TextField
+                name="phone"
+                type="tel"
+                label={t("phone")}
+                helperText={t("phoneHelper")}
+                autoComplete="tel"
+                defaultValue={defaults.phone}
+                required
+                error={errorText("phone")}
+              />
+              <div className={styles.select}>
+                <label
+                  htmlFor="buyer-country"
+                  className={`type-caption ${styles.selectLabel}`}
+                >
+                  {t("country")}
+                </label>
+                <select
+                  id="buyer-country"
+                  name="countryCode"
+                  className={styles.selectInput}
+                  defaultValue={defaults.countryCode || countries[0]?.code}
+                  autoComplete="country"
+                  required
+                >
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.code}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+                {errorText("countryCode") ? (
+                  <p role="alert" className={`type-caption ${styles.selectError}`}>
+                    {errorText("countryCode")}
+                  </p>
+                ) : null}
+              </div>
+            </fieldset>
+
+            {requiresShipping ? (
+              <fieldset className={styles.group}>
+                <legend className={`type-mono ${styles.legend}`}>
+                  {t("shippingHeading")}
+                </legend>
+                {renderAddressFields(
+                  "shipping",
+                  defaults.shippingAddress ?? EMPTY_ADDRESS,
+                )}
+              </fieldset>
+            ) : (
+              <p className={`type-mono ${styles.note}`}>{t("digitalNote")}</p>
+            )}
+
+            <fieldset className={styles.group}>
+              <legend className={`type-mono ${styles.legend}`}>
+                {t("billingHeading")}
+              </legend>
+              {requiresShipping ? (
+                <label className={styles.checkLabel}>
+                  <input
+                    type="checkbox"
+                    name="billingSameAsShipping"
+                    className={styles.checkbox}
+                    checked={billingIsSameAsShipping}
+                    onChange={(event) =>
+                      setBillingIsSameAsShipping(event.target.checked)
+                    }
+                  />
+                  <span>{t("billingSame")}</span>
+                </label>
+              ) : null}
+              {requiresShipping && billingIsSameAsShipping
+                ? null
+                : renderAddressFields(
+                    "billing",
+                    defaults.billingAddress ?? EMPTY_ADDRESS,
+                  )}
+            </fieldset>
+
+            {saveError ? (
+              <p role="alert" className={styles.message}>
+                {saveError === "unavailable"
+                  ? t("checkoutUnavailable")
+                  : t("saveError")}
+              </p>
+            ) : null}
+          </div>
+        </section>
+        <aside className={cartStyles.order}>
+          {orderSummary}
+          <CheckoutConsent
+            initialCheckout={initialCheckout}
+            cartVersion={cartVersion}
+            detailsRevision={detailsRevision}
+            getDetailsSignature={getDetailsSignature}
+            prepareCheckout={prepareCheckout}
+            paymentMethods={paymentMethods}
+          />
+        </aside>
+      </form>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import {useState, useTransition} from "react";
+import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import type {Cart} from "@/lib/shopify/cart";
 import {formatMoney} from "@/lib/shopify/money";
 import {removeFromCart, updateCartLine, type CartActionResult} from "./actions";
@@ -38,6 +39,7 @@ export default function CartLines({cart, locale, copy}: CartLinesProps) {
 
   return (
     <div aria-busy={isPending}>
+      {isPending ? <LoadingScreen label={copy.updating} subtle /> : null}
       <ul className={styles.lines} aria-label={copy.itemsLabel}>
         {cart.lines.map((line) => (
           <li key={line.id} className={styles.line}>
