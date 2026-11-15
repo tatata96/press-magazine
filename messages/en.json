@@ -100,7 +100,7 @@
     "lead": "Press is published twice a year. Choose how you would like to read it.",
     "planChoice": "Choose your subscription",
     "includesLabel": "Includes",
-    "priceNote": "2 issues / year",
+    "priceNote": "One time payment",
     "cta": "Add to cart",
     "priceUnavailable": "Price unavailable",
     "unavailable": "Currently unavailable",
@@ -110,21 +110,21 @@
     "metaDescription": "Subscribe to Press, digital or in print. Each purchase covers two issues per year, as a one-time payment with no automatic renewal.",
     "plans": {
       "digital": {
-        "name": "Annual Digital",
+        "name": "Digital – 2 Issues",
         "tagline": "Read Press on any screen.",
         "benefits": [
           "Two digital PDF issues of PRESS per year",
-          "Newsletter access",
+          "Email newsletter",
           "One-time payment, no automatic renewal"
         ]
       },
       "print": {
-        "name": "Annual Print",
+        "name": "Print + Digital – 2 Issues",
         "tagline": "Both issues in your hands, and on your screen.",
         "benefits": [
           "Two print issues of PRESS per year",
           "Digital PDF editions of both issues",
-          "Newsletter access",
+          "Email newsletter",
           "One-time payment, no automatic renewal"
         ]
       }
