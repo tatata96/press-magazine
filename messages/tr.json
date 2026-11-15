@@ -100,7 +100,7 @@
     "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
     "planChoice": "Aboneliğini seç",
     "includesLabel": "İçerik",
-    "priceNote": "Yılda 2 sayı",
+    "priceNote": "Tek seferlik ödeme",
     "cta": "Sepete ekle",
     "priceUnavailable": "Fiyat mevcut değil",
     "unavailable": "Şu anda mevcut değil",
@@ -110,30 +110,31 @@
     "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma yılda iki sayıyı kapsar; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
-        "name": "Yıllık Dijital",
+        "name": "Dijital – 2 Sayı",
         "tagline": "Press'i her ekranda oku.",
         "benefits": [
           "Yılda iki dijital PDF PRESS sayısı",
-          "Bülten erişimi",
+          "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       },
       "print": {
-        "name": "Yıllık Basılı",
+        "name": "Basılı + Dijital – 2 Sayı",
         "tagline": "İki sayı da elinde ve ekranında.",
         "benefits": [
           "Yılda iki basılı PRESS sayısı",
           "Her iki sayının dijital PDF sürümleri",
-          "Bülten erişimi",
+          "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       }
     }
   },
   "CartPage": {
-    "metaTitle": "Sepet",
-    "metaDescription": "Press sepetin.",
-    "heading": "Sepet",
+    "metaTitle": "Ödeme",
+    "metaDescription": "Press siparişini incele ve bilgilerini gir.",
+    "heading": "Ödeme",
+    "orderHeading": "Siparişin",
     "loading": "Sepet yükleniyor…",
     "loadError": "Sepetin şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
     "empty": "Sepetin boş.",
@@ -219,6 +220,7 @@
     "zip": "Posta kodu",
     "submit": "Sepete devam et",
     "saving": "Kaydediliyor…",
+    "preparingCart": "Sepetin hazırlanıyor…",
     "required": "Bu alan zorunludur.",
     "invalid": "Lütfen bu alanı kontrol et.",
     "emailInvalid": "Geçerli bir e-posta adresi gir.",

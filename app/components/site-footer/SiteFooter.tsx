@@ -5,7 +5,7 @@ import LogoMark from "../logo/LogoMark";
 import Team from "../team/Team";
 import styles from "./site-footer.module.scss";
 
-const inquiryEmail = "hello@septembercompany.com";
+const inquiryEmail = "hello@pressmagazine.com.tr";
 const septemberHref = "https://www.septembercompany.com/";
 
 function toStrings(value: unknown): string[] {

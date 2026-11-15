@@ -10,6 +10,7 @@ import "../globals.scss";
 import "../typography.scss";
 import Header from "../components/header/Header";
 import SiteFooter from "../components/site-footer/SiteFooter";
+import LoadingProvider from "../components/loading-screen/LoadingProvider";
 
 const pressed = localFont({
   src: "../style/fonts/Pressed.woff2",
@@ -79,9 +80,11 @@ export default async function RootLayout({children}: LayoutProps<"/[locale]">) {
     >
       <body>
         <NextIntlClientProvider>
-          <Header />
-          {children}
-          <SiteFooter />
+          <LoadingProvider>
+            <Header />
+            {children}
+            <SiteFooter />
+          </LoadingProvider>
         </NextIntlClientProvider>
       </body>
     </html>

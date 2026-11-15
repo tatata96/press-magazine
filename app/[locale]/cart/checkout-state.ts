@@ -8,6 +8,7 @@ import {LEGAL_DOCUMENTS_VERSION} from "@/lib/legal/consent";
 import {
   assembleBuyerDetails,
   type BuyerDetails,
+  type StoredBuyerDetails,
 } from "../buyer-details/buyer-details";
 import {readStoredBuyerDetails} from "../buyer-details/buyer-cookie";
 import {readCartId} from "./cart-cookie";
@@ -46,6 +47,20 @@ function fingerprintAgreement(snapshot: AgreementSnapshot): string {
   return createHash("sha256").update(JSON.stringify(snapshot)).digest("hex");
 }
 
+export function fingerprintCart(
+  cart: Cart,
+  context: Pick<CartCheckoutContext, "total" | "delivery" | "requiresShipping">,
+): string {
+  return createHash("sha256")
+    .update(JSON.stringify({
+      cart,
+      total: context.total,
+      delivery: context.delivery,
+      requiresShipping: context.requiresShipping,
+    }))
+    .digest("hex");
+}
+
 // Cookies are read here and not in loadCheckoutState so callers can keep this outside any
 // try/catch: Next signals "this render is dynamic" by rejecting cookies(), and catching
 // that would hide it.
@@ -66,6 +81,13 @@ export async function loadCheckoutState({
 }: Awaited<ReturnType<typeof readCheckoutCookies>>): Promise<CheckoutState> {
   const current = cartId ? await getCartWithCheckoutContext(cartId) : null;
 
+  return buildCheckoutState(current, storedBuyer);
+}
+
+export function buildCheckoutState(
+  current: Awaited<ReturnType<typeof getCartWithCheckoutContext>>,
+  storedBuyer: StoredBuyerDetails | null,
+): CheckoutState {
   if (!current || current.cart.lines.length === 0) {
     return {status: "empty"};
   }
