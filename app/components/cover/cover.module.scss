@@ -5,8 +5,8 @@
   will-change: transform;
 }
 
-// Magazine proportions (A4, 210 x 297). The source photo is 4:5, so it is cropped to
-// fill the frame. Capped by viewport height so the whole cover stays on screen.
+// Magazine proportions (A4, 210 x 297). The frame is capped by viewport height
+// so the whole cover stays on screen.
 .cover {
   --cover-ratio: calc(210 / 297);
   width: min(80vw, 480px, calc((100svh - 160px) * var(--cover-ratio)));

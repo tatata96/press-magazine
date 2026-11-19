@@ -10,10 +10,10 @@ export default async function Cover() {
     <CoverSheen>
       <figure className={styles.cover}>
         <Image
-          src="/images/cover.jpg"
+          src="/images/newsletter/newsletter-11.jpg"
           alt={t("alt")}
-          width={1200}
-          height={1500}
+          width={2599}
+          height={3544}
           sizes="(min-width: 768px) 480px, 80vw"
           priority
         />

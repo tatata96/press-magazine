@@ -6,28 +6,21 @@ import {getPageMetadata} from "@/lib/seo";
 import NewsletterForm from "./NewsletterForm";
 import styles from "./newsletter.module.scss";
 
-// Decorative images (a photo can appear more than once) collaged around the edges, tilted and overlapping, with
-// the centre left clear for the form. `left` and `top` place the top-left
-// corner (percent of the stage; negative values bleed off the edge), `width` is
-// the desktop width (percent of the stage width), `phone` where and how it shows on phones (same units, `width` as a share of the stage width; images without it are hidden), `rotate` the tilt in degrees,
-// and `fromX` / `fromY` the offset the image slides in from on load.
+// Position and width are percentages of the stage. Images with a phone
+// layout appear on smaller screens. fromX and fromY set the entrance offset.
 const COLLAGE_IMAGES = [
   {
     src: "/images/newsletter/newsletter-1.jpg",
-    w: 1200,
-    h: 960,
     left: -3,
-    top: -4,
-    width: 18,
+    top: -8,
+    width: 15,
     phone: {left: 5, top: 10, width: 24, rotate: 15},
     rotate: -9,
     fromX: "-120%",
     fromY: "-120%",
   },
   {
-    src: "/images/newsletter/newsletter-3.jpg",
-    w: 938,
-    h: 1280,
+    src: "/images/newsletter/newsletter-2.jpg",
     left: 20,
     top: -10,
     width: 13,
@@ -37,9 +30,7 @@ const COLLAGE_IMAGES = [
     fromY: "-150%",
   },
   {
-    src: "/images/newsletter/newsletter-4.jpg",
-    w: 915,
-    h: 1299,
+    src: "/images/newsletter/newsletter-3.jpg",
     left: 78,
     top: -6,
     width: 14,
@@ -49,31 +40,25 @@ const COLLAGE_IMAGES = [
     fromY: "-120%",
   },
   {
-    src: "/images/newsletter/newsletter-7.jpg",
-    w: 1065,
-    h: 710,
-    left: -4,
-    top: 40,
-    width: 17,
+    src: "/images/newsletter/newsletter-4.jpg",
+    left: -3,
+    top: 31,
+    width: 13,
     rotate: 7,
     fromX: "-150%",
     fromY: "0%",
   },
   {
     src: "/images/newsletter/newsletter-5.jpg",
-    w: 1536,
-    h: 1024,
-    left: 86,
+    left: 88,
     top: 38,
-    width: 18,
+    width: 14,
     rotate: -7,
     fromX: "150%",
     fromY: "0%",
   },
   {
-    src: "/images/newsletter/newsletter-2.jpg",
-    w: 1200,
-    h: 1500,
+    src: "/images/newsletter/newsletter-6.jpg",
     left: 14,
     top: 74,
     width: 13,
@@ -82,9 +67,7 @@ const COLLAGE_IMAGES = [
     fromY: "120%",
   },
   {
-    src: "/images/newsletter/newsletter-6.jpg",
-    w: 1863,
-    h: 2484,
+    src: "/images/newsletter/newsletter-7.jpg",
     left: 70,
     top: 72,
     width: 14,
@@ -94,9 +77,7 @@ const COLLAGE_IMAGES = [
     fromY: "120%",
   },
   {
-    src: "/images/newsletter/newsletter-2.jpg",
-    w: 1200,
-    h: 1500,
+    src: "/images/newsletter/newsletter-8.jpg",
     left: 60,
     top: -12,
     width: 12,
@@ -105,9 +86,7 @@ const COLLAGE_IMAGES = [
     fromY: "-150%",
   },
   {
-    src: "/images/newsletter/newsletter-4.jpg",
-    w: 915,
-    h: 1299,
+    src: "/images/newsletter/newsletter-9.jpg",
     left: 42,
     top: 82,
     width: 12,
@@ -117,9 +96,7 @@ const COLLAGE_IMAGES = [
     fromY: "150%",
   },
   {
-    src: "/images/newsletter/newsletter-6.jpg",
-    w: 1863,
-    h: 2484,
+    src: "/images/newsletter/newsletter-10.jpg",
     left: -2,
     top: 60,
     width: 12,
@@ -129,15 +106,31 @@ const COLLAGE_IMAGES = [
     fromY: "0%",
   },
   {
-    src: "/images/newsletter/newsletter-1.jpg",
-    w: 1200,
-    h: 960,
+    src: "/images/newsletter/newsletter-11.jpg",
     left: 88,
     top: 18,
     width: 11,
     rotate: 9,
     fromX: "150%",
     fromY: "0%",
+  },
+  {
+    src: "/images/newsletter/newsletter-12.jpg",
+    left: 1,
+    top: 85,
+    width: 12,
+    rotate: 8,
+    fromX: "-120%",
+    fromY: "120%",
+  },
+  {
+    src: "/images/newsletter/newsletter-13.jpg",
+    left: 89,
+    top: 78,
+    width: 13,
+    rotate: -9,
+    fromX: "120%",
+    fromY: "120%",
   },
 ] as const;
 
@@ -164,13 +157,13 @@ export default async function NewsletterPage() {
       <div className={styles.images} aria-hidden="true">
         {COLLAGE_IMAGES.map((image, index) => (
           <Image
-            key={`${image.src}-${image.left}-${image.top}`}
+            key={image.src}
             className={`${styles.image} ${"phone" in image ? "" : styles.desktopOnly}`}
             src={image.src}
-            width={image.w}
-            height={image.h}
+            width={2599}
+            height={3544}
             alt=""
-            sizes="(min-width: 900px) 12vw, 35vw"
+            sizes={`(min-width: 900px) ${image.width}vw, ${"phone" in image ? image.phone.width : 0}vw`}
             style={
               {
                 "--left": `${image.left}%`,
