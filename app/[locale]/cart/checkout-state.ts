@@ -11,7 +11,7 @@ import {
   type StoredBuyerDetails,
 } from "../buyer-details/buyer-details";
 import {readStoredBuyerDetails} from "../buyer-details/buyer-cookie";
-import {readCartId} from "./cart-cookie";
+import {readCartId} from "@/lib/cookies/cart-cookie";
 
 // Everything the personalized Distance Sales Agreement states. It is built on the server
 // from Shopify's cart and the saved buyer details, never from browser input.

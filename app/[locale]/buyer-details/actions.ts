@@ -6,7 +6,7 @@ import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {ShopifyError} from "@/lib/shopify/admin-client";
 import {getCartWithCheckoutContext, setCartBuyer} from "@/lib/shopify/cart";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
-import {readCartId} from "../cart/cart-cookie";
+import {readCartId} from "@/lib/cookies/cart-cookie";
 import {parseBuyerDetails, type BuyerDetailsErrors} from "./buyer-details";
 import {BuyerCookieConfigError} from "./buyer-crypto";
 import {writeStoredBuyerDetails} from "./buyer-cookie";

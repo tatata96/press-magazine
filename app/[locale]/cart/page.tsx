@@ -9,7 +9,7 @@ import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import BuyerDetailsForm from "../buyer-details/BuyerDetailsForm";
 import {readStoredBuyerDetails} from "../buyer-details/buyer-cookie";
-import {readCartId} from "./cart-cookie";
+import {readCartId} from "@/lib/cookies/cart-cookie";
 import CartLines from "./CartLines";
 import PaymentMethods from "./PaymentMethods";
 import {fingerprintCart} from "./checkout-state";

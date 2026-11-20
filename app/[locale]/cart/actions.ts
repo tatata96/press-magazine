@@ -14,7 +14,7 @@ import {
   setCartAttributesForCheckout,
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
-import {readCartId, writeCartId} from "./cart-cookie";
+import {readCartId, writeCartId} from "@/lib/cookies/cart-cookie";
 import {loadCheckoutState, readCheckoutCookies} from "./checkout-state";
 
 export type CartActionResult = {ok: true} | {ok: false; error: "invalid" | "failed"};

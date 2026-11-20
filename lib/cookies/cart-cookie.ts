@@ -1,6 +1,7 @@
 import "server-only";
 
 import {cookies} from "next/headers";
+import {getHttpOnlyCookieOptions} from "./cookie-options";
 
 const CART_COOKIE_NAME = "press_cart_id";
 // Shopify expires carts after a period of inactivity; an expired id is handled where the
@@ -13,11 +14,12 @@ export async function readCartId(): Promise<string | undefined> {
 
 // The id lives in an httpOnly cookie so only our server code can read or change the cart.
 export async function writeCartId(cartId: string): Promise<void> {
-  (await cookies()).set(CART_COOKIE_NAME, cartId, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: CART_COOKIE_MAX_AGE_SECONDS,
-  });
+  (await cookies()).set(
+    CART_COOKIE_NAME,
+    cartId,
+    getHttpOnlyCookieOptions({
+      maxAgeSeconds: CART_COOKIE_MAX_AGE_SECONDS,
+      secure: process.env.NODE_ENV === "production",
+    }),
+  );
 }
