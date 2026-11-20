@@ -1,5 +1,6 @@
 import "server-only";
 
+import type {Locale} from "next-intl";
 import {getLocale, getTranslations} from "next-intl/server";
 import {PRODUCT_TYPE_BY_HANDLE} from "@/lib/legal/agreement-config";
 import {
@@ -21,10 +22,11 @@ export type PreparedCheckout = {
 
 export async function buildPreparedCheckout(
   state: Extract<CheckoutState, {status: "ready"}>,
+  locale: Locale,
 ): Promise<PreparedCheckout> {
   const [data, terms] = await Promise.all([
-    buildAgreementData(state.snapshot),
-    getBusinessTermValues(),
+    buildAgreementData(state.snapshot, locale),
+    getBusinessTermValues(locale),
   ]);
 
   return {
@@ -50,15 +52,16 @@ function formatAddress(address: PostalAddress, countryName: string): string {
 // before Shopify's checkout, so they say so rather than showing a guess.
 export async function buildAgreementData(
   snapshot: AgreementSnapshot,
+  locale?: Locale,
 ): Promise<AgreementData> {
-  const [t, locale, seller] = await Promise.all([
-    getTranslations("Agreement"),
-    getLocale(),
-    getSellerValues(),
+  const resolvedLocale = locale ?? await getLocale();
+  const [t, seller] = await Promise.all([
+    getTranslations({locale: resolvedLocale, namespace: "Agreement"}),
+    getSellerValues(resolvedLocale),
   ]);
   const {buyer} = snapshot;
   const countryName =
-    new Intl.DisplayNames([locale], {type: "region"}).of(buyer.countryCode) ??
+    new Intl.DisplayNames([resolvedLocale], {type: "region"}).of(buyer.countryCode) ??
     buyer.countryCode;
   // "Same as delivery" resolves to the delivery address, so the agreement names a concrete one.
   const billingAddress = buyer.billingAddress ?? buyer.shippingAddress;
@@ -66,7 +69,7 @@ export async function buildAgreementData(
   const {currencyCode} = snapshot.total;
   // The day the agreement is shown, in the shop's time zone. It is not part of the
   // fingerprint; the exact acceptance time is stored on the order.
-  const today = new Intl.DateTimeFormat(locale, {
+  const today = new Intl.DateTimeFormat(resolvedLocale, {
     dateStyle: "long",
     timeZone: "Europe/Istanbul",
   }).format(new Date());
@@ -92,21 +95,21 @@ export async function buildAgreementData(
           ? t(productType === "digital" ? "productTypeDigital" : "productTypePrint")
           : undecided,
         quantity: String(line.quantity),
-        unitPrice: formatMoney(line.unitPrice, locale),
-        totalPrice: formatMoney(line.totalPrice, locale),
+        unitPrice: formatMoney(line.unitPrice, resolvedLocale),
+        totalPrice: formatMoney(line.totalPrice, resolvedLocale),
       };
     }),
     order: {
-      subtotal: formatMoney(snapshot.subtotal, locale),
+      subtotal: formatMoney(snapshot.subtotal, resolvedLocale),
       // Shopify's cart exposes no discount, tax or payment-method data.
       discount: undecided,
       taxAmount: undecided,
       shippingCost: snapshot.delivery
-        ? formatMoney(snapshot.delivery.cost, locale)
+        ? formatMoney(snapshot.delivery.cost, resolvedLocale)
         : buyer.shippingAddress
           ? undecided
-          : formatMoney({amount: "0", currencyCode}, locale),
-      total: formatMoney(snapshot.total, locale),
+          : formatMoney({amount: "0", currencyCode}, resolvedLocale),
+      total: formatMoney(snapshot.total, resolvedLocale),
       currency: currencyCode,
       paymentMethod: undecided,
       date: today,

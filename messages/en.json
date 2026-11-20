@@ -148,13 +148,14 @@
     "subtotal": "Subtotal",
     "updateError": "We could not update your cart. Please try again.",
     "checkout": "Checkout",
+    "reviewAgreements": "Review agreements",
     "redirecting": "Taking you to checkout…",
     "consentLabel": "I have read and agree to the <distanceSalesAgreement>Distance Sales Agreement</distanceSalesAgreement> and <preInformation>Pre-Information Form</preInformation>.",
     "consentRequired": "Please agree to the Distance Sales Agreement and Pre-Information Form to continue.",
     "checkoutEmpty": "Your cart is empty. Add an item to check out.",
     "checkoutError": "We could not start checkout. Please try again.",
     "editDetails": "Edit your details",
-    "agreementChanged": "The agreement has changed since you last saw it. Please review it and accept again.",
+    "agreementChanged": "Your buyer details, cart, or delivery costs have changed. Review the updated agreements and accept them again.",
     "needsDetails": "Please complete your details first.",
     "checkoutUnavailable": "Checkout is not available yet.",
     "paymentMethods": "Accepted payment methods"
@@ -225,6 +226,7 @@
     "invalid": "Please check this field.",
     "emailInvalid": "Enter a valid email address.",
     "phoneInvalid": "Enter a phone number with its country code, like +90 …",
+    "checkoutEmpty": "Your cart is empty. Add an item to check out.",
     "saveError": "We could not save your details. Please try again.",
     "checkoutUnavailable": "Checkout is not available yet."
   },

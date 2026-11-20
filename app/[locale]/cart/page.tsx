@@ -12,8 +12,7 @@ import {readStoredBuyerDetails} from "../buyer-details/buyer-cookie";
 import {readCartId} from "./cart-cookie";
 import CartLines from "./CartLines";
 import PaymentMethods from "./PaymentMethods";
-import {buildCheckoutState, fingerprintCart} from "./checkout-state";
-import {buildPreparedCheckout} from "./build-agreement-data";
+import {fingerprintCart} from "./checkout-state";
 import styles from "./cart.module.scss";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -99,8 +98,6 @@ async function CartContent() {
     return <p role="alert" className={styles.message}>{detailsT("loadError")}</p>;
   }
 
-  const state = buildCheckoutState(current, storedBuyer);
-  const initialCheckout = state.status === "ready" ? await buildPreparedCheckout(state) : null;
   const regionNames = new Intl.DisplayNames([locale], {type: "region"});
   const shipping = context.shippingAddress;
   // Changes to quantities, shipping requirements or prices invalidate client consent.
@@ -127,7 +124,6 @@ async function CartContent() {
       }}
       orderSummary={orderSummary}
       paymentMethods={<PaymentMethods />}
-      initialCheckout={initialCheckout}
       cartVersion={cartVersion}
     />
   );

@@ -1,5 +1,6 @@
 import "server-only";
 
+import type {Locale} from "next-intl";
 import {getLocale, getTranslations} from "next-intl/server";
 import {
   BUSINESS_TERMS,
@@ -49,8 +50,8 @@ export type PreInformationData = AgreementData & {
 const BLANK = "________";
 
 // Seller details come from one place. A missing value shows a visible marker, never a guess.
-export async function getSellerValues(): Promise<AgreementData["seller"]> {
-  const t = await getTranslations("Agreement");
+export async function getSellerValues(locale?: Locale): Promise<AgreementData["seller"]> {
+  const t = await getTranslations({locale: locale ?? await getLocale(), namespace: "Agreement"});
   const value = (field: SellerField) =>
     SELLER[field] ?? t("placeholderValue", {name: `seller.${field}`});
 
@@ -101,13 +102,11 @@ export async function getBlankAgreementData(): Promise<AgreementData> {
 }
 
 // Business terms come from one place. A missing value shows a visible marker, never a guess.
-export async function getBusinessTermValues(): Promise<PreInformationData["terms"]> {
-  const [t, locale] = await Promise.all([
-    getTranslations("Agreement"),
-    getLocale(),
-  ]);
+export async function getBusinessTermValues(locale?: Locale): Promise<PreInformationData["terms"]> {
+  const resolvedLocale = locale ?? await getLocale();
+  const t = await getTranslations({locale: resolvedLocale, namespace: "Agreement"});
   const value = (field: BusinessTermField) =>
-    BUSINESS_TERMS[field]?.[locale === "en" ? "en" : "tr"] ??
+    BUSINESS_TERMS[field]?.[resolvedLocale] ??
     t("placeholderValue", {name: `terms.${field}`});
 
   return {

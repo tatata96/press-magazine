@@ -2,7 +2,7 @@
 
 import {useRef, useState} from "react";
 import type {ReactNode} from "react";
-import {useTranslations} from "next-intl";
+import {useLocale, useTranslations} from "next-intl";
 import TextField from "@/app/components/text-field/TextField";
 import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import {saveBuyerDetails} from "./actions";
@@ -35,7 +35,6 @@ type BuyerDetailsFormProps = {
   defaults: BuyerDetailsDefaults;
   orderSummary: ReactNode;
   paymentMethods: ReactNode;
-  initialCheckout: PreparedCheckout | null;
   cartVersion: string;
 };
 
@@ -52,20 +51,16 @@ export default function BuyerDetailsForm({
   defaults,
   orderSummary,
   paymentMethods,
-  initialCheckout,
   cartVersion,
 }: BuyerDetailsFormProps) {
   const t = useTranslations("BuyerDetails");
+  const locale = useLocale();
   const formRef = useRef<HTMLFormElement>(null);
   const savingRef = useRef(false);
-  const preparedRef = useRef<{
-    signature: string;
-    checkout: PreparedCheckout;
-  } | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [detailsRevision, setDetailsRevision] = useState(0);
   const [errors, setErrors] = useState<BuyerDetailsErrors>({});
-  const [saveError, setSaveError] = useState<"unavailable" | "failed" | null>(
+  const [saveError, setSaveError] = useState<"empty_cart" | "unavailable" | "failed" | null>(
     null,
   );
   const [billingIsSameAsShipping, setBillingIsSameAsShipping] = useState(
@@ -113,29 +108,20 @@ export default function BuyerDetailsForm({
       return null;
     }
 
-    const signature = JSON.stringify(Array.from(formData.entries()));
-    const cached = preparedRef.current;
-
-    if (cached?.signature === signature && cached.checkout.cartVersion === cartVersion) {
-      return cached.checkout;
-    }
-
     savingRef.current = true;
     setIsSaving(true);
 
     try {
-      const result = await saveBuyerDetails(formData);
+      const result = await saveBuyerDetails(formData, locale);
 
       if (result.ok) {
-        preparedRef.current = {signature, checkout: result.checkout};
-
         return result.checkout;
       }
 
       if (result.error === "invalid") {
         setErrors(result.errors);
       } else {
-        setSaveError(result.error === "unavailable" ? "unavailable" : "failed");
+        setSaveError(result.error);
       }
     } catch {
       setSaveError("failed");
@@ -328,7 +314,9 @@ export default function BuyerDetailsForm({
               <p role="alert" className={styles.message}>
                 {saveError === "unavailable"
                   ? t("checkoutUnavailable")
-                  : t("saveError")}
+                  : saveError === "empty_cart"
+                    ? t("checkoutEmpty")
+                    : t("saveError")}
               </p>
             ) : null}
           </div>
@@ -336,7 +324,6 @@ export default function BuyerDetailsForm({
         <aside className={cartStyles.order}>
           {orderSummary}
           <CheckoutConsent
-            initialCheckout={initialCheckout}
             cartVersion={cartVersion}
             detailsRevision={detailsRevision}
             getDetailsSignature={getDetailsSignature}
