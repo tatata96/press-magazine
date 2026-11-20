@@ -1,28 +1,36 @@
 import {Suspense} from "react";
 import type {Metadata} from "next";
+import {redirect} from "next/navigation";
 import {getLocale, getTranslations} from "next-intl/server";
 import {Link} from "../../../i18n/navigation";
 import {getPageMetadata} from "@/lib/seo";
+import buttonStyles from "@/app/components/button/button.module.scss";
+import {getCustomer, type Customer} from "@/lib/customer-account/customer";
+import {getLoginPath, getRefreshPath} from "@/lib/customer-account/links";
+import {CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {getCartWithCheckoutContext} from "@/lib/shopify/cart";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
-import BuyerDetailsForm from "../buyer-details/BuyerDetailsForm";
-import {readStoredBuyerDetails} from "../buyer-details/buyer-cookie";
-import {readCartId} from "@/lib/cookies/cart-cookie";
+import type {AddressView} from "../buyer-details/AddressChooser";
+import CheckoutDetails from "../buyer-details/CheckoutDetails";
 import CartLines from "./CartLines";
 import PaymentMethods from "./PaymentMethods";
-import {fingerprintCart} from "./checkout-state";
+import {fingerprintCart, readCheckoutInputs} from "./checkout-state";
 import styles from "./cart.module.scss";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("CartPage");
 
-  return getPageMetadata({
-    title: t("metaTitle"),
-    description: t("metaDescription"),
-    path: "/cart",
-  });
+  return {
+    ...(await getPageMetadata({
+      title: t("metaTitle"),
+      description: t("metaDescription"),
+      path: "/cart",
+    })),
+    // The cart is personal and not worth indexing.
+    robots: {index: false, follow: false},
+  };
 }
 
 async function CartContent() {
@@ -30,10 +38,7 @@ async function CartContent() {
   const detailsT = await getTranslations("BuyerDetails");
   const locale = await getLocale();
   // Keep request-time cookie reads outside catch blocks for Cache Components.
-  const [cartId, storedBuyer] = await Promise.all([
-    readCartId(),
-    readStoredBuyerDetails(),
-  ]);
+  const {cartId, session} = await readCheckoutInputs();
   const checkoutEnabled = isLegalContentPublishable();
   let current: Awaited<ReturnType<typeof getCartWithCheckoutContext>>;
   let countryCodes: string[] | null;
@@ -94,33 +99,96 @@ async function CartContent() {
     );
   }
 
+  // Browsing and the cart need no account; checking out does.
+  if (session.status === "signed_out") {
+    return (
+      <div className={styles.layout}>
+        <section className={styles.details} aria-labelledby="sign-in-heading">
+          <h2 id="sign-in-heading" className={`type-mono ${styles.sectionHeading}`}>
+            {t("signInHeading")}
+          </h2>
+          <div className={styles.signIn}>
+            <p className={styles.message}>{t("signInBody")}</p>
+            {/* A plain link: the auth routes are not locale-prefixed pages. */}
+            <a
+              href={getLoginPath({locale})}
+              className={`${buttonStyles.button} type-label ${styles.signInButton}`}
+            >
+              {t("signIn")}
+            </a>
+          </div>
+        </section>
+        <aside className={styles.order}>{orderSummary}</aside>
+      </div>
+    );
+  }
+
+  // Pages cannot set cookies, so the auth route renews the session and comes back here.
+  if (session.status === "expired") {
+    redirect(getRefreshPath({locale}));
+  }
+
   if (!countryCodes || countryCodes.length === 0) {
     return <p role="alert" className={styles.message}>{detailsT("loadError")}</p>;
   }
 
+  let customer: Customer | null = null;
+  let sessionExpired = false;
+
+  try {
+    customer = await getCustomer(session.accessToken);
+  } catch (error) {
+    sessionExpired = error instanceof CustomerSessionExpiredError;
+
+    if (!sessionExpired) {
+      console.error(
+        "Could not load customer:",
+        error instanceof Error ? error.message : "unknown error",
+      );
+    }
+  }
+
+  if (sessionExpired) {
+    redirect(getRefreshPath({locale}));
+  }
+
+  if (!customer) {
+    return <p role="alert" className={styles.message}>{detailsT("loadError")}</p>;
+  }
+
   const regionNames = new Intl.DisplayNames([locale], {type: "region"});
-  const shipping = context.shippingAddress;
+  // Addresses the shop cannot sell to are left out: they could not be used for this order.
+  const addresses: AddressView[] = customer.addresses
+    .filter((address) => countryCodes.includes(address.countryCode))
+    .map((address) => ({
+      id: address.id,
+      label: [
+        address.address1,
+        address.address2,
+        `${address.zip} ${address.city}`.trim(),
+        regionNames.of(address.countryCode) ?? address.countryCode,
+      ]
+        .filter(Boolean)
+        .join(", "),
+      isDefault: address.id === customer.defaultAddressId,
+    }));
+  const preselectedAddress = addresses.find((address) => address.isDefault) ?? addresses[0];
   // Changes to quantities, shipping requirements or prices invalidate client consent.
   const cartVersion = fingerprintCart(cart, context);
 
   return (
-    <BuyerDetailsForm
+    <CheckoutDetails
       requiresShipping={context.requiresShipping}
       countries={countryCodes.map((code) => ({code, name: regionNames.of(code) ?? code}))}
+      customer={{
+        firstName: customer.firstName,
+        lastName: customer.lastName,
+        email: customer.email ?? "",
+      }}
+      addresses={addresses}
       defaults={{
-        firstName: storedBuyer?.firstName ?? shipping?.firstName ?? "",
-        lastName: storedBuyer?.lastName ?? shipping?.lastName ?? "",
-        email: context.buyer.email ?? "",
-        phone: context.buyer.phone ?? "",
-        countryCode: context.buyer.countryCode ?? "",
-        shippingAddress: shipping ? {
-          address1: shipping.address1,
-          address2: shipping.address2,
-          city: shipping.city,
-          zip: shipping.zip,
-        } : null,
-        billingAddress: storedBuyer?.billingAddress ?? null,
-        billingIsSameAsShipping: storedBuyer ? storedBuyer.billingAddress === null : true,
+        phone: context.buyer.phone ?? customer.phone ?? "",
+        addressId: preselectedAddress?.id ?? null,
       }}
       orderSummary={orderSummary}
       paymentMethods={<PaymentMethods />}

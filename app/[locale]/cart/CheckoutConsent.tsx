@@ -7,7 +7,8 @@ import Button from "@/app/components/button/Button";
 import type {LegalDocumentKey} from "@/app/components/legal-document/documents";
 import LegalModal from "@/app/components/legal-modal/LegalModal";
 import {useRouter} from "../../../i18n/navigation";
-import {proceedToCheckout} from "./actions";
+import type {CheckoutActionError, CheckoutActionResult} from "./actions";
+import {redirectForAuthError} from "./auth-redirect";
 import type {PreparedCheckout} from "./build-agreement-data";
 import AgreementEn from "@/app/components/legal-document/distance-sales-agreement/AgreementEn";
 import AgreementTr from "@/app/components/legal-document/distance-sales-agreement/AgreementTr";
@@ -18,27 +19,22 @@ import styles from "./cart.module.scss";
 
 type CheckoutConsentProps = {
   cartVersion: string;
-  detailsRevision: number;
-  getDetailsSignature: () => string;
+  /** Changes whenever anything the buyer chose changes, which invalidates the agreements and consent. */
+  detailsKey: string;
   prepareCheckout: () => Promise<PreparedCheckout | null>;
+  proceed: (acceptedFingerprint: string) => Promise<CheckoutActionResult>;
   paymentMethods: ReactNode;
 };
 
-type CheckoutError =
-  | "consent_required"
-  | "empty_cart"
-  | "needs_details"
-  | "agreement_changed"
-  | "unavailable"
-  | "failed";
+type CheckoutError = Exclude<CheckoutActionError, "login_required" | "session_expired">;
 
 // Consent gate before leaving for Shopify's hosted checkout. The disabled button is only
 // a convenience: proceedToCheckout re-checks consent and records it on the cart.
 export default function CheckoutConsent({
   cartVersion,
-  detailsRevision,
-  getDetailsSignature,
+  detailsKey,
   prepareCheckout,
+  proceed,
   paymentMethods,
 }: CheckoutConsentProps) {
   const t = useTranslations("CartPage");
@@ -49,11 +45,11 @@ export default function CheckoutConsent({
   const busyRef = useRef(false);
   const [prepared, setPrepared] = useState<{
     checkout: PreparedCheckout;
-    detailsSignature: string;
-    revision: number;
+    detailsKey: string;
   } | null>(null);
   const [acceptedFingerprint, setAcceptedFingerprint] = useState<string | null>(null);
-  const current = prepared?.revision === detailsRevision &&
+  // The prepared agreements only count while nothing they were built from has changed.
+  const current = prepared?.detailsKey === detailsKey &&
     prepared.checkout.cartVersion === cartVersion ? prepared : null;
   const hasConsent = current !== null && acceptedFingerprint === current.checkout.fingerprint;
   const [openDocument, setOpenDocument] = useState<LegalDocumentKey | null>(
@@ -82,14 +78,6 @@ export default function CheckoutConsent({
       return;
     }
 
-    if (getDetailsSignature() !== current.detailsSignature) {
-      setPrepared(null);
-      setAcceptedFingerprint(null);
-      setError("agreement_changed");
-
-      return;
-    }
-
     setError(null);
     setAcceptedFingerprint(checked ? current.checkout.fingerprint : null);
   }
@@ -99,9 +87,7 @@ export default function CheckoutConsent({
       return;
     }
 
-    const detailsSignature = getDetailsSignature();
-
-    if (current?.detailsSignature === detailsSignature) {
+    if (current) {
       setOpenDocument(key);
 
       return;
@@ -116,11 +102,10 @@ export default function CheckoutConsent({
     try {
       const checkout = await prepareCheckout();
 
-      if (checkout && getDetailsSignature() === detailsSignature) {
-        setPrepared({checkout, detailsSignature, revision: detailsRevision});
+      if (checkout) {
+        // Keyed by the details it was built for: if they changed meanwhile, it is not current.
+        setPrepared({checkout, detailsKey});
         setOpenDocument(key);
-      } else if (checkout) {
-        setError("agreement_changed");
       }
     } catch {
       setError("failed");
@@ -134,21 +119,12 @@ export default function CheckoutConsent({
       return;
     }
 
-    // Autofill may change fields without firing a React change event.
-    if (getDetailsSignature() !== current.detailsSignature) {
-      setPrepared(null);
-      setAcceptedFingerprint(null);
-      setError("agreement_changed");
-
-      return;
-    }
-
     busyRef.current = true;
     setError(null);
     setIsRedirecting(true);
 
     try {
-      const result = await proceedToCheckout(current.checkout.fingerprint, locale);
+      const result = await proceed(current.checkout.fingerprint);
 
       if (result.ok) {
         window.location.assign(result.checkoutUrl);
@@ -156,10 +132,17 @@ export default function CheckoutConsent({
         return;
       }
 
-      setIsRedirecting(false);
-      setError(result.error);
+      // Not signed in (any more): the auth routes bring the buyer back to this page.
+      if (redirectForAuthError(result.error, {locale})) {
+        return;
+      }
 
-      if (result.error === "agreement_changed" || result.error === "needs_details") {
+      const failure = result.error as CheckoutError;
+
+      setIsRedirecting(false);
+      setError(failure);
+
+      if (failure === "agreement_changed" || failure === "invalid_details") {
         setPrepared(null);
         setAcceptedFingerprint(null);
         router.refresh();
@@ -237,7 +220,7 @@ export default function CheckoutConsent({
               ? t("checkoutEmpty")
               : checkoutError === "agreement_changed"
                 ? t("agreementChanged")
-                : checkoutError === "needs_details"
+                : checkoutError === "invalid_details"
                   ? t("needsDetails")
                   : checkoutError === "unavailable"
                     ? t("checkoutUnavailable")

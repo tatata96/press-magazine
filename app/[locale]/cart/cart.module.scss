@@ -322,9 +322,6 @@
   }
 }
 
-.editDetails {
-  align-self: flex-start;
-}
 
 .paymentMethods {
   display: flex;
@@ -354,4 +351,19 @@
   min-width: 0;
   height: 24px;
   object-fit: contain;
+}
+
+.signIn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+// An anchor that borrows the shared button look, for the sign-in link.
+.signInButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
