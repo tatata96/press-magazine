@@ -1,0 +1,45 @@
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: calc(100svh - 78px);
+  padding: 32px 16px 96px;
+
+  @media (min-width: 768px) {
+    padding: 48px 32px 128px;
+  }
+}
+
+.heading {
+  margin: 0 0 32px;
+  font-family: var(--font-family-title);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--type-title-size);
+  line-height: var(--type-title-line-height);
+  letter-spacing: var(--type-title-letter-spacing);
+}
+
+.message {
+  margin: 0 0 32px;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.link {
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  text-transform: uppercase;
+  text-underline-offset: 0.2em;
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}

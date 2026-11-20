@@ -12,6 +12,9 @@ export default async function Header() {
     { label: t("about"), href: "/about" },
     { label: t("newsletter"), href: "/newsletter" },
     { label: t("subscribe"), href: "/subscribe" },
+    // Always shown: the page itself sends signed-out visitors to sign in, so the header
+    // needs no session read and every page stays prerenderable.
+    { label: t("account"), href: "/account" },
   ];
 
   return (
