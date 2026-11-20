@@ -1,6 +1,7 @@
 "use server";
 
-import {refresh} from "next/cache";
+import {hasLocale} from "next-intl";
+import {routing} from "@/i18n/routing";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {ShopifyError} from "@/lib/shopify/admin-client";
 import {getCartWithCheckoutContext, setCartBuyer} from "@/lib/shopify/cart";
@@ -21,8 +22,9 @@ export type SaveBuyerDetailsResult =
 // needed comes from the cart on Shopify, never from the browser.
 export async function saveBuyerDetails(
   formData: FormData,
+  locale: string,
 ): Promise<SaveBuyerDetailsResult> {
-  if (!(formData instanceof FormData)) {
+  if (!(formData instanceof FormData) || !hasLocale(routing.locales, locale)) {
     return {ok: false, error: "failed"};
   }
 
@@ -75,8 +77,6 @@ export async function saveBuyerDetails(
       billingAddress: details.billingAddress,
     };
 
-    await writeStoredBuyerDetails(storedBuyer);
-
     // Re-read Shopify after saving: delivery estimates and totals may have changed.
     const state = await loadCheckoutState({cartId, storedBuyer});
 
@@ -84,9 +84,9 @@ export async function saveBuyerDetails(
       return {ok: false, error: "failed"};
     }
 
-    const checkout = await buildPreparedCheckout(state);
+    const checkout = await buildPreparedCheckout(state, locale);
 
-    refresh();
+    await writeStoredBuyerDetails(storedBuyer);
 
     return {ok: true, checkout};
   } catch (error) {

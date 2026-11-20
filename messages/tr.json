@@ -148,13 +148,14 @@
     "subtotal": "Ara toplam",
     "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene.",
     "checkout": "Ödemeye geç",
+    "reviewAgreements": "Sözleşmeleri incele",
     "redirecting": "Ödemeye yönlendiriliyorsun…",
     "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
     "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
     "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
     "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene.",
     "editDetails": "Bilgilerini düzenle",
-    "agreementChanged": "Sözleşme en son gördüğünden beri değişti. Lütfen tekrar incele ve yeniden kabul et.",
+    "agreementChanged": "Alıcı bilgilerin, sepetin veya teslimat ücretin değişti. Güncellenen belgeleri incele ve yeniden kabul et.",
     "needsDetails": "Lütfen önce bilgilerini tamamla.",
     "checkoutUnavailable": "Ödeme henüz kullanılamıyor.",
     "paymentMethods": "Kabul edilen ödeme yöntemleri"
@@ -225,6 +226,7 @@
     "invalid": "Lütfen bu alanı kontrol et.",
     "emailInvalid": "Geçerli bir e-posta adresi gir.",
     "phoneInvalid": "Telefon numarasını ülke koduyla gir, örneğin +90 …",
+    "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
     "saveError": "Bilgilerin kaydedilemedi. Lütfen tekrar dene.",
     "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
   },

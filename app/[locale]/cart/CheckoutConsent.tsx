@@ -17,7 +17,6 @@ import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import styles from "./cart.module.scss";
 
 type CheckoutConsentProps = {
-  initialCheckout: PreparedCheckout | null;
   cartVersion: string;
   detailsRevision: number;
   getDetailsSignature: () => string;
@@ -36,7 +35,6 @@ type CheckoutError =
 // Consent gate before leaving for Shopify's hosted checkout. The disabled button is only
 // a convenience: proceedToCheckout re-checks consent and records it on the cart.
 export default function CheckoutConsent({
-  initialCheckout,
   cartVersion,
   detailsRevision,
   getDetailsSignature,
@@ -51,22 +49,19 @@ export default function CheckoutConsent({
   const busyRef = useRef(false);
   const [prepared, setPrepared] = useState<{
     checkout: PreparedCheckout;
-    revision: number;
-  } | null>(initialCheckout ? {checkout: initialCheckout, revision: 0} : null);
-  const [accepted, setAccepted] = useState<{
-    cartVersion: string;
     detailsSignature: string;
     revision: number;
   } | null>(null);
-  const currentCheckout = prepared?.revision === detailsRevision &&
-    prepared.checkout.cartVersion === cartVersion ? prepared.checkout : null;
-  const hasConsent = accepted?.revision === detailsRevision &&
-    accepted.cartVersion === cartVersion;
+  const [acceptedFingerprint, setAcceptedFingerprint] = useState<string | null>(null);
+  const current = prepared?.revision === detailsRevision &&
+    prepared.checkout.cartVersion === cartVersion ? prepared : null;
+  const hasConsent = current !== null && acceptedFingerprint === current.checkout.fingerprint;
   const [openDocument, setOpenDocument] = useState<LegalDocumentKey | null>(
     null,
   );
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState<CheckoutError | null>(null);
+  const checkoutError = error ?? (acceptedFingerprint && !hasConsent ? "agreement_changed" : null);
 
   // Coming back from checkout with the browser's back button restores this page from
   // the bfcache with the redirect still "in progress".
@@ -82,29 +77,21 @@ export default function CheckoutConsent({
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
-  async function prepareCurrentCheckout() {
-    const checkout = await prepareCheckout();
-
-    if (checkout) {
-      setPrepared({checkout, revision: detailsRevision});
+  function handleConsent(checked: boolean) {
+    if (!current || busyRef.current) {
+      return;
     }
 
-    return checkout;
-  }
+    if (getDetailsSignature() !== current.detailsSignature) {
+      setPrepared(null);
+      setAcceptedFingerprint(null);
+      setError("agreement_changed");
 
-  function handleConsent(checked: boolean) {
-    if (busyRef.current) {
       return;
     }
 
     setError(null);
-    // Acceptance is a local interaction. Saving and refreshing the page here can
-    // invalidate that very interaction before the checkbox becomes checked.
-    setAccepted(checked ? {
-      cartVersion,
-      detailsSignature: getDetailsSignature(),
-      revision: detailsRevision,
-    } : null);
+    setAcceptedFingerprint(checked ? current.checkout.fingerprint : null);
   }
 
   async function openLegalDocument(key: LegalDocumentKey) {
@@ -112,25 +99,45 @@ export default function CheckoutConsent({
       return;
     }
 
+    const detailsSignature = getDetailsSignature();
+
+    if (current?.detailsSignature === detailsSignature) {
+      setOpenDocument(key);
+
+      return;
+    }
+
     busyRef.current = true;
+    setPrepared(null);
+    setOpenDocument(null);
+    setAcceptedFingerprint(null);
+    setError(acceptedFingerprint ? "agreement_changed" : null);
 
     try {
-      if (await prepareCurrentCheckout()) {
+      const checkout = await prepareCheckout();
+
+      if (checkout && getDetailsSignature() === detailsSignature) {
+        setPrepared({checkout, detailsSignature, revision: detailsRevision});
         setOpenDocument(key);
+      } else if (checkout) {
+        setError("agreement_changed");
       }
+    } catch {
+      setError("failed");
     } finally {
       busyRef.current = false;
     }
   }
 
   async function handleCheckout() {
-    if (!hasConsent || !accepted || busyRef.current) {
+    if (!hasConsent || !current || busyRef.current) {
       return;
     }
 
     // Autofill may change fields without firing a React change event.
-    if (getDetailsSignature() !== accepted.detailsSignature) {
-      setAccepted(null);
+    if (getDetailsSignature() !== current.detailsSignature) {
+      setPrepared(null);
+      setAcceptedFingerprint(null);
       setError("agreement_changed");
 
       return;
@@ -141,28 +148,7 @@ export default function CheckoutConsent({
     setIsRedirecting(true);
 
     try {
-      // Recheck the form too: browser autofill can change values without a change event.
-      const checkout = await prepareCurrentCheckout();
-
-      if (!checkout) {
-        setAccepted(null);
-        setIsRedirecting(false);
-
-        return;
-      }
-
-      if (
-        checkout.cartVersion !== accepted.cartVersion ||
-        getDetailsSignature() !== accepted.detailsSignature
-      ) {
-        setAccepted(null);
-        setError("agreement_changed");
-        setIsRedirecting(false);
-
-        return;
-      }
-
-      const result = await proceedToCheckout(checkout.fingerprint);
+      const result = await proceedToCheckout(current.checkout.fingerprint, locale);
 
       if (result.ok) {
         window.location.assign(result.checkoutUrl);
@@ -171,10 +157,11 @@ export default function CheckoutConsent({
       }
 
       setIsRedirecting(false);
-      setAccepted(null);
       setError(result.error);
 
       if (result.error === "agreement_changed" || result.error === "needs_details") {
+        setPrepared(null);
+        setAcceptedFingerprint(null);
         router.refresh();
       }
     } catch {
@@ -185,13 +172,13 @@ export default function CheckoutConsent({
     }
   }
 
-  const documents: Record<LegalDocumentKey, ReactNode> | null = currentCheckout ? {
+  const documents: Record<LegalDocumentKey, ReactNode> | null = current ? {
     distanceSalesAgreement: locale === "en"
-      ? <AgreementEn data={currentCheckout.data} />
-      : <AgreementTr data={currentCheckout.data} />,
+      ? <AgreementEn data={current.checkout.data} />
+      : <AgreementTr data={current.checkout.data} />,
     preInformation: locale === "en"
-      ? <PreInformationEn data={currentCheckout.data} />
-      : <PreInformationTr data={currentCheckout.data} />,
+      ? <PreInformationEn data={current.checkout.data} />
+      : <PreInformationTr data={current.checkout.data} />,
   } : null;
 
   // Rich-text renderer for a document name inside the consent label.
@@ -216,6 +203,7 @@ export default function CheckoutConsent({
           type="checkbox"
           className={styles.checkbox}
           checked={hasConsent}
+          disabled={!current}
           onChange={(event) => handleConsent(event.target.checked)}
         />
         <label htmlFor={checkboxId} className={styles.consentLabel}>
@@ -231,28 +219,27 @@ export default function CheckoutConsent({
       <div className={styles.checkoutActions}>
         {paymentMethods}
         <Button
-          type="submit"
           className={styles.checkoutButton}
-          disabled={!hasConsent}
+          disabled={current !== null && !hasConsent}
           loading={isRedirecting}
           loadingLabel={t("redirecting")}
-          onClick={handleCheckout}
+          onClick={current ? handleCheckout : () => openLegalDocument("distanceSalesAgreement")}
         >
-          {t("checkout")}
+          {t(current ? "checkout" : "reviewAgreements")}
         </Button>
       </div>
 
-      {error ? (
+      {checkoutError ? (
         <p role="alert" className={styles.message}>
-          {error === "consent_required"
+          {checkoutError === "consent_required"
             ? t("consentRequired")
-            : error === "empty_cart"
+            : checkoutError === "empty_cart"
               ? t("checkoutEmpty")
-              : error === "agreement_changed"
+              : checkoutError === "agreement_changed"
                 ? t("agreementChanged")
-                : error === "needs_details"
+                : checkoutError === "needs_details"
                   ? t("needsDetails")
-                  : error === "unavailable"
+                  : checkoutError === "unavailable"
                     ? t("checkoutUnavailable")
                     : t("checkoutError")}
         </p>
