@@ -86,10 +86,30 @@ export async function handleSpike(run: () => Promise<Response>): Promise<Respons
   }
 }
 
-// The redirect URI must match a registered callback exactly, so it comes from configuration
-// and not from the incoming request, which can differ behind a proxy.
-export function getOrigin(request: Request): string {
-  return process.env.APP_ORIGIN?.trim().replace(/\/+$/, "") || new URL(request.url).origin;
+// The single source of the origin used for redirect_uri (authorize and token exchange) and for
+// the post-login and post-logout redirects. It deliberately has no fallback to the request or
+// VERCEL_URL: those are deployment-specific hosts Shopify has not registered, and a silent
+// fallback is how a missing variable turned into a redirect_uri mismatch.
+export function getOrigin(): string {
+  const configured = process.env.APP_ORIGIN?.trim();
+
+  if (!configured) {
+    throw new SpikeError(
+      "APP_ORIGIN is not set for this deployment. Vercel applies variables only to deployments built after they were added.",
+    );
+  }
+
+  try {
+    const url = new URL(configured);
+
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error("unsupported protocol");
+    }
+
+    return url.origin;
+  } catch {
+    throw new SpikeError("APP_ORIGIN must be an origin such as https://host.example.");
+  }
 }
 
 function readConfig() {
@@ -229,6 +249,17 @@ function parseReturnTo(value: string | null): string {
 
 export async function startLogin(request: Request): Promise<string> {
   const {clientId} = readConfig();
+  const configuredHost = new URL(getOrigin()).host;
+  const requestHost = new URL(request.url).host;
+
+  // Cookies are host-specific: the login state is stored on the host that starts the flow, and
+  // Shopify returns to the registered host. If they differ the callback cannot read it.
+  if (requestHost !== configuredHost) {
+    throw new SpikeError(
+      `Start login from ${configuredHost}. This request came from ${requestHost}.`,
+    );
+  }
+
   const {searchParams} = new URL(request.url);
   const transaction: Transaction = {
     state: randomBytes(16).toString("base64url"),
@@ -242,7 +273,7 @@ export async function startLogin(request: Request): Promise<string> {
   url.searchParams.set("scope", "openid email customer-account-api:full");
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("response_type", "code");
-  url.searchParams.set("redirect_uri", `${getOrigin(request)}/api/auth/callback`);
+  url.searchParams.set("redirect_uri", `${getOrigin()}/api/auth/callback`);
   url.searchParams.set("state", transaction.state);
   url.searchParams.set("nonce", transaction.nonce);
   // Sets the language of Shopify's hosted login screen.
@@ -289,7 +320,7 @@ export async function finishLogin(request: Request): Promise<string> {
     body: new URLSearchParams({
       grant_type: "authorization_code",
       client_id: clientId,
-      redirect_uri: `${getOrigin(request)}/api/auth/callback`,
+      redirect_uri: `${getOrigin()}/api/auth/callback`,
       code,
     }),
     cache: "no-store",
@@ -322,24 +353,24 @@ export async function finishLogin(request: Request): Promise<string> {
   );
   (await cookies()).delete(TRANSACTION_COOKIE);
 
-  return `${getOrigin(request)}/${transaction.locale}${transaction.returnTo}`;
+  return `${getOrigin()}/${transaction.locale}${transaction.returnTo}`;
 }
 
 // Returns the URL that ends the session on Shopify, which then redirects to the origin.
-export async function startLogout(request: Request): Promise<string> {
+export async function startLogout(): Promise<string> {
   const session = await readSealedCookie<Session>(SESSION_COOKIE);
 
   (await cookies()).delete(SESSION_COOKIE);
 
   if (!session) {
-    return `${getOrigin(request)}/`;
+    return `${getOrigin()}/`;
   }
 
   const {endSessionEndpoint} = await discover();
   const url = new URL(endSessionEndpoint);
 
   url.searchParams.set("id_token_hint", session.idToken);
-  url.searchParams.set("post_logout_redirect_uri", `${getOrigin(request)}/`);
+  url.searchParams.set("post_logout_redirect_uri", `${getOrigin()}/`);
 
   return url.toString();
 }
@@ -394,7 +425,29 @@ async function fetchCustomer(accessToken: string): Promise<CustomerSummary["cust
 
 // Read-only report: answers the cookie-size, token-shape, saved-data and cart questions
 // without exposing any value (only presence, counts and sizes).
-export async function describeSession() {
+function describeOrigin(request: Request) {
+  let configuredOrigin: string | null = null;
+
+  try {
+    configuredOrigin = getOrigin();
+  } catch {
+    configuredOrigin = null;
+  }
+
+  const requestHost = new URL(request.url).host;
+
+  return {
+    appOriginSet: Boolean(process.env.APP_ORIGIN?.trim()),
+    appOriginHost: configuredOrigin ? new URL(configuredOrigin).host : null,
+    requestHost,
+    requestMatchesAppOrigin: configuredOrigin ? new URL(configuredOrigin).host === requestHost : false,
+    // For comparison only: this deployment-specific host is never used by the flow.
+    vercelDeploymentHost: process.env.VERCEL_URL ?? null,
+    redirectUri: configuredOrigin ? `${configuredOrigin}/api/auth/callback` : null,
+  };
+}
+
+export async function describeSession(request: Request) {
   const raw = (await cookies()).get(SESSION_COOKIE)?.value;
   const session = raw ? open<Session>(raw, SESSION_COOKIE) : null;
   const cartId = await readCartId();
@@ -405,8 +458,10 @@ export async function describeSession() {
     lineCount: cart?.lines.length ?? 0,
   };
 
+  const origin = describeOrigin(request);
+
   if (!session) {
-    return {signedIn: false, cart: cartReport};
+    return {signedIn: false, origin, cart: cartReport};
   }
 
   const customer = await fetchCustomer(session.accessToken);
@@ -414,6 +469,7 @@ export async function describeSession() {
 
   return {
     signedIn: true,
+    origin,
     cookie: {
       nameAndValueBytes: cookieBytes,
       limitBytes: COOKIE_VALUE_LIMIT_BYTES,

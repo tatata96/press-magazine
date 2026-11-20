@@ -13,6 +13,6 @@ export async function GET(request: Request) {
       return NextResponse.redirect(await associateCartWithCustomer());
     }
 
-    return Response.json(await describeSession());
+    return Response.json(await describeSession(request));
   });
 }
