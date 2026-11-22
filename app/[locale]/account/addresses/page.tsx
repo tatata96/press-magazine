@@ -45,15 +45,12 @@ async function AddressesContent() {
   }));
 
   return (
-    <section className={styles.section} aria-labelledby="addresses-heading">
-      <h2 id="addresses-heading" className={`type-mono ${styles.sectionHeading}`}>
-        {t("addressesHeading")}
-      </h2>
+    <div className={styles.section}>
       <AddressBook
         addresses={addresses}
         countries={countryCodes.map((code) => ({code, name: countryName(code)}))}
       />
-    </section>
+    </div>
   );
 }
 

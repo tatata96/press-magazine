@@ -79,6 +79,7 @@ export default function AddressFields({countries, defaults, errors, namePrefix =
           className={styles.selectInput}
           defaultValue={defaults?.countryCode || countries[0]?.code}
           autoComplete="country"
+          aria-invalid={errorText("countryCode") ? true : undefined}
           required
         >
           {countries.map((country) => (

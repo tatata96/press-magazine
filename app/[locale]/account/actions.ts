@@ -13,9 +13,10 @@ import {
 import {getSessionState} from "@/lib/customer-account/session";
 import {CustomerAccountError, CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {ShopifyError} from "@/lib/shopify/admin-client";
+import {updateCustomerPhone} from "@/lib/shopify/admin-customer";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import {parseAddressForm, parseNameForm, type FormErrors} from "../buyer-details/buyer-details";
-import {isAddressId} from "../buyer-details/checkout-selection";
+import {isAddressId, isValidPhone, normalizePhone} from "../buyer-details/checkout-selection";
 
 export type AccountActionResult =
   | {ok: true; addressId?: string}
@@ -110,6 +111,23 @@ export async function addAddress(formData: FormData): Promise<AccountActionResul
     });
 
     return result.ok ? {ok: true, addressId: result.addressId} : {ok: false, error: "invalid"};
+  });
+}
+
+// Writes the phone to the customer record with the store's Admin credentials (the Customer
+// Account API cannot). The customer id comes from the session, never from the browser.
+export async function savePhone(phone: string): Promise<AccountActionResult> {
+  const normalized = normalizePhone(typeof phone === "string" ? phone : "");
+
+  if (!isValidPhone(normalized)) {
+    return {ok: false, error: "invalid", errors: {phone: "invalid"}};
+  }
+
+  return runAsCustomer(async (accessToken) => {
+    const customer = await getCustomer(accessToken);
+    const result = await updateCustomerPhone(customer.id, normalized);
+
+    return result.ok ? {ok: true} : {ok: false, error: "invalid", errors: {phone: "invalid"}};
   });
 }
 

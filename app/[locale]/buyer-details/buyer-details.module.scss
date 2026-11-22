@@ -85,11 +85,11 @@
   opacity: 0.7;
 }
 
+// The Continue button, right-aligned under the order total.
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
+  justify-content: flex-end;
+  margin-top: 40px;
 }
 
 // Looks like the other underlined text actions on the cart page.

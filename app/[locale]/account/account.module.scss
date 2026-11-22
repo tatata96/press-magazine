@@ -179,6 +179,15 @@
   gap: 16px 24px;
 }
 
+// Form buttons sit at the right edge of the form: Save is always the right-most button.
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px 24px;
+}
+
 .cards {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

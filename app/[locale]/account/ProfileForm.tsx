@@ -7,21 +7,28 @@ import Button from "@/app/components/button/Button";
 import TextField from "@/app/components/text-field/TextField";
 import {redirectForAuthError} from "../cart/auth-redirect";
 import type {FormErrors} from "../buyer-details/buyer-details";
-import {updateName} from "./actions";
+import {isValidPhone, normalizePhone} from "../buyer-details/checkout-selection";
+import {savePhone, updateName} from "./actions";
 import styles from "./account.module.scss";
 
-type ProfileFormProps = {firstName: string; lastName: string};
+type ProfileFormProps = {firstName: string; lastName: string; phone: string; email: string};
 
-export default function ProfileForm({firstName, lastName}: ProfileFormProps) {
+// The details are always editable in place: no separate "edit" step. Email is the sign-in
+// identity and is shown read-only.
+export default function ProfileForm({firstName, lastName, phone, email}: ProfileFormProps) {
   const t = useTranslations("Account");
+  const detailsT = useTranslations("BuyerDetails");
   const locale = useLocale();
-  const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [outcome, setOutcome] = useState<"saved" | "error" | null>(null);
   const [isSaving, startSaving] = useTransition();
 
-  function errorText(field: "firstName" | "lastName"): string | undefined {
+  function errorText(field: "firstName" | "lastName" | "phone"): string | undefined {
     const code = errors[field];
+
+    if (field === "phone" && code) {
+      return detailsT("phoneInvalid");
+    }
 
     return code ? t(code === "required" ? "required" : "invalid") : undefined;
   }
@@ -30,41 +37,53 @@ export default function ProfileForm({firstName, lastName}: ProfileFormProps) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
+    // An empty phone leaves the stored one as it is: the field cannot clear it.
+    const nextPhone = normalizePhone(String(formData.get("phone") ?? ""));
+    const savesPhone = nextPhone !== "" && nextPhone !== normalizePhone(phone);
 
     setErrors({});
     setOutcome(null);
 
-    startSaving(async () => {
-      const result = await updateName(formData);
+    if (savesPhone && !isValidPhone(nextPhone)) {
+      setErrors({phone: "invalid"});
 
-      if (result.ok) {
-        setIsEditing(false);
-        setOutcome("saved");
+      return;
+    }
+
+    startSaving(async () => {
+      const steps: (() => ReturnType<typeof updateName>)[] = [
+        () => updateName(formData),
+        ...(savesPhone ? [() => savePhone(nextPhone)] : []),
+      ];
+
+      for (const step of steps) {
+        const result = await step();
+
+        if (result.ok) {
+          continue;
+        }
+
+        if (result.error === "invalid" && result.errors) {
+          setErrors(result.errors);
+        } else if (!redirectForAuthError(result.error, {locale, returnTo: "/account"})) {
+          setOutcome("error");
+        }
 
         return;
       }
 
-      if (result.error === "invalid" && result.errors) {
-        setErrors(result.errors);
-      } else if (!redirectForAuthError(result.error, {locale, returnTo: "/account"})) {
-        setOutcome("error");
-      }
+      setOutcome("saved");
     });
   }
 
-  if (!isEditing) {
-    return (
-      <>
-        <button type="button" className={styles.textButton} onClick={() => setIsEditing(true)}>
-          {t("editName")}
-        </button>
-        {outcome === "saved" ? <p role="status" className={styles.success}>{t("saved")}</p> : null}
-      </>
-    );
-  }
-
   return (
-    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+    // Keyed by the saved values so the fields show what Shopify now holds after a save.
+    <form
+      key={`${firstName}|${lastName}|${phone}`}
+      className={styles.form}
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <div className={styles.row}>
         <TextField
           name="firstName"
@@ -83,14 +102,29 @@ export default function ProfileForm({firstName, lastName}: ProfileFormProps) {
           error={errorText("lastName")}
         />
       </div>
-      <div className={styles.actions}>
+      <TextField
+        label={t("email")}
+        type="email"
+        defaultValue={email}
+        helperText={t("emailNote")}
+        autoComplete="email"
+        disabled
+      />
+      <TextField
+        name="phone"
+        type="tel"
+        label={t("phone")}
+        helperText={detailsT("phoneHelper")}
+        autoComplete="tel"
+        defaultValue={phone}
+        error={errorText("phone")}
+      />
+      <div className={styles.formActions}>
         <Button type="submit" loading={isSaving} loadingLabel={t("saving")}>
-          {t("saveName")}
+          {t("save")}
         </Button>
-        <button type="button" className={styles.textButton} onClick={() => setIsEditing(false)}>
-          {t("cancel")}
-        </button>
       </div>
+      {outcome === "saved" ? <p role="status" className={styles.success}>{t("saved")}</p> : null}
       {outcome === "error" ? <p role="alert" className={styles.message}>{t("saveError")}</p> : null}
     </form>
   );

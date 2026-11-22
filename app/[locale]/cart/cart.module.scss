@@ -120,6 +120,17 @@
   }
 }
 
+// Review step: title and total only.
+.lineReadOnly {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "info total";
+
+  @container (min-width: 600px) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "info total";
+  }
+}
+
 .lineInfo {
   grid-area: info;
   display: flex;

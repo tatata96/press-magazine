@@ -15,30 +15,15 @@ async function ProfileContent() {
     return <p role="alert" className={styles.message}>{t("loadError")}</p>;
   }
 
-  const name = `${customer.firstName} ${customer.lastName}`.trim();
-
   return (
-    <section className={styles.section} aria-labelledby="profile-heading">
-      <h2 id="profile-heading" className={`type-mono ${styles.sectionHeading}`}>
-        {t("profileHeading")}
-      </h2>
-      <dl className={styles.summary}>
-        <div>
-          <dt>{t("firstName")} / {t("lastName")}</dt>
-          <dd>{name || t("notSet")}</dd>
-        </div>
-        <div>
-          <dt>{t("email")}</dt>
-          <dd>{customer.email ?? t("notSet")}</dd>
-        </div>
-        <div>
-          <dt>{t("phone")}</dt>
-          <dd>{customer.phone ?? t("notSet")}</dd>
-        </div>
-      </dl>
-      <p className={styles.note}>{t("emailNote")}</p>
-      <ProfileForm firstName={customer.firstName} lastName={customer.lastName} />
-    </section>
+    <div className={styles.section}>
+      <ProfileForm
+        firstName={customer.firstName}
+        lastName={customer.lastName}
+        phone={customer.phone ?? ""}
+        email={customer.email ?? ""}
+      />
+    </div>
   );
 }
 

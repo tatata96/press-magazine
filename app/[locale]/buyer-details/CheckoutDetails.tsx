@@ -1,33 +1,27 @@
 "use client";
 
-import {useState, useTransition} from "react";
+import {useId, useRef, useState, useTransition} from "react";
 import type {FormEvent, ReactNode} from "react";
 import {useLocale, useTranslations} from "next-intl";
 import Button from "@/app/components/button/Button";
-import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
-import {addAddress, updateName} from "../account/actions";
-import {proceedToCheckout} from "../cart/actions";
+import {useRouter} from "../../../i18n/navigation";
+import {addAddress, savePhone, updateName} from "../account/actions";
 import {redirectForAuthError} from "../cart/auth-redirect";
-import type {PreparedCheckout} from "../cart/build-agreement-data";
-import CheckoutConsent from "../cart/CheckoutConsent";
 import cartStyles from "../cart/cart.module.scss";
-import {prepareCheckout} from "./actions";
 import AddressChooser, {type AddressView} from "./AddressChooser";
 import type {FormErrors} from "./buyer-details";
 import ContactSection from "./ContactSection";
-import {isValidPhone, normalizePhone, type CheckoutSelection} from "./checkout-selection";
+import {isValidPhone, normalizePhone} from "./checkout-selection";
 import styles from "./buyer-details.module.scss";
 
 type CheckoutDetailsProps = {
   requiresShipping: boolean;
   countries: {code: string; name: string}[];
   /** From the signed-in Shopify account. */
-  customer: {firstName: string; lastName: string; email: string};
+  customer: {firstName: string; lastName: string; email: string; phone: string};
   addresses: AddressView[];
   defaults: {phone: string; addressId: string | null};
   orderSummary: ReactNode;
-  paymentMethods: ReactNode;
-  cartVersion: string;
 };
 
 type Problems = {contact?: boolean; shipping?: boolean; billing?: boolean};
@@ -48,13 +42,36 @@ function pickAddressFields(formData: FormData, kind: AddressKind): FormData {
   return picked;
 }
 
+type ContactValues = {firstName: string; lastName: string; phone: string};
+
+function validateContact(values: ContactValues): FormErrors {
+  const errors: FormErrors = {};
+
+  if (!values.firstName) {
+    errors.firstName = "required";
+  }
+
+  if (!values.lastName) {
+    errors.lastName = "required";
+  }
+
+  if (!values.phone) {
+    errors.phone = "required";
+  } else if (!isValidPhone(values.phone)) {
+    errors.phone = "invalid";
+  }
+
+  return errors;
+}
+
 function getRequired(formData: FormData, field: string): string {
   return String(formData.get(field) ?? "").trim();
 }
 
-// The buyer's side of checkout for a signed-in customer: a summary of what the account holds,
-// the delivery and billing address choices, and the agreement consent. Everything chosen here
-// is sent to the server as ids and plain values and checked there again.
+// Step 1 of checkout for a signed-in customer: what the account holds, the delivery and billing
+// address choices, and one Continue button that saves whatever is open and moves on to the
+// review step. Only address ids travel in the URL; the review page and the server check them
+// against the account again.
 export default function CheckoutDetails({
   requiresShipping,
   countries,
@@ -62,18 +79,15 @@ export default function CheckoutDetails({
   addresses,
   defaults,
   orderSummary,
-  paymentMethods,
-  cartVersion,
 }: CheckoutDetailsProps) {
   const t = useTranslations("BuyerDetails");
   const locale = useLocale();
+  const router = useRouter();
   const [phone, setPhone] = useState(defaults.phone);
   const [shippingId, setShippingId] = useState(defaults.addressId);
   const [billingIsSameAsShipping, setBillingIsSameAsShipping] = useState(requiresShipping);
   const [billingId, setBillingId] = useState(defaults.addressId);
   const [problems, setProblems] = useState<Problems>({});
-  const [failure, setFailure] = useState<"failed" | "empty_cart" | "unavailable" | null>(null);
-  const [isPreparing, setIsPreparing] = useState(false);
   const [wantsContactEdit, setWantsContactEdit] = useState(
     !customer.firstName || !customer.lastName || !defaults.phone,
   );
@@ -88,126 +102,28 @@ export default function CheckoutDetails({
   });
   const [saveFailure, setSaveFailure] = useState<"details" | "address" | null>(null);
   const [isSaving, startSaving] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
+  const formId = useId();
 
   const billsToDelivery = requiresShipping && billingIsSameAsShipping;
   const isEditingContact = wantsContactEdit || problems.contact === true;
   // With nothing saved yet, the new-address fields are the only thing to show.
   const isAddingShipping = requiresShipping && (wantsNewAddress.shipping || addresses.length === 0);
   const isAddingBilling = !billsToDelivery && (wantsNewAddress.billing || addresses.length === 0);
-  const hasOpenFields = isEditingContact || isAddingShipping || isAddingBilling;
   const hadCompleteContact = Boolean(customer.firstName && customer.lastName && phone);
 
-  // Anything the agreement is built from. When it changes, the prepared agreements and the
-  // buyer's consent no longer apply, so they must be reviewed again.
-  const detailsKey = JSON.stringify([
-    customer.firstName,
-    customer.lastName,
-    normalizePhone(phone),
-    requiresShipping ? shippingId : null,
-    billsToDelivery ? null : billingId,
-  ]);
-
-  // The same checks the server repeats; running them here only saves a round trip.
-  function readSelection(): CheckoutSelection | null {
-    const nextProblems: Problems = {};
-
-    if (!customer.firstName || !customer.lastName || !isValidPhone(phone)) {
-      nextProblems.contact = true;
-    }
-
-    if (requiresShipping && !shippingId) {
-      nextProblems.shipping = true;
-    }
-
-    if (!billsToDelivery && !billingId) {
-      nextProblems.billing = true;
-    }
-
-    setProblems(nextProblems);
-
-    if (Object.keys(nextProblems).length > 0) {
-      return null;
-    }
-
-    return {
-      phone: normalizePhone(phone),
-      shippingAddressId: requiresShipping ? shippingId : null,
-      billingAddressId: billsToDelivery ? null : billingId,
-    };
-  }
-
-  async function prepare(): Promise<PreparedCheckout | null> {
-    const selection = readSelection();
-
-    setFailure(null);
-
-    if (!selection) {
-      return null;
-    }
-
-    setIsPreparing(true);
-
-    try {
-      const result = await prepareCheckout(selection, locale);
-
-      if (result.ok) {
-        return result.checkout;
-      }
-
-      if (redirectForAuthError(result.error, {locale})) {
-        return null;
-      }
-
-      if (result.error === "invalid_details") {
-        setProblems({contact: true});
-      } else {
-        setFailure(result.error === "empty_cart" || result.error === "unavailable" ? result.error : "failed");
-      }
-    } catch {
-      setFailure("failed");
-    } finally {
-      setIsPreparing(false);
-    }
-
-    return null;
-  }
-
-  async function proceed(acceptedFingerprint: string) {
-    const selection = readSelection();
-
-    if (!selection) {
-      return {ok: false, error: "invalid_details"} as const;
-    }
-
-    return proceedToCheckout(acceptedFingerprint, selection, locale);
-  }
-
-  // One Save for everything that is open. Each part closes as soon as it is saved, so a retry
-  // after a failure only sends what is left.
-  function handleSave(event: FormEvent<HTMLFormElement>) {
+  // Continue saves everything that is open, then goes to the review step. Each part closes as
+  // soon as it is saved, so a retry after a failure only sends what is left.
+  function handleContinue(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const nextPhone = normalizePhone(getRequired(formData, "phone"));
     const nextFirstName = getRequired(formData, "firstName");
     const nextLastName = getRequired(formData, "lastName");
-    const nextContactErrors: FormErrors = {};
-
-    if (isEditingContact) {
-      if (!nextFirstName) {
-        nextContactErrors.firstName = "required";
-      }
-
-      if (!nextLastName) {
-        nextContactErrors.lastName = "required";
-      }
-
-      if (!nextPhone) {
-        nextContactErrors.phone = "required";
-      } else if (!isValidPhone(nextPhone)) {
-        nextContactErrors.phone = "invalid";
-      }
-    }
+    const nextContactErrors: FormErrors = isEditingContact
+      ? validateContact({firstName: nextFirstName, lastName: nextLastName, phone: nextPhone})
+      : {};
 
     setContactErrors(nextContactErrors);
     setAddressErrors({shipping: {}, billing: {}});
@@ -218,6 +134,9 @@ export default function CheckoutDetails({
     }
 
     startSaving(async () => {
+      let finalShippingId = shippingId;
+      let finalBillingId = billingId;
+
       if (isEditingContact) {
         // Only a changed name is sent to Shopify; the phone stays on this order.
         if (nextFirstName !== customer.firstName || nextLastName !== customer.lastName) {
@@ -239,14 +158,30 @@ export default function CheckoutDetails({
           }
         }
 
+        // The phone is saved on the customer, so it is remembered for the next order.
+        if (nextPhone !== normalizePhone(customer.phone)) {
+          const result = await savePhone(nextPhone);
+
+          if (!result.ok) {
+            if (result.error === "invalid") {
+              setContactErrors(result.errors ?? {phone: "invalid"});
+            } else if (!redirectForAuthError(result.error, {locale})) {
+              setSaveFailure("details");
+            }
+
+            return;
+          }
+        }
+
         setPhone(nextPhone);
         setProblems((current) => ({...current, contact: false}));
         setWantsContactEdit(false);
       }
 
+      const finalPhone = isEditingContact ? nextPhone : normalizePhone(phone);
       const newAddresses: [AddressKind, boolean, (id: string) => void][] = [
-        ["shipping", isAddingShipping, setShippingId],
-        ["billing", isAddingBilling, setBillingId],
+        ["shipping", isAddingShipping, (id) => { finalShippingId = id; setShippingId(id); }],
+        ["billing", isAddingBilling, (id) => { finalBillingId = id; setBillingId(id); }],
       ];
 
       for (const [kind, isOpen, select] of newAddresses) {
@@ -271,15 +206,52 @@ export default function CheckoutDetails({
 
         return;
       }
+
+      // Everything open is saved. Check what the review step needs before leaving; the server
+      // checks it again.
+      const finalFirstName = isEditingContact ? nextFirstName : customer.firstName;
+      const finalLastName = isEditingContact ? nextLastName : customer.lastName;
+      const contactProblems = validateContact({
+        firstName: finalFirstName,
+        lastName: finalLastName,
+        phone: finalPhone,
+      });
+      const nextProblems: Problems = {
+        contact: Object.keys(contactProblems).length > 0 || undefined,
+        shipping: requiresShipping && !finalShippingId ? true : undefined,
+        billing: !billsToDelivery && !finalBillingId ? true : undefined,
+      };
+
+      setProblems(nextProblems);
+
+      if (nextProblems.contact || nextProblems.shipping || nextProblems.billing) {
+        setContactErrors(contactProblems);
+        setTimeout(() => {
+          formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        }, 0);
+
+        return;
+      }
+
+      const query = new URLSearchParams();
+
+      if (requiresShipping && finalShippingId) {
+        query.set("shipping", finalShippingId);
+      }
+
+      if (!billsToDelivery && finalBillingId) {
+        query.set("billing", finalBillingId);
+      }
+
+      router.push(`/checkout?${query.toString()}`);
     });
   }
 
   return (
     <>
-      {isPreparing ? <LoadingScreen label={t("preparingCart")} /> : null}
-      <div className={cartStyles.layout} aria-busy={isPreparing} inert={isPreparing}>
+      <div className={cartStyles.layout}>
         <div className={cartStyles.details}>
-          <form className={styles.form} onSubmit={handleSave} noValidate>
+          <form id={formId} ref={formRef} className={styles.form} onSubmit={handleContinue} noValidate>
             <ContactSection
               firstName={customer.firstName}
               lastName={customer.lastName}
@@ -341,40 +313,22 @@ export default function CheckoutDetails({
               )}
             </fieldset>
 
-            {hasOpenFields ? (
-              <div className={styles.actions}>
-                <Button type="submit" loading={isSaving} loadingLabel={t("saving")}>
-                  {t("save")}
-                </Button>
-              </div>
-            ) : null}
-
             {saveFailure ? (
               <p role="alert" className={styles.message}>
                 {saveFailure === "address" ? t("addressSaveError") : t("saveError")}
               </p>
             ) : null}
 
-            {failure ? (
-              <p role="alert" className={styles.message}>
-                {failure === "unavailable"
-                  ? t("checkoutUnavailable")
-                  : failure === "empty_cart"
-                    ? t("checkoutEmpty")
-                    : t("saveError")}
-              </p>
-            ) : null}
           </form>
         </div>
         <aside className={cartStyles.order}>
           {orderSummary}
-          <CheckoutConsent
-            cartVersion={cartVersion}
-            detailsKey={detailsKey}
-            prepareCheckout={prepare}
-            proceed={proceed}
-            paymentMethods={paymentMethods}
-          />
+          {/* Sits under the order total but submits the details form on the left. */}
+          <div className={styles.actions}>
+            <Button type="submit" form={formId} loading={isSaving} loadingLabel={t("saving")}>
+              {t("continue")}
+            </Button>
+          </div>
         </aside>
       </div>
     </>

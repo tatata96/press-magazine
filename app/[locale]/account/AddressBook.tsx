@@ -83,13 +83,13 @@ export default function AddressBook({addresses, countries}: AddressBookProps) {
     return (
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         <AddressFields countries={countries} defaults={values} errors={errors} />
-        <div className={styles.actions}>
-          <Button type="submit" loading={isPending} loadingLabel={t("saving")}>
-            {t("saveAddress")}
-          </Button>
+        <div className={styles.formActions}>
           <button type="button" className={styles.textButton} onClick={() => setEditingId(null)}>
             {t("cancel")}
           </button>
+          <Button type="submit" loading={isPending} loadingLabel={t("saving")}>
+            {t("save")}
+          </Button>
         </div>
         {failure === "address" && editingId === id ? (
           <p role="alert" className={styles.message}>{t("addressError")}</p>

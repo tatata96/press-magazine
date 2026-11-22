@@ -48,10 +48,20 @@
     border-bottom: 2px solid var(--foreground);
   }
 
+  // Shown for context, not editable. Browsers dim disabled text on their own; the explicit
+  // colour keeps it readable (muted, not faded) and Safari honours it only via text-fill.
+  &:disabled {
+    color: var(--field-label);
+    -webkit-text-fill-color: var(--field-label);
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
   // The message below (with its icon) marks the error without
   // relying on colour.
-  &[aria-invalid="true"] {
-    border-bottom-color: var(--foreground);
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:focus-visible {
+    border-bottom-color: var(--field-error);
   }
 
   // Hide native number spinners; they clash with the underlined look.

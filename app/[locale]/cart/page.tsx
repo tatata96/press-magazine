@@ -16,7 +16,7 @@ import type {AddressView} from "../buyer-details/AddressChooser";
 import CheckoutDetails from "../buyer-details/CheckoutDetails";
 import CartLines from "./CartLines";
 import PaymentMethods from "./PaymentMethods";
-import {fingerprintCart, readCheckoutInputs} from "./checkout-state";
+import {readCheckoutInputs} from "./checkout-state";
 import styles from "./cart.module.scss";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -173,8 +173,6 @@ async function CartContent() {
       isDefault: address.id === customer.defaultAddressId,
     }));
   const preselectedAddress = addresses.find((address) => address.isDefault) ?? addresses[0];
-  // Changes to quantities, shipping requirements or prices invalidate client consent.
-  const cartVersion = fingerprintCart(cart, context);
 
   return (
     <CheckoutDetails
@@ -184,15 +182,15 @@ async function CartContent() {
         firstName: customer.firstName,
         lastName: customer.lastName,
         email: customer.email ?? "",
+        phone: customer.phone ?? "",
       }}
       addresses={addresses}
       defaults={{
-        phone: context.buyer.phone ?? customer.phone ?? "",
+        // The account's phone first (that is where edits are stored), then this order's.
+        phone: customer.phone || context.buyer.phone || "",
         addressId: preselectedAddress?.id ?? null,
       }}
       orderSummary={orderSummary}
-      paymentMethods={<PaymentMethods />}
-      cartVersion={cartVersion}
     />
   );
 }

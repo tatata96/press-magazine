@@ -1,6 +1,7 @@
 import "server-only";
 
 import {cookies} from "next/headers";
+import {io} from "next/cache";
 import {getHttpOnlyCookieOptions} from "@/lib/cookies/cookie-options";
 import {openJson, sealJson} from "@/lib/cookies/seal";
 import {CustomerAccountError, type CustomerSession} from "./types";
@@ -76,6 +77,10 @@ export async function getSessionState(): Promise<SessionState> {
   if (!session) {
     return {status: "signed_out"};
   }
+
+  // The current time differs on every request, so Cache Components must be told this read
+  // belongs to a request. io() resolves immediately inside a request, route handler or action.
+  await io();
 
   return session.expiresAt - Date.now() > EXPIRY_MARGIN_MS
     ? {status: "active", accessToken: session.accessToken}

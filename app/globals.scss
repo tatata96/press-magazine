@@ -7,6 +7,8 @@
   // colour stays above 3:1 against white so the field boundary remains visible.
   --field-border: #a8a8a8;
   --field-label: #6b6b6b;
+  // Error underline; about 5.6:1 on white. The message below the field still states the error.
+  --field-error: #c62828;
 }
 
 *,

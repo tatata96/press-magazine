@@ -43,6 +43,11 @@
     outline: none;
     border-bottom: 2px solid var(--foreground);
   }
+
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:focus-visible {
+    border-bottom-color: var(--field-error);
+  }
 }
 
 // Same look and overlay as the TextField and newsletter errors. Nested under .select to
