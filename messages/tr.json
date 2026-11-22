@@ -149,7 +149,6 @@
     "subtotal": "Ara toplam",
     "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene.",
     "checkout": "Ödemeye geç",
-    "reviewAgreements": "Sözleşmeleri incele",
     "redirecting": "Ödemeye yönlendiriliyorsun…",
     "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
     "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
@@ -200,7 +199,6 @@
     }
   },
   "BuyerDetails": {
-    "heading": "Bilgilerin",
     "loadError": "Bu sayfa şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
     "contact": "İletişim",
     "firstName": "Ad",
@@ -231,7 +229,6 @@
     "cancel": "Vazgeç",
     "emailManaged": "{email} ile giriş yapıyorsun. Buradan değiştirilemez.",
     "addAddress": "Yeni adres ekle",
-    "saveAddress": "Adresi kaydet",
     "addressRequired": "Bir adres seç veya ekle.",
     "addressSaveError": "Bu adres kaydedilemedi. Lütfen kontrol edip tekrar dene.",
     "defaultBadge": "Varsayılan"

@@ -73,13 +73,46 @@ export default function CheckoutConsent({
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
-  function handleConsent(checked: boolean) {
-    if (!current || busyRef.current) {
+  // The agreements are built from the buyer's details, and consent is recorded against their
+  // fingerprint. Ticking the box therefore prepares them in the background when needed, so the
+  // box is usable at any time and the buyer never has to open a document first.
+  async function handleConsent(checked: boolean) {
+    if (busyRef.current) {
       return;
     }
 
     setError(null);
-    setAcceptedFingerprint(checked ? current.checkout.fingerprint : null);
+
+    if (!checked) {
+      setAcceptedFingerprint(null);
+
+      return;
+    }
+
+    if (current) {
+      setAcceptedFingerprint(current.checkout.fingerprint);
+
+      return;
+    }
+
+    busyRef.current = true;
+    setPrepared(null);
+    setAcceptedFingerprint(null);
+
+    try {
+      // Null when the details are incomplete or preparing failed; the form shows what is
+      // missing and the box stays unticked.
+      const checkout = await prepareCheckout();
+
+      if (checkout) {
+        setPrepared({checkout, detailsKey});
+        setAcceptedFingerprint(checkout.fingerprint);
+      }
+    } catch {
+      setError("failed");
+    } finally {
+      busyRef.current = false;
+    }
   }
 
   async function openLegalDocument(key: LegalDocumentKey) {
@@ -186,7 +219,6 @@ export default function CheckoutConsent({
           type="checkbox"
           className={styles.checkbox}
           checked={hasConsent}
-          disabled={!current}
           onChange={(event) => handleConsent(event.target.checked)}
         />
         <label htmlFor={checkboxId} className={styles.consentLabel}>
@@ -203,12 +235,12 @@ export default function CheckoutConsent({
         {paymentMethods}
         <Button
           className={styles.checkoutButton}
-          disabled={current !== null && !hasConsent}
+          disabled={!hasConsent}
           loading={isRedirecting}
           loadingLabel={t("redirecting")}
-          onClick={current ? handleCheckout : () => openLegalDocument("distanceSalesAgreement")}
+          onClick={handleCheckout}
         >
-          {t(current ? "checkout" : "reviewAgreements")}
+          {t("checkout")}
         </Button>
       </div>
 

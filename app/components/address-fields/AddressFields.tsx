@@ -18,11 +18,13 @@ type AddressFieldsProps = {
   defaults?: Partial<AddressFieldValues>;
   /** Keys are field names; values are the codes the server's validation returns. */
   errors: Partial<Record<string, "required" | "invalid">>;
+  /** Prefixed onto every input name, so two address forms can share one <form>. */
+  namePrefix?: string;
 };
 
 // Uncontrolled inputs: the parent wraps them in a <form> and reads them with FormData, so the
 // same fields serve checkout and the account's address book.
-export default function AddressFields({countries, defaults, errors}: AddressFieldsProps) {
+export default function AddressFields({countries, defaults, errors, namePrefix = ""}: AddressFieldsProps) {
   const t = useTranslations("BuyerDetails");
   const countryId = useId();
 
@@ -35,7 +37,7 @@ export default function AddressFields({countries, defaults, errors}: AddressFiel
   return (
     <div className={styles.fields}>
       <TextField
-        name="address1"
+        name={`${namePrefix}address1`}
         label={t("address1")}
         autoComplete="address-line1"
         defaultValue={defaults?.address1 ?? ""}
@@ -43,7 +45,7 @@ export default function AddressFields({countries, defaults, errors}: AddressFiel
         error={errorText("address1")}
       />
       <TextField
-        name="address2"
+        name={`${namePrefix}address2`}
         label={t("address2")}
         autoComplete="address-line2"
         defaultValue={defaults?.address2 ?? ""}
@@ -51,7 +53,7 @@ export default function AddressFields({countries, defaults, errors}: AddressFiel
       />
       <div className={styles.row}>
         <TextField
-          name="city"
+          name={`${namePrefix}city`}
           label={t("city")}
           autoComplete="address-level2"
           defaultValue={defaults?.city ?? ""}
@@ -59,7 +61,7 @@ export default function AddressFields({countries, defaults, errors}: AddressFiel
           error={errorText("city")}
         />
         <TextField
-          name="zip"
+          name={`${namePrefix}zip`}
           label={t("zip")}
           autoComplete="postal-code"
           defaultValue={defaults?.zip ?? ""}
@@ -73,7 +75,7 @@ export default function AddressFields({countries, defaults, errors}: AddressFiel
         </label>
         <select
           id={countryId}
-          name="countryCode"
+          name={`${namePrefix}countryCode`}
           className={styles.selectInput}
           defaultValue={defaults?.countryCode || countries[0]?.code}
           autoComplete="country"

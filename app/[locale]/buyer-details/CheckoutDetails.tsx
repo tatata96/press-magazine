@@ -1,9 +1,11 @@
 "use client";
 
-import {useState} from "react";
-import type {ReactNode} from "react";
+import {useState, useTransition} from "react";
+import type {FormEvent, ReactNode} from "react";
 import {useLocale, useTranslations} from "next-intl";
+import Button from "@/app/components/button/Button";
 import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
+import {addAddress, updateName} from "../account/actions";
 import {proceedToCheckout} from "../cart/actions";
 import {redirectForAuthError} from "../cart/auth-redirect";
 import type {PreparedCheckout} from "../cart/build-agreement-data";
@@ -11,6 +13,7 @@ import CheckoutConsent from "../cart/CheckoutConsent";
 import cartStyles from "../cart/cart.module.scss";
 import {prepareCheckout} from "./actions";
 import AddressChooser, {type AddressView} from "./AddressChooser";
+import type {FormErrors} from "./buyer-details";
 import ContactSection from "./ContactSection";
 import {isValidPhone, normalizePhone, type CheckoutSelection} from "./checkout-selection";
 import styles from "./buyer-details.module.scss";
@@ -28,6 +31,26 @@ type CheckoutDetailsProps = {
 };
 
 type Problems = {contact?: boolean; shipping?: boolean; billing?: boolean};
+type AddressKind = "shipping" | "billing";
+
+// The new-address inputs are prefixed with their kind so both can live in one form; the
+// server action expects the plain field names.
+function pickAddressFields(formData: FormData, kind: AddressKind): FormData {
+  const prefix = `${kind}-`;
+  const picked = new FormData();
+
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith(prefix)) {
+      picked.append(key.slice(prefix.length), value);
+    }
+  }
+
+  return picked;
+}
+
+function getRequired(formData: FormData, field: string): string {
+  return String(formData.get(field) ?? "").trim();
+}
 
 // The buyer's side of checkout for a signed-in customer: a summary of what the account holds,
 // the delivery and billing address choices, and the agreement consent. Everything chosen here
@@ -51,8 +74,29 @@ export default function CheckoutDetails({
   const [problems, setProblems] = useState<Problems>({});
   const [failure, setFailure] = useState<"failed" | "empty_cart" | "unavailable" | null>(null);
   const [isPreparing, setIsPreparing] = useState(false);
+  const [wantsContactEdit, setWantsContactEdit] = useState(
+    !customer.firstName || !customer.lastName || !defaults.phone,
+  );
+  const [wantsNewAddress, setWantsNewAddress] = useState<Record<AddressKind, boolean>>({
+    shipping: false,
+    billing: false,
+  });
+  const [contactErrors, setContactErrors] = useState<FormErrors>({});
+  const [addressErrors, setAddressErrors] = useState<Record<AddressKind, FormErrors>>({
+    shipping: {},
+    billing: {},
+  });
+  const [saveFailure, setSaveFailure] = useState<"details" | "address" | null>(null);
+  const [isSaving, startSaving] = useTransition();
 
   const billsToDelivery = requiresShipping && billingIsSameAsShipping;
+  const isEditingContact = wantsContactEdit || problems.contact === true;
+  // With nothing saved yet, the new-address fields are the only thing to show.
+  const isAddingShipping = requiresShipping && (wantsNewAddress.shipping || addresses.length === 0);
+  const isAddingBilling = !billsToDelivery && (wantsNewAddress.billing || addresses.length === 0);
+  const hasOpenFields = isEditingContact || isAddingShipping || isAddingBilling;
+  const hadCompleteContact = Boolean(customer.firstName && customer.lastName && phone);
+
   // Anything the agreement is built from. When it changes, the prepared agreements and the
   // buyer's consent no longer apply, so they must be reviewed again.
   const detailsKey = JSON.stringify([
@@ -138,25 +182,114 @@ export default function CheckoutDetails({
     return proceedToCheckout(acceptedFingerprint, selection, locale);
   }
 
+  // One Save for everything that is open. Each part closes as soon as it is saved, so a retry
+  // after a failure only sends what is left.
+  function handleSave(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const nextPhone = normalizePhone(getRequired(formData, "phone"));
+    const nextFirstName = getRequired(formData, "firstName");
+    const nextLastName = getRequired(formData, "lastName");
+    const nextContactErrors: FormErrors = {};
+
+    if (isEditingContact) {
+      if (!nextFirstName) {
+        nextContactErrors.firstName = "required";
+      }
+
+      if (!nextLastName) {
+        nextContactErrors.lastName = "required";
+      }
+
+      if (!nextPhone) {
+        nextContactErrors.phone = "required";
+      } else if (!isValidPhone(nextPhone)) {
+        nextContactErrors.phone = "invalid";
+      }
+    }
+
+    setContactErrors(nextContactErrors);
+    setAddressErrors({shipping: {}, billing: {}});
+    setSaveFailure(null);
+
+    if (Object.keys(nextContactErrors).length > 0) {
+      return;
+    }
+
+    startSaving(async () => {
+      if (isEditingContact) {
+        // Only a changed name is sent to Shopify; the phone stays on this order.
+        if (nextFirstName !== customer.firstName || nextLastName !== customer.lastName) {
+          const nameData = new FormData();
+
+          nameData.set("firstName", nextFirstName);
+          nameData.set("lastName", nextLastName);
+
+          const result = await updateName(nameData);
+
+          if (!result.ok) {
+            if (result.error === "invalid" && result.errors) {
+              setContactErrors(result.errors);
+            } else if (!redirectForAuthError(result.error, {locale})) {
+              setSaveFailure("details");
+            }
+
+            return;
+          }
+        }
+
+        setPhone(nextPhone);
+        setProblems((current) => ({...current, contact: false}));
+        setWantsContactEdit(false);
+      }
+
+      const newAddresses: [AddressKind, boolean, (id: string) => void][] = [
+        ["shipping", isAddingShipping, setShippingId],
+        ["billing", isAddingBilling, setBillingId],
+      ];
+
+      for (const [kind, isOpen, select] of newAddresses) {
+        if (!isOpen) {
+          continue;
+        }
+
+        const result = await addAddress(pickAddressFields(formData, kind));
+
+        if (result.ok && result.addressId) {
+          select(result.addressId);
+          setWantsNewAddress((current) => ({...current, [kind]: false}));
+
+          continue;
+        }
+
+        if (!result.ok && result.error === "invalid" && result.errors) {
+          setAddressErrors((current) => ({...current, [kind]: result.errors ?? {}}));
+        } else if (result.ok || !redirectForAuthError(result.error, {locale})) {
+          setSaveFailure("address");
+        }
+
+        return;
+      }
+    });
+  }
+
   return (
     <>
       {isPreparing ? <LoadingScreen label={t("preparingCart")} /> : null}
       <div className={cartStyles.layout} aria-busy={isPreparing} inert={isPreparing}>
-        <section className={cartStyles.details} aria-labelledby="buyer-details-heading">
-          <h2 id="buyer-details-heading" className={`type-mono ${cartStyles.sectionHeading}`}>
-            {t("heading")}
-          </h2>
-          <div className={styles.form}>
+        <div className={cartStyles.details}>
+          <form className={styles.form} onSubmit={handleSave} noValidate>
             <ContactSection
               firstName={customer.firstName}
               lastName={customer.lastName}
               email={customer.email}
               phone={phone}
-              needsAttention={problems.contact === true}
-              onSaved={(nextPhone) => {
-                setPhone(nextPhone);
-                setProblems((current) => ({...current, contact: false}));
-              }}
+              isEditing={isEditingContact}
+              canCancel={hadCompleteContact && problems.contact !== true}
+              errors={contactErrors}
+              onEdit={() => setWantsContactEdit(true)}
+              onCancel={() => setWantsContactEdit(false)}
             />
 
             {requiresShipping ? (
@@ -169,6 +302,10 @@ export default function CheckoutDetails({
                   selectedId={shippingId}
                   onSelect={setShippingId}
                   error={problems.shipping ? t("addressRequired") : undefined}
+                  isAdding={isAddingShipping}
+                  onAdd={() => setWantsNewAddress((current) => ({...current, shipping: true}))}
+                  onCancel={() => setWantsNewAddress((current) => ({...current, shipping: false}))}
+                  errors={addressErrors.shipping}
                 />
               </fieldset>
             ) : (
@@ -196,9 +333,27 @@ export default function CheckoutDetails({
                   selectedId={billingId}
                   onSelect={setBillingId}
                   error={problems.billing ? t("addressRequired") : undefined}
+                  isAdding={isAddingBilling}
+                  onAdd={() => setWantsNewAddress((current) => ({...current, billing: true}))}
+                  onCancel={() => setWantsNewAddress((current) => ({...current, billing: false}))}
+                  errors={addressErrors.billing}
                 />
               )}
             </fieldset>
+
+            {hasOpenFields ? (
+              <div className={styles.actions}>
+                <Button type="submit" loading={isSaving} loadingLabel={t("saving")}>
+                  {t("save")}
+                </Button>
+              </div>
+            ) : null}
+
+            {saveFailure ? (
+              <p role="alert" className={styles.message}>
+                {saveFailure === "address" ? t("addressSaveError") : t("saveError")}
+              </p>
+            ) : null}
 
             {failure ? (
               <p role="alert" className={styles.message}>
@@ -209,8 +364,8 @@ export default function CheckoutDetails({
                     : t("saveError")}
               </p>
             ) : null}
-          </div>
-        </section>
+          </form>
+        </div>
         <aside className={cartStyles.order}>
           {orderSummary}
           <CheckoutConsent

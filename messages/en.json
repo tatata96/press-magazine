@@ -149,7 +149,6 @@
     "subtotal": "Subtotal",
     "updateError": "We could not update your cart. Please try again.",
     "checkout": "Checkout",
-    "reviewAgreements": "Review agreements",
     "redirecting": "Taking you to checkout…",
     "consentLabel": "I have read and agree to the <distanceSalesAgreement>Distance Sales Agreement</distanceSalesAgreement> and <preInformation>Pre-Information Form</preInformation>.",
     "consentRequired": "Please agree to the Distance Sales Agreement and Pre-Information Form to continue.",
@@ -200,7 +199,6 @@
     }
   },
   "BuyerDetails": {
-    "heading": "Your details",
     "loadError": "We could not load this page right now. Please refresh or try again later.",
     "contact": "Contact",
     "firstName": "First name",
@@ -231,7 +229,6 @@
     "cancel": "Cancel",
     "emailManaged": "You sign in with {email}. It can’t be changed here.",
     "addAddress": "Add a new address",
-    "saveAddress": "Save address",
     "addressRequired": "Choose or add an address.",
     "addressSaveError": "We could not save this address. Please check it and try again.",
     "defaultBadge": "Default"

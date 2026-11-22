@@ -1,14 +1,8 @@
 "use client";
 
-import {useState, useTransition} from "react";
-import type {FormEvent} from "react";
-import {useLocale, useTranslations} from "next-intl";
-import Button from "@/app/components/button/Button";
+import {useTranslations} from "next-intl";
 import TextField from "@/app/components/text-field/TextField";
-import {updateName} from "../account/actions";
-import {redirectForAuthError} from "../cart/auth-redirect";
 import type {FormErrors} from "./buyer-details";
-import {isValidPhone, normalizePhone} from "./checkout-selection";
 import styles from "./buyer-details.module.scss";
 
 type ContactSectionProps = {
@@ -16,29 +10,30 @@ type ContactSectionProps = {
   lastName: string;
   email: string;
   phone: string;
-  /** Set by the parent when checkout is blocked on something in this section. */
-  needsAttention: boolean;
-  onSaved: (phone: string) => void;
+  isEditing: boolean;
+  /** Cancelling only makes sense once there is a complete set of details to go back to. */
+  canCancel: boolean;
+  errors: FormErrors;
+  onEdit: () => void;
+  onCancel: () => void;
 };
 
 // Shows what the Shopify account already holds as a summary and asks only for what is missing.
 // "Edit" opens the fields for the name (saved to the account) and the phone (kept for this
-// order: the account has no phone field the API can update).
+// order: the account has no phone field the API can update). The fields belong to the
+// checkout's single form; saving is handled there.
 export default function ContactSection({
   firstName,
   lastName,
   email,
   phone,
-  needsAttention,
-  onSaved,
+  isEditing,
+  canCancel,
+  errors,
+  onEdit,
+  onCancel,
 }: ContactSectionProps) {
   const t = useTranslations("BuyerDetails");
-  const locale = useLocale();
-  const [wantsEdit, setWantsEdit] = useState(!firstName || !lastName || !phone);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [saveError, setSaveError] = useState(false);
-  const [isSaving, startSaving] = useTransition();
-  const isEditing = wantsEdit || needsAttention;
 
   function errorText(field: "firstName" | "lastName" | "phone"): string | undefined {
     const code = errors[field];
@@ -54,63 +49,12 @@ export default function ContactSection({
     return t(code === "required" ? "required" : "invalid");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const nextPhone = normalizePhone(String(formData.get("phone") ?? ""));
-    const nextFirstName = String(formData.get("firstName") ?? "").trim();
-    const nextLastName = String(formData.get("lastName") ?? "").trim();
-    const nextErrors: FormErrors = {};
-
-    if (!nextFirstName) {
-      nextErrors.firstName = "required";
-    }
-
-    if (!nextLastName) {
-      nextErrors.lastName = "required";
-    }
-
-    if (!nextPhone) {
-      nextErrors.phone = "required";
-    } else if (!isValidPhone(nextPhone)) {
-      nextErrors.phone = "invalid";
-    }
-
-    setErrors(nextErrors);
-    setSaveError(false);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return;
-    }
-
-    startSaving(async () => {
-      // Only a changed name is sent to Shopify; the phone stays on this order.
-      if (nextFirstName !== firstName || nextLastName !== lastName) {
-        const result = await updateName(formData);
-
-        if (!result.ok) {
-          if (result.error === "invalid" && result.errors) {
-            setErrors(result.errors);
-          } else if (!redirectForAuthError(result.error, {locale})) {
-            setSaveError(true);
-          }
-
-          return;
-        }
-      }
-
-      onSaved(nextPhone);
-      setWantsEdit(false);
-    });
-  }
-
   if (!isEditing) {
     return (
       <section aria-labelledby="contact-heading">
-        <h3 id="contact-heading" className={`type-mono ${styles.legend}`}>
+        <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
           {t("contact")}
-        </h3>
+        </h2>
         <dl className={styles.summary}>
           <div>
             <dt>{t("name")}</dt>
@@ -125,7 +69,7 @@ export default function ContactSection({
             <dd>{phone}</dd>
           </div>
         </dl>
-        <button type="button" className={styles.textButton} onClick={() => setWantsEdit(true)}>
+        <button type="button" className={styles.textButton} onClick={onEdit}>
           {t("edit")}
         </button>
       </section>
@@ -134,10 +78,10 @@ export default function ContactSection({
 
   return (
     <section aria-labelledby="contact-heading">
-      <h3 id="contact-heading" className={`type-mono ${styles.legend}`}>
+      <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
         {t("contact")}
-      </h3>
-      <form className={styles.contactForm} onSubmit={handleSubmit} noValidate>
+      </h2>
+      <div className={styles.contactForm}>
         <div className={styles.row}>
           <TextField
             name="firstName"
@@ -167,20 +111,12 @@ export default function ContactSection({
           error={errorText("phone")}
         />
         <p className={styles.helper}>{t("emailManaged", {email})}</p>
-        <div className={styles.actions}>
-          <Button type="submit" loading={isSaving} loadingLabel={t("saving")}>
-            {t("save")}
-          </Button>
-          {firstName && lastName && phone && !needsAttention ? (
-            <button type="button" className={styles.textButton} onClick={() => setWantsEdit(false)}>
-              {t("cancel")}
-            </button>
-          ) : null}
-        </div>
-        {saveError ? (
-          <p role="alert" className={styles.message}>{t("saveError")}</p>
+        {canCancel ? (
+          <button type="button" className={styles.textButton} onClick={onCancel}>
+            {t("cancel")}
+          </button>
         ) : null}
-      </form>
+      </div>
     </section>
   );
 }
