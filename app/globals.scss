@@ -3,8 +3,10 @@
   --foreground: #171717;
   --rule-width: 0.8px;
   --border-subtle: #d9d9d9;
-  // Provisional: background of the focused form field.
-  --field-focus-background: #f0f0f0;
+  // Form fields: soft hairline at rest, full-strength line on focus. The rest
+  // colour stays above 3:1 against white so the field boundary remains visible.
+  --field-border: #a8a8a8;
+  --field-label: #6b6b6b;
 }
 
 *,

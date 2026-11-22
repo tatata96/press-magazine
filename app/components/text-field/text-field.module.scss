@@ -23,9 +23,14 @@
   color: inherit;
   background: var(--background);
   border: 0;
-  border-bottom: 1.5px solid var(--foreground);
+  border-bottom: 1px solid var(--field-border);
   border-radius: 0;
   appearance: none;
+  transition: border-color 0.15s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 
   // Browsers paint autofilled fields pale blue and ignore `background`; an
   // inset shadow is the only way to cover it.
@@ -36,20 +41,17 @@
     -webkit-text-fill-color: var(--foreground);
   }
 
-  &:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 1000px var(--field-focus-background) inset;
-  }
-
-  // The tint replaces the default outline as the focus indicator.
+  // The darker, thicker underline replaces the default outline as the focus
+  // indicator.
   &:focus-visible {
     outline: none;
-    background: var(--field-focus-background);
+    border-bottom: 2px solid var(--foreground);
   }
 
   // The message below (with its icon) marks the error without
   // relying on colour.
   &[aria-invalid="true"] {
-    border-bottom-width: 1px;
+    border-bottom-color: var(--foreground);
   }
 
   // Hide native number spinners; they clash with the underlined look.
@@ -73,6 +75,7 @@
   align-items: center;
   font-family: var(--font-family-mono);
   font-size: var(--type-label-size);
+  color: var(--field-label);
   pointer-events: none;
   transition:
     transform 0.15s ease,

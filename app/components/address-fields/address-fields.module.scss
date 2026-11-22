@@ -25,6 +25,7 @@
 
 .selectLabel {
   font-family: var(--font-family-mono);
+  color: var(--field-label);
 }
 
 .selectInput {
@@ -35,12 +36,12 @@
   color: inherit;
   background: var(--background);
   border: 0;
-  border-bottom: 1.5px solid var(--foreground);
+  border-bottom: 1px solid var(--field-border);
   border-radius: 0;
 
   &:focus-visible {
     outline: none;
-    background: var(--field-focus-background);
+    border-bottom: 2px solid var(--foreground);
   }
 }
 
