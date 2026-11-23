@@ -18,7 +18,6 @@ import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import styles from "./cart.module.scss";
 
 type CheckoutConsentProps = {
-  cartVersion: string;
   /** Changes whenever anything the buyer chose changes, which invalidates the agreements and consent. */
   detailsKey: string;
   prepareCheckout: () => Promise<PreparedCheckout | null>;
@@ -31,7 +30,6 @@ type CheckoutError = Exclude<CheckoutActionError, "login_required" | "session_ex
 // Consent gate before leaving for Shopify's hosted checkout. The disabled button is only
 // a convenience: proceedToCheckout re-checks consent and records it on the cart.
 export default function CheckoutConsent({
-  cartVersion,
   detailsKey,
   prepareCheckout,
   proceed,
@@ -48,9 +46,11 @@ export default function CheckoutConsent({
     detailsKey: string;
   } | null>(null);
   const [acceptedFingerprint, setAcceptedFingerprint] = useState<string | null>(null);
-  // The prepared agreements only count while nothing they were built from has changed.
-  const current = prepared?.detailsKey === detailsKey &&
-    prepared.checkout.cartVersion === cartVersion ? prepared : null;
+  // The prepared agreements only count while the buyer's details are unchanged. The cart is
+  // deliberately not compared: preparing writes the address onto it, which changes delivery
+  // and total, so the page's earlier cart reading would never match. The server fingerprint
+  // covers the cart and is re-checked in proceedToCheckout.
+  const current = prepared?.detailsKey === detailsKey ? prepared : null;
   const hasConsent = current !== null && acceptedFingerprint === current.checkout.fingerprint;
   const [openDocument, setOpenDocument] = useState<LegalDocumentKey | null>(
     null,

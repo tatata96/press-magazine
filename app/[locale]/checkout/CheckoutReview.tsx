@@ -15,13 +15,12 @@ import CheckoutConsent from "../cart/CheckoutConsent";
 type CheckoutReviewProps = {
   /** Already validated against the account by the page; the server checks it again. */
   selection: CheckoutSelection;
-  cartVersion: string;
   paymentMethods: ReactNode;
 };
 
 // Step 2: the buyer's details are final, so the agreements can be prepared as soon as the
 // consent box is ticked or an agreement is opened.
-export default function CheckoutReview({selection, cartVersion, paymentMethods}: CheckoutReviewProps) {
+export default function CheckoutReview({selection, paymentMethods}: CheckoutReviewProps) {
   const t = useTranslations("BuyerDetails");
   const locale = useLocale();
   const router = useRouter();
@@ -59,7 +58,6 @@ export default function CheckoutReview({selection, cartVersion, paymentMethods}:
     <>
       {isPreparing ? <LoadingScreen label={t("preparingCart")} /> : null}
       <CheckoutConsent
-        cartVersion={cartVersion}
         detailsKey={JSON.stringify(selection)}
         prepareCheckout={prepare}
         proceed={(acceptedFingerprint) => proceedToCheckout(acceptedFingerprint, selection, locale)}

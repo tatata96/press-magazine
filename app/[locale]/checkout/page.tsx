@@ -13,7 +13,7 @@ import detailsStyles from "../buyer-details/buyer-details.module.scss";
 import {parseCheckoutSelection, resolveBuyerDetails} from "../buyer-details/checkout-selection";
 import CartLines from "../cart/CartLines";
 import PaymentMethods from "../cart/PaymentMethods";
-import {fingerprintCart, readCheckoutInputs} from "../cart/checkout-state";
+import {readCheckoutInputs} from "../cart/checkout-state";
 import cartStyles from "../cart/cart.module.scss";
 import CheckoutReview from "./CheckoutReview";
 
@@ -176,7 +176,6 @@ async function CheckoutContent({searchParams}: CheckoutPageProps) {
         />
         <CheckoutReview
           selection={selection}
-          cartVersion={fingerprintCart(cart, context)}
           paymentMethods={<PaymentMethods />}
         />
       </aside>

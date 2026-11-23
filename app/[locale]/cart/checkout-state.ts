@@ -47,20 +47,6 @@ function fingerprintAgreement(snapshot: AgreementSnapshot): string {
   return createHash("sha256").update(JSON.stringify(snapshot)).digest("hex");
 }
 
-export function fingerprintCart(
-  cart: Cart,
-  context: Pick<CartCheckoutContext, "total" | "delivery" | "requiresShipping">,
-): string {
-  return createHash("sha256")
-    .update(JSON.stringify({
-      cart,
-      total: context.total,
-      delivery: context.delivery,
-      requiresShipping: context.requiresShipping,
-    }))
-    .digest("hex");
-}
-
 export type CheckoutInputs = {cartId: string | undefined; session: SessionState};
 
 // Cookies are read here and not in prepareCheckoutState so callers can keep this outside any

@@ -12,11 +12,9 @@ import {
 import {formatMoney} from "@/lib/shopify/money";
 import type {PostalAddress} from "../buyer-details/buyer-details";
 import type {AgreementSnapshot, CheckoutState} from "./checkout-state";
-import {fingerprintCart} from "./checkout-state";
 
 export type PreparedCheckout = {
   fingerprint: string;
-  cartVersion: string;
   data: PreInformationData;
 };
 
@@ -31,11 +29,6 @@ export async function buildPreparedCheckout(
 
   return {
     fingerprint: state.fingerprint,
-    cartVersion: fingerprintCart(state.cart, {
-      total: state.snapshot.total,
-      delivery: state.snapshot.delivery,
-      requiresShipping: state.snapshot.buyer.shippingAddress !== null,
-    }),
     data: {...data, terms},
   };
 }
