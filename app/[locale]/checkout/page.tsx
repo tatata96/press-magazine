@@ -122,9 +122,12 @@ async function CheckoutContent({searchParams}: CheckoutPageProps) {
   return (
     <div className={cartStyles.layout}>
       <section className={cartStyles.details} aria-labelledby="checkout-details-heading">
-        <h2 id="checkout-details-heading" className={`type-mono ${detailsStyles.legend}`}>
-          {detailsT("contact")}
-        </h2>
+        <div className={detailsStyles.sectionHeader}>
+          <h2 id="checkout-details-heading" className={`type-mono ${detailsStyles.legend}`}>
+            {detailsT("contact")}
+          </h2>
+          <Link href="/cart" className={cartStyles.link}>{detailsT("edit")}</Link>
+        </div>
         <dl className={detailsStyles.summary}>
           <div>
             <dt>{detailsT("name")}</dt>
@@ -153,7 +156,6 @@ async function CheckoutContent({searchParams}: CheckoutPageProps) {
             </dd>
           </div>
         </dl>
-        <Link href="/cart" className={cartStyles.link}>{detailsT("edit")}</Link>
       </section>
       <aside className={cartStyles.order}>
         <h2 className={`type-mono ${cartStyles.sectionHeading} ${cartStyles.orderHeading}`}>

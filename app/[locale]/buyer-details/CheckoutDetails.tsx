@@ -8,7 +8,7 @@ import {useRouter} from "../../../i18n/navigation";
 import {addAddress, savePhone, updateName} from "../account/actions";
 import {redirectForAuthError} from "../cart/auth-redirect";
 import cartStyles from "../cart/cart.module.scss";
-import AddressChooser, {type AddressView} from "./AddressChooser";
+import AddressChooser, {AddressSectionHeader, type AddressView} from "./AddressChooser";
 import type {FormErrors} from "./buyer-details";
 import ContactSection from "./ContactSection";
 import {isValidPhone, normalizePhone} from "./checkout-selection";
@@ -265,27 +265,35 @@ export default function CheckoutDetails({
             />
 
             {requiresShipping ? (
-              <fieldset className={styles.group}>
-                <legend className={`type-mono ${styles.legend}`}>{t("shippingHeading")}</legend>
+              <section className={styles.group} aria-labelledby="shipping-heading">
+                <AddressSectionHeader
+                  id="shipping-heading"
+                  heading={t("shippingHeading")}
+                  onAdd={isAddingShipping ? undefined : () => setWantsNewAddress((current) => ({...current, shipping: true}))}
+                />
                 <AddressChooser
                   kind="shipping"
+                  labelledBy="shipping-heading"
                   addresses={addresses}
                   countries={countries}
                   selectedId={shippingId}
                   onSelect={setShippingId}
                   error={problems.shipping ? t("addressRequired") : undefined}
                   isAdding={isAddingShipping}
-                  onAdd={() => setWantsNewAddress((current) => ({...current, shipping: true}))}
                   onCancel={() => setWantsNewAddress((current) => ({...current, shipping: false}))}
                   errors={addressErrors.shipping}
                 />
-              </fieldset>
+              </section>
             ) : (
               <p className={`type-mono ${styles.note}`}>{t("digitalNote")}</p>
             )}
 
-            <fieldset className={styles.group}>
-              <legend className={`type-mono ${styles.legend}`}>{t("billingHeading")}</legend>
+            <section className={styles.group} aria-labelledby="billing-heading">
+              <AddressSectionHeader
+                id="billing-heading"
+                heading={t("billingHeading")}
+                onAdd={billsToDelivery || isAddingBilling ? undefined : () => setWantsNewAddress((current) => ({...current, billing: true}))}
+              />
               {requiresShipping ? (
                 <label className={styles.checkLabel}>
                   <input
@@ -300,18 +308,18 @@ export default function CheckoutDetails({
               {billsToDelivery ? null : (
                 <AddressChooser
                   kind="billing"
+                  labelledBy="billing-heading"
                   addresses={addresses}
                   countries={countries}
                   selectedId={billingId}
                   onSelect={setBillingId}
                   error={problems.billing ? t("addressRequired") : undefined}
                   isAdding={isAddingBilling}
-                  onAdd={() => setWantsNewAddress((current) => ({...current, billing: true}))}
                   onCancel={() => setWantsNewAddress((current) => ({...current, billing: false}))}
                   errors={addressErrors.billing}
                 />
               )}
-            </fieldset>
+            </section>
 
             {saveFailure ? (
               <p role="alert" className={styles.message}>

@@ -309,6 +309,56 @@
   }
 }
 
+// Agreement text sits in a small scrollable box instead of a modal.
+.document {
+  align-self: stretch;
+}
+
+.documentTitle {
+  margin: 0 0 8px;
+  font-size: var(--type-body-size);
+  font-weight: normal;
+  opacity: 0.7;
+}
+
+.documentBody {
+  max-height: 8rem;
+  padding: 8px 12px;
+  overflow-y: auto;
+  border: 1px solid currentColor;
+  border-color: color-mix(in srgb, currentColor 20%, transparent);
+
+  // The shared legal-document styles set their own sizes, so scale them down here.
+  p,
+  ul,
+  ol,
+  li,
+  th,
+  td {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin-block: 12px 4px;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  p,
+  ul,
+  ol {
+    margin-block: 0 6px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
 // Badges and button share one row on wider screens; on mobile the button comes first.
 .checkoutActions {
   display: flex;

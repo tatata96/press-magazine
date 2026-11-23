@@ -17,15 +17,43 @@ type AddressChooserProps = {
   kind: "shipping" | "billing";
   addresses: AddressView[];
   countries: {code: string; name: string}[];
+  /** Id of the section heading that names this group of addresses. */
+  labelledBy: string;
   selectedId: string | null;
   onSelect: (addressId: string) => void;
   error?: string;
   /** The new-address fields are showing; they are part of the checkout's single form. */
   isAdding: boolean;
-  onAdd: () => void;
   onCancel: () => void;
   errors: FormErrors;
 };
+
+// Section heading with the "add a new address" action on the same row.
+export function AddressSectionHeader({
+  id,
+  heading,
+  onAdd,
+}: {
+  id: string;
+  heading: string;
+  /** Omitted while the new-address fields are already showing. */
+  onAdd?: () => void;
+}) {
+  const t = useTranslations("BuyerDetails");
+
+  return (
+    <div className={styles.sectionHeader}>
+      <h2 id={id} className={`type-mono ${styles.legend}`}>
+        {heading}
+      </h2>
+      {onAdd ? (
+        <button type="button" className={styles.textButton} onClick={onAdd}>
+          {t("addAddress")}
+        </button>
+      ) : null}
+    </div>
+  );
+}
 
 // Pick one of the customer's saved addresses, or fill in a new one. Saving the new address
 // (to the customer's account) is done by the checkout form. Only an address id is ever sent
@@ -34,11 +62,11 @@ export default function AddressChooser({
   kind,
   addresses,
   countries,
+  labelledBy,
   selectedId,
   onSelect,
   error,
   isAdding,
-  onAdd,
   onCancel,
   errors,
 }: AddressChooserProps) {
@@ -47,7 +75,7 @@ export default function AddressChooser({
   return (
     <div className={styles.group}>
       {addresses.length > 0 ? (
-        <div className={styles.choices}>
+        <div className={styles.choices} role="radiogroup" aria-labelledby={labelledBy}>
           {addresses.map((address) => (
             <label key={address.id} className={styles.choice}>
               <input
@@ -67,6 +95,7 @@ export default function AddressChooser({
         </div>
       ) : null}
 
+      {/* The "add" action lives in the section heading row, see AddressSectionHeader. */}
       {isAdding ? (
         <div className={styles.addForm}>
           <AddressFields countries={countries} errors={errors} namePrefix={`${kind}-`} />
@@ -76,11 +105,7 @@ export default function AddressChooser({
             </button>
           ) : null}
         </div>
-      ) : (
-        <button type="button" className={styles.textButton} onClick={onAdd}>
-          {t("addAddress")}
-        </button>
-      )}
+      ) : null}
 
       {error ? <p role="alert" className={styles.message}>{error}</p> : null}
     </div>

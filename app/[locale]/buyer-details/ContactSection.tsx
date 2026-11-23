@@ -52,9 +52,14 @@ export default function ContactSection({
   if (!isEditing) {
     return (
       <section aria-labelledby="contact-heading">
-        <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
-          {t("contact")}
-        </h2>
+        <div className={styles.sectionHeader}>
+          <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
+            {t("contact")}
+          </h2>
+          <button type="button" className={styles.textButton} onClick={onEdit}>
+            {t("edit")}
+          </button>
+        </div>
         <dl className={styles.summary}>
           <div>
             <dt>{t("name")}</dt>
@@ -69,9 +74,6 @@ export default function ContactSection({
             <dd>{phone}</dd>
           </div>
         </dl>
-        <button type="button" className={styles.textButton} onClick={onEdit}>
-          {t("edit")}
-        </button>
       </section>
     );
   }

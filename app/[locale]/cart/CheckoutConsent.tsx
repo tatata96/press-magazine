@@ -5,7 +5,6 @@ import type {ReactNode} from "react";
 import {useLocale, useTranslations} from "next-intl";
 import Button from "@/app/components/button/Button";
 import type {LegalDocumentKey} from "@/app/components/legal-document/documents";
-import LegalModal from "@/app/components/legal-modal/LegalModal";
 import {useRouter} from "../../../i18n/navigation";
 import type {CheckoutActionError, CheckoutActionResult} from "./actions";
 import {redirectForAuthError} from "./auth-redirect";
@@ -38,6 +37,7 @@ export default function CheckoutConsent({
   const t = useTranslations("CartPage");
   const legalT = useTranslations("LegalDocuments");
   const checkboxId = useId();
+  const documentTitleId = useId();
   const router = useRouter();
   const locale = useLocale();
   const busyRef = useRef(false);
@@ -121,7 +121,7 @@ export default function CheckoutConsent({
     }
 
     if (current) {
-      setOpenDocument(key);
+      setOpenDocument((open) => (open === key ? null : key));
 
       return;
     }
@@ -260,19 +260,20 @@ export default function CheckoutConsent({
         </p>
       ) : null}
 
-      {documents ? (Object.keys(documents) as LegalDocumentKey[]).map((key) => (
-        <LegalModal
-          key={key}
-          isOpen={openDocument === key}
-          title={legalT(`${key}.title`)}
-          closeLabel={legalT("close")}
-          onClose={() =>
-            setOpenDocument((current) => (current === key ? null : current))
-          }
+      {documents && openDocument ? (
+        <section
+          className={styles.document}
+          aria-labelledby={documentTitleId}
         >
-          {documents[key]}
-        </LegalModal>
-      )) : null}
+          <h2 id={documentTitleId} className={styles.documentTitle}>
+            {legalT(`${openDocument}.title`)}
+          </h2>
+          {/* Focusable so keyboard users can scroll the text. */}
+          <div className={styles.documentBody} tabIndex={0}>
+            {documents[openDocument]}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
