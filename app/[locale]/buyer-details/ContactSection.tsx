@@ -51,7 +51,7 @@ export default function ContactSection({
 
   if (!isEditing) {
     return (
-      <section aria-labelledby="contact-heading">
+      <section className={styles.contact} aria-labelledby="contact-heading">
         <div className={styles.sectionHeader}>
           <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
             {t("contact")}
@@ -79,7 +79,7 @@ export default function ContactSection({
   }
 
   return (
-    <section aria-labelledby="contact-heading">
+    <section className={styles.contact} aria-labelledby="contact-heading">
       <h2 id="contact-heading" className={`type-mono ${styles.legend}`}>
         {t("contact")}
       </h2>

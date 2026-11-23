@@ -19,7 +19,7 @@ import styles from "./cart.module.scss";
 type CheckoutConsentProps = {
   /** Changes whenever anything the buyer chose changes, which invalidates the agreements and consent. */
   detailsKey: string;
-  prepareCheckout: () => Promise<PreparedCheckout | null>;
+  prepareCheckout: (options?: {silent?: boolean}) => Promise<PreparedCheckout | null>;
   proceed: (acceptedFingerprint: string) => Promise<CheckoutActionResult>;
   paymentMethods: ReactNode;
 };
@@ -72,6 +72,31 @@ export default function CheckoutConsent({
 
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
+
+  // Prepare the agreements in the background as soon as the details are known, so opening
+  // a document or ticking the box is instant. If this fails or is still running, the
+  // explicit action below prepares again and shows the loader and any error.
+  useEffect(() => {
+    let cancelled = false;
+
+    prepareCheckout({silent: true})
+      .then((checkout) => {
+        if (checkout && !cancelled) {
+          setPrepared((existing) =>
+            existing?.detailsKey === detailsKey ? existing : {checkout, detailsKey},
+          );
+        }
+      })
+      .catch(() => {
+        // Intentionally quiet: the buyer has not asked for anything yet.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // prepareCheckout is recreated every render; the details key is what invalidates it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsKey]);
 
   // The agreements are built from the buyer's details, and consent is recorded against their
   // fingerprint. Ticking the box therefore prepares them in the background when needed, so the

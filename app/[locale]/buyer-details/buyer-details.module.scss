@@ -4,6 +4,11 @@
   gap: 40px;
 }
 
+// Extra space on top of the form gap to separate contact details from the address sections.
+.contact {
+  margin-bottom: 32px;
+}
+
 // Wide row gap: TextField overlays its error message in the gap below the field.
 .group {
   display: flex;

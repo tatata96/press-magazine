@@ -26,8 +26,11 @@ export default function CheckoutReview({selection, paymentMethods}: CheckoutRevi
   const router = useRouter();
   const [isPreparing, setIsPreparing] = useState(false);
 
-  async function prepare(): Promise<PreparedCheckout | null> {
-    setIsPreparing(true);
+  // Silent preparation runs in the background, so it must not cover the page.
+  async function prepare({silent = false}: {silent?: boolean} = {}): Promise<PreparedCheckout | null> {
+    if (!silent) {
+      setIsPreparing(true);
+    }
 
     try {
       const result = await prepareCheckout(selection, locale);
@@ -50,7 +53,9 @@ export default function CheckoutReview({selection, paymentMethods}: CheckoutRevi
       // The consent component turns a thrown error into its "could not continue" message.
       throw new Error(result.error);
     } finally {
-      setIsPreparing(false);
+      if (!silent) {
+        setIsPreparing(false);
+      }
     }
   }
 
