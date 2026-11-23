@@ -52,8 +52,6 @@ export async function getPlanProducts(): Promise<PlanProductsResult> {
     }),
   );
 
-  console.log("result", result);
-
   // A failure must not be pinned into the prerendered page, so it expires quickly.
   if (result.status === "ok") {
     cacheLife("minutes");
