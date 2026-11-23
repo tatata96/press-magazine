@@ -1,7 +1,8 @@
 "use server";
 
 import {refresh} from "next/cache";
-import {getLocale} from "next-intl/server";
+import {hasLocale} from "next-intl";
+import {routing} from "@/i18n/routing";
 import {CONSENT_ATTRIBUTE_KEYS, LEGAL_DOCUMENTS_VERSION} from "@/lib/legal/consent";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import {ShopifyError} from "@/lib/shopify/admin-client";
@@ -13,7 +14,7 @@ import {
   setCartAttributesForCheckout,
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
-import {readCartId, writeCartId} from "./cart-cookie";
+import {readCartId, writeCartId} from "@/lib/cookies/cart-cookie";
 import {loadCheckoutState, readCheckoutCookies} from "./checkout-state";
 
 export type CartActionResult = {ok: true} | {ok: false; error: "invalid" | "failed"};
@@ -132,6 +133,7 @@ export type CheckoutActionResult =
 // address, option and total afterwards, and cannot be gated from this repo.
 export async function proceedToCheckout(
   acceptedFingerprint: string,
+  locale: string,
 ): Promise<CheckoutActionResult> {
   // Placeholder legal text must never reach a real checkout; see lib/legal/readiness.ts.
   if (!isLegalContentPublishable()) {
@@ -142,10 +144,12 @@ export async function proceedToCheckout(
     return {ok: false, error: "consent_required"};
   }
 
-  const cookies = await readCheckoutCookies();
+  if (!hasLocale(routing.locales, locale)) {
+    return {ok: false, error: "failed"};
+  }
 
   try {
-    const state = await loadCheckoutState(cookies);
+    const state = await loadCheckoutState(await readCheckoutCookies());
 
     if (state.status === "empty") {
       return {ok: false, error: "empty_cart"};
@@ -163,17 +167,18 @@ export async function proceedToCheckout(
       [CONSENT_ATTRIBUTE_KEYS.accepted]: "accepted",
       [CONSENT_ATTRIBUTE_KEYS.documentsVersion]: LEGAL_DOCUMENTS_VERSION,
       [CONSENT_ATTRIBUTE_KEYS.acceptedAt]: new Date().toISOString(),
-      [CONSENT_ATTRIBUTE_KEYS.locale]: await getLocale(),
+      [CONSENT_ATTRIBUTE_KEYS.locale]: locale,
       [CONSENT_ATTRIBUTE_KEYS.agreementFingerprint]: state.fingerprint,
       [CONSENT_ATTRIBUTE_KEYS.cartReference]: state.cart.id.split("?")[0],
       [CONSENT_ATTRIBUTE_KEYS.agreedTotal]: `${state.snapshot.total.amount} ${state.snapshot.total.currencyCode}`,
     });
 
-    if (
-      handoff.totalQuantity < 1 ||
-      !handoff.checkoutUrl.startsWith("https://")
-    ) {
+    if (handoff.totalQuantity < 1) {
       return {ok: false, error: "empty_cart"};
+    }
+
+    if (!handoff.checkoutUrl.startsWith("https://")) {
+      return {ok: false, error: "failed"};
     }
 
     return {ok: true, checkoutUrl: handoff.checkoutUrl};

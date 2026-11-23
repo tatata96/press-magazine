@@ -1,6 +1,7 @@
 import "server-only";
 
 import {cookies} from "next/headers";
+import {getHttpOnlyCookieOptions} from "@/lib/cookies/cookie-options";
 import {decryptJson, encryptJson} from "./buyer-crypto";
 import type {PostalAddress, StoredBuyerDetails} from "./buyer-details";
 
@@ -52,12 +53,13 @@ export async function readStoredBuyerDetails(): Promise<StoredBuyerDetails | nul
 export async function writeStoredBuyerDetails(
   details: StoredBuyerDetails,
 ): Promise<void> {
-  (await cookies()).set(BUYER_COOKIE_NAME, encryptJson(details), {
-    httpOnly: true,
-    sameSite: "lax",
-    // Always Secure: browsers treat localhost as secure, but Safari over plain http does not.
-    secure: true,
-    path: "/",
-    maxAge: BUYER_COOKIE_MAX_AGE_SECONDS,
-  });
+  (await cookies()).set(
+    BUYER_COOKIE_NAME,
+    encryptJson(details),
+    getHttpOnlyCookieOptions({
+      maxAgeSeconds: BUYER_COOKIE_MAX_AGE_SECONDS,
+      // Always Secure: browsers treat localhost as secure, but Safari over plain http does not.
+      secure: true,
+    }),
+  );
 }
