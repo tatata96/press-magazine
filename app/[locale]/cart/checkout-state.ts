@@ -11,6 +11,7 @@ import type {Cart, CartCheckoutContext} from "@/lib/shopify/cart";
 import {getCartWithCheckoutContext, setCartForCustomer} from "@/lib/shopify/cart";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import type {Money} from "@/lib/shopify/money";
+import type {PlanId} from "@/lib/shopify/plan-products";
 import type {BuyerDetails} from "../buyer-details/buyer-details";
 import {resolveBuyerDetails, type CheckoutSelection} from "../buyer-details/checkout-selection";
 
@@ -21,7 +22,7 @@ export type AgreementSnapshot = {
   buyer: BuyerDetails;
   lines: {
     title: string;
-    productHandle: string;
+    planId: PlanId | null;
     quantity: number;
     unitPrice: Money;
     totalPrice: Money;
@@ -68,7 +69,7 @@ function buildSnapshot(
     buyer,
     lines: cart.lines.map((line) => ({
       title: line.productTitle,
-      productHandle: line.productHandle,
+      planId: line.planId,
       quantity: line.quantity,
       unitPrice: line.unitPrice,
       totalPrice: line.totalPrice,

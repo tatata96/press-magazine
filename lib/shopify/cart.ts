@@ -2,13 +2,15 @@ import "server-only";
 
 import {ShopifyError} from "./admin-client";
 import type {Money} from "./money";
+import {planIdFromTags, type PlanId} from "./plan-products";
 import {requestShopifyStorefrontGraphQL} from "./storefront-client";
 
 export type CartLine = {
   id: string;
   quantity: number;
   productTitle: string;
-  productHandle: string;
+  /** Which plan the product is, from its Shopify tags; null for anything else. */
+  planId: PlanId | null;
   unitPrice: Money;
   totalPrice: Money;
 };
@@ -24,7 +26,7 @@ type CartLineNode = {
   id: string;
   quantity: number;
   cost: {amountPerQuantity: Money; totalAmount: Money};
-  merchandise: {product?: {title: string; handle: string}};
+  merchandise: {product?: {title: string; tags: string[]}};
 };
 
 type CartNode = {
@@ -65,7 +67,7 @@ const CART_FIELDS = `
           ... on ProductVariant {
             product {
               title
-              handle
+              tags
             }
           }
         }
@@ -83,7 +85,7 @@ function toCart(node: CartNode): Cart {
       id: line.id,
       quantity: line.quantity,
       productTitle: line.merchandise.product?.title ?? "",
-      productHandle: line.merchandise.product?.handle ?? "",
+      planId: planIdFromTags(line.merchandise.product?.tags ?? []),
       unitPrice: line.cost.amountPerQuantity,
       totalPrice: line.cost.totalAmount,
     })),

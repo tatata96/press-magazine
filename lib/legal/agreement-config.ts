@@ -1,6 +1,6 @@
 import "server-only";
 
-import {PLAN_PRODUCT_HANDLES} from "@/lib/shopify/products";
+import type {PlanId} from "@/lib/shopify/plan-products";
 
 export type SellerField =
   | "legalName"
@@ -44,9 +44,10 @@ export const BUSINESS_TERMS: Record<BusinessTermField, LocalizedText | null> = {
   digitalProtection: null,
 };
 
-// The agreement names two product categories (article 3.4). They are matched by Shopify
-// handle, so the wording stays right whatever a product's shipping setting is.
-export const PRODUCT_TYPE_BY_HANDLE: Record<string, "digital" | "printAndDigital"> = {
-  [PLAN_PRODUCT_HANDLES.digital]: "digital",
-  [PLAN_PRODUCT_HANDLES.print]: "printAndDigital",
+// The agreement names two product categories (article 3.4). They are matched by the product's
+// `digital`/`print` Shopify tag (not its handle, which changes with every issue), so the
+// wording stays right whatever a product's shipping setting is.
+export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "printAndDigital"> = {
+  digital: "digital",
+  print: "printAndDigital",
 };

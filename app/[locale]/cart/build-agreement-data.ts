@@ -2,7 +2,7 @@ import "server-only";
 
 import type {Locale} from "next-intl";
 import {getLocale, getTranslations} from "next-intl/server";
-import {PRODUCT_TYPE_BY_HANDLE} from "@/lib/legal/agreement-config";
+import {PRODUCT_TYPE_BY_PLAN} from "@/lib/legal/agreement-config";
 import {
   getBusinessTermValues,
   getSellerValues,
@@ -82,7 +82,7 @@ export async function buildAgreementData(
       billingAddress: billingAddress ? formatAddress(billingAddress, regionNames) : "",
     },
     products: snapshot.lines.map((line) => {
-      const productType = PRODUCT_TYPE_BY_HANDLE[line.productHandle];
+      const productType = line.planId ? PRODUCT_TYPE_BY_PLAN[line.planId] : null;
 
       return {
         name: line.title,
