@@ -2,7 +2,7 @@ import "server-only";
 
 import type {Locale} from "next-intl";
 import {getLocale, getTranslations} from "next-intl/server";
-import {PRODUCT_TYPE_BY_HANDLE} from "@/lib/legal/agreement-config";
+import {PRODUCT_TYPE_BY_PLAN} from "@/lib/legal/agreement-config";
 import {
   getBusinessTermValues,
   getSellerValues,
@@ -12,11 +12,9 @@ import {
 import {formatMoney} from "@/lib/shopify/money";
 import type {PostalAddress} from "../buyer-details/buyer-details";
 import type {AgreementSnapshot, CheckoutState} from "./checkout-state";
-import {fingerprintCart} from "./checkout-state";
 
 export type PreparedCheckout = {
   fingerprint: string;
-  cartVersion: string;
   data: PreInformationData;
 };
 
@@ -31,16 +29,14 @@ export async function buildPreparedCheckout(
 
   return {
     fingerprint: state.fingerprint,
-    cartVersion: fingerprintCart(state.cart, {
-      total: state.snapshot.total,
-      delivery: state.snapshot.delivery,
-      requiresShipping: state.snapshot.buyer.shippingAddress !== null,
-    }),
     data: {...data, terms},
   };
 }
 
-function formatAddress(address: PostalAddress, countryName: string): string {
+// Each address names its own country: a billing address can be abroad while delivery is not.
+function formatAddress(address: PostalAddress, regionNames: Intl.DisplayNames): string {
+  const countryName = regionNames.of(address.countryCode) ?? address.countryCode;
+
   return [address.address1, address.address2, `${address.zip} ${address.city}`, countryName]
     .filter(Boolean)
     .join(", ");
@@ -60,9 +56,8 @@ export async function buildAgreementData(
     getSellerValues(resolvedLocale),
   ]);
   const {buyer} = snapshot;
-  const countryName =
-    new Intl.DisplayNames([resolvedLocale], {type: "region"}).of(buyer.countryCode) ??
-    buyer.countryCode;
+  const regionNames = new Intl.DisplayNames([resolvedLocale], {type: "region"});
+  const countryName = regionNames.of(buyer.countryCode) ?? buyer.countryCode;
   // "Same as delivery" resolves to the delivery address, so the agreement names a concrete one.
   const billingAddress = buyer.billingAddress ?? buyer.shippingAddress;
   const undecided = t("determinedAtCheckout");
@@ -82,12 +77,12 @@ export async function buildAgreementData(
       phone: buyer.phone,
       country: countryName,
       shippingAddress: buyer.shippingAddress
-        ? formatAddress(buyer.shippingAddress, countryName)
+        ? formatAddress(buyer.shippingAddress, regionNames)
         : t("digitalDelivery"),
-      billingAddress: billingAddress ? formatAddress(billingAddress, countryName) : "",
+      billingAddress: billingAddress ? formatAddress(billingAddress, regionNames) : "",
     },
     products: snapshot.lines.map((line) => {
-      const productType = PRODUCT_TYPE_BY_HANDLE[line.productHandle];
+      const productType = line.planId ? PRODUCT_TYPE_BY_PLAN[line.planId] : null;
 
       return {
         name: line.title,

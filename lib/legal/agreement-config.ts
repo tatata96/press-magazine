@@ -1,6 +1,6 @@
 import "server-only";
 
-import {PLAN_PRODUCT_HANDLES} from "@/lib/shopify/products";
+import type {PlanId} from "@/lib/shopify/plan-products";
 
 export type SellerField =
   | "legalName"
@@ -35,18 +35,28 @@ export type BusinessTermField =
 // (see readiness.ts). Supply the exact text in both languages; do not guess any of them.
 export const BUSINESS_TERMS: Record<BusinessTermField, LocalizedText | null> = {
   // Delivery time for printed magazines (regulation art. 5(1)(f)).
-  physicalDeliveryTime: null,
+  physicalDeliveryTime: {
+    tr: "Fiziksel dergi, sipariş tarihinden itibaren en geç 30 gün içerisinde teslim edilir.",
+    en: "The physical magazine will be delivered within 30 days of the order date.",
+  },
   // Carrier for returns and who pays the return shipping (art. 5(1)(g); agreement 8.6).
   returnCarrier: null,
   // How and from when the buyer can access the PDF (art. 5(1)(f); agreement 7.2.2).
-  digitalAccess: null,
+  digitalAccess: {
+    tr: "Dijital dergiye erişim, ödemenin tamamlanmasının hemen ardından müşterinin e-posta adresine otomatik olarak gönderilen indirme bağlantısı üzerinden sağlanır.",
+    en: "The digital magazine is accessible through a download link automatically sent to the customer's email address immediately after successful payment.",
+  },
   // Technical protection applied to the PDF, if any (art. 5(1)(i)).
-  digitalProtection: null,
+  digitalProtection: {
+    tr: "Dijital dergi dosyalarında DRM, parola koruması veya başka bir teknik kopyalama koruması uygulanmamaktadır.",
+    en: "Digital magazine files are not protected by DRM, passwords, or other technical copy protection.",
+  },
 };
 
-// The agreement names two product categories (article 3.4). They are matched by Shopify
-// handle, so the wording stays right whatever a product's shipping setting is.
-export const PRODUCT_TYPE_BY_HANDLE: Record<string, "digital" | "printAndDigital"> = {
-  [PLAN_PRODUCT_HANDLES.digital]: "digital",
-  [PLAN_PRODUCT_HANDLES.print]: "printAndDigital",
+// The agreement names two product categories (article 3.4). They are matched by the product's
+// `digital`/`print` Shopify tag (not its handle, which changes with every issue), so the
+// wording stays right whatever a product's shipping setting is.
+export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "printAndDigital"> = {
+  digital: "digital",
+  print: "printAndDigital",
 };

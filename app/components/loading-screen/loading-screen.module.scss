@@ -10,7 +10,7 @@
   padding: 24px;
   border: 0;
   color: var(--foreground);
-  background: rgb(255 255 255 / 82%);
+  background: rgb(255 255 255 / 92%);
   opacity: 0;
   transition: opacity 180ms ease;
   cursor: wait;
@@ -52,7 +52,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
   text-align: center;
   animation: appear 180ms ease 120ms both;
 
@@ -61,15 +60,19 @@
   }
 }
 
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 1.5px solid var(--border-subtle);
-  border-top-color: var(--foreground);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+// Indeterminate: real progress is unknown, so the bar eases toward ~90% and
+// waits there until the overlay closes. It restarts each time the dialog opens.
+.bar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--foreground);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: progress 8s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
 
   @media (prefers-reduced-motion: reduce) {
+    transform: scaleX(1);
     animation: none;
   }
 }
@@ -79,9 +82,9 @@
   text-transform: uppercase;
 }
 
-@keyframes spin {
+@keyframes progress {
   to {
-    transform: rotate(360deg);
+    transform: scaleX(0.9);
   }
 }
 

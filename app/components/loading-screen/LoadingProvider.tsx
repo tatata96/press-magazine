@@ -105,8 +105,8 @@ export default function LoadingProvider({children}: {children: ReactNode}) {
         data-subtle={loading.subtle}
         onCancel={(event) => event.preventDefault()}
       >
+        <span className={styles.bar} aria-hidden="true" />
         <div className={styles.content} role="status">
-          <span className={styles.spinner} aria-hidden="true" />
           <p className={`type-mono ${styles.label}`}>{loading.label}</p>
         </div>
       </dialog>

@@ -5,9 +5,9 @@ import type {ReactNode} from "react";
 import {useLocale, useTranslations} from "next-intl";
 import Button from "@/app/components/button/Button";
 import type {LegalDocumentKey} from "@/app/components/legal-document/documents";
-import LegalModal from "@/app/components/legal-modal/LegalModal";
 import {useRouter} from "../../../i18n/navigation";
-import {proceedToCheckout} from "./actions";
+import type {CheckoutActionError, CheckoutActionResult} from "./actions";
+import {redirectForAuthError} from "./auth-redirect";
 import type {PreparedCheckout} from "./build-agreement-data";
 import AgreementEn from "@/app/components/legal-document/distance-sales-agreement/AgreementEn";
 import AgreementTr from "@/app/components/legal-document/distance-sales-agreement/AgreementTr";
@@ -17,44 +17,40 @@ import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
 import styles from "./cart.module.scss";
 
 type CheckoutConsentProps = {
-  cartVersion: string;
-  detailsRevision: number;
-  getDetailsSignature: () => string;
-  prepareCheckout: () => Promise<PreparedCheckout | null>;
+  /** Changes whenever anything the buyer chose changes, which invalidates the agreements and consent. */
+  detailsKey: string;
+  prepareCheckout: (options?: {silent?: boolean}) => Promise<PreparedCheckout | null>;
+  proceed: (acceptedFingerprint: string) => Promise<CheckoutActionResult>;
   paymentMethods: ReactNode;
 };
 
-type CheckoutError =
-  | "consent_required"
-  | "empty_cart"
-  | "needs_details"
-  | "agreement_changed"
-  | "unavailable"
-  | "failed";
+type CheckoutError = Exclude<CheckoutActionError, "login_required" | "session_expired">;
 
 // Consent gate before leaving for Shopify's hosted checkout. The disabled button is only
 // a convenience: proceedToCheckout re-checks consent and records it on the cart.
 export default function CheckoutConsent({
-  cartVersion,
-  detailsRevision,
-  getDetailsSignature,
+  detailsKey,
   prepareCheckout,
+  proceed,
   paymentMethods,
 }: CheckoutConsentProps) {
   const t = useTranslations("CartPage");
   const legalT = useTranslations("LegalDocuments");
   const checkboxId = useId();
+  const documentTitleId = useId();
   const router = useRouter();
   const locale = useLocale();
   const busyRef = useRef(false);
   const [prepared, setPrepared] = useState<{
     checkout: PreparedCheckout;
-    detailsSignature: string;
-    revision: number;
+    detailsKey: string;
   } | null>(null);
   const [acceptedFingerprint, setAcceptedFingerprint] = useState<string | null>(null);
-  const current = prepared?.revision === detailsRevision &&
-    prepared.checkout.cartVersion === cartVersion ? prepared : null;
+  // The prepared agreements only count while the buyer's details are unchanged. The cart is
+  // deliberately not compared: preparing writes the address onto it, which changes delivery
+  // and total, so the page's earlier cart reading would never match. The server fingerprint
+  // covers the cart and is re-checked in proceedToCheckout.
+  const current = prepared?.detailsKey === detailsKey ? prepared : null;
   const hasConsent = current !== null && acceptedFingerprint === current.checkout.fingerprint;
   const [openDocument, setOpenDocument] = useState<LegalDocumentKey | null>(
     null,
@@ -77,21 +73,71 @@ export default function CheckoutConsent({
     return () => window.removeEventListener("pageshow", handlePageShow);
   }, []);
 
-  function handleConsent(checked: boolean) {
-    if (!current || busyRef.current) {
-      return;
-    }
+  // Prepare the agreements in the background as soon as the details are known, so opening
+  // a document or ticking the box is instant. If this fails or is still running, the
+  // explicit action below prepares again and shows the loader and any error.
+  useEffect(() => {
+    let cancelled = false;
 
-    if (getDetailsSignature() !== current.detailsSignature) {
-      setPrepared(null);
-      setAcceptedFingerprint(null);
-      setError("agreement_changed");
+    prepareCheckout({silent: true})
+      .then((checkout) => {
+        if (checkout && !cancelled) {
+          setPrepared((existing) =>
+            existing?.detailsKey === detailsKey ? existing : {checkout, detailsKey},
+          );
+        }
+      })
+      .catch(() => {
+        // Intentionally quiet: the buyer has not asked for anything yet.
+      });
 
+    return () => {
+      cancelled = true;
+    };
+    // prepareCheckout is recreated every render; the details key is what invalidates it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsKey]);
+
+  // The agreements are built from the buyer's details, and consent is recorded against their
+  // fingerprint. Ticking the box therefore prepares them in the background when needed, so the
+  // box is usable at any time and the buyer never has to open a document first.
+  async function handleConsent(checked: boolean) {
+    if (busyRef.current) {
       return;
     }
 
     setError(null);
-    setAcceptedFingerprint(checked ? current.checkout.fingerprint : null);
+
+    if (!checked) {
+      setAcceptedFingerprint(null);
+
+      return;
+    }
+
+    if (current) {
+      setAcceptedFingerprint(current.checkout.fingerprint);
+
+      return;
+    }
+
+    busyRef.current = true;
+    setPrepared(null);
+    setAcceptedFingerprint(null);
+
+    try {
+      // Null when the details are incomplete or preparing failed; the form shows what is
+      // missing and the box stays unticked.
+      const checkout = await prepareCheckout();
+
+      if (checkout) {
+        setPrepared({checkout, detailsKey});
+        setAcceptedFingerprint(checkout.fingerprint);
+      }
+    } catch {
+      setError("failed");
+    } finally {
+      busyRef.current = false;
+    }
   }
 
   async function openLegalDocument(key: LegalDocumentKey) {
@@ -99,10 +145,8 @@ export default function CheckoutConsent({
       return;
     }
 
-    const detailsSignature = getDetailsSignature();
-
-    if (current?.detailsSignature === detailsSignature) {
-      setOpenDocument(key);
+    if (current) {
+      setOpenDocument((open) => (open === key ? null : key));
 
       return;
     }
@@ -116,11 +160,10 @@ export default function CheckoutConsent({
     try {
       const checkout = await prepareCheckout();
 
-      if (checkout && getDetailsSignature() === detailsSignature) {
-        setPrepared({checkout, detailsSignature, revision: detailsRevision});
+      if (checkout) {
+        // Keyed by the details it was built for: if they changed meanwhile, it is not current.
+        setPrepared({checkout, detailsKey});
         setOpenDocument(key);
-      } else if (checkout) {
-        setError("agreement_changed");
       }
     } catch {
       setError("failed");
@@ -134,21 +177,12 @@ export default function CheckoutConsent({
       return;
     }
 
-    // Autofill may change fields without firing a React change event.
-    if (getDetailsSignature() !== current.detailsSignature) {
-      setPrepared(null);
-      setAcceptedFingerprint(null);
-      setError("agreement_changed");
-
-      return;
-    }
-
     busyRef.current = true;
     setError(null);
     setIsRedirecting(true);
 
     try {
-      const result = await proceedToCheckout(current.checkout.fingerprint, locale);
+      const result = await proceed(current.checkout.fingerprint);
 
       if (result.ok) {
         window.location.assign(result.checkoutUrl);
@@ -156,10 +190,17 @@ export default function CheckoutConsent({
         return;
       }
 
-      setIsRedirecting(false);
-      setError(result.error);
+      // Not signed in (any more): the auth routes bring the buyer back to this page.
+      if (redirectForAuthError(result.error, {locale})) {
+        return;
+      }
 
-      if (result.error === "agreement_changed" || result.error === "needs_details") {
+      const failure = result.error as CheckoutError;
+
+      setIsRedirecting(false);
+      setError(failure);
+
+      if (failure === "agreement_changed" || failure === "invalid_details") {
         setPrepared(null);
         setAcceptedFingerprint(null);
         router.refresh();
@@ -203,7 +244,6 @@ export default function CheckoutConsent({
           type="checkbox"
           className={styles.checkbox}
           checked={hasConsent}
-          disabled={!current}
           onChange={(event) => handleConsent(event.target.checked)}
         />
         <label htmlFor={checkboxId} className={styles.consentLabel}>
@@ -220,12 +260,12 @@ export default function CheckoutConsent({
         {paymentMethods}
         <Button
           className={styles.checkoutButton}
-          disabled={current !== null && !hasConsent}
+          disabled={!hasConsent}
           loading={isRedirecting}
           loadingLabel={t("redirecting")}
-          onClick={current ? handleCheckout : () => openLegalDocument("distanceSalesAgreement")}
+          onClick={handleCheckout}
         >
-          {t(current ? "checkout" : "reviewAgreements")}
+          {t("checkout")}
         </Button>
       </div>
 
@@ -237,7 +277,7 @@ export default function CheckoutConsent({
               ? t("checkoutEmpty")
               : checkoutError === "agreement_changed"
                 ? t("agreementChanged")
-                : checkoutError === "needs_details"
+                : checkoutError === "invalid_details"
                   ? t("needsDetails")
                   : checkoutError === "unavailable"
                     ? t("checkoutUnavailable")
@@ -245,19 +285,20 @@ export default function CheckoutConsent({
         </p>
       ) : null}
 
-      {documents ? (Object.keys(documents) as LegalDocumentKey[]).map((key) => (
-        <LegalModal
-          key={key}
-          isOpen={openDocument === key}
-          title={legalT(`${key}.title`)}
-          closeLabel={legalT("close")}
-          onClose={() =>
-            setOpenDocument((current) => (current === key ? null : current))
-          }
+      {documents && openDocument ? (
+        <section
+          className={styles.document}
+          aria-labelledby={documentTitleId}
         >
-          {documents[key]}
-        </LegalModal>
-      )) : null}
+          <h2 id={documentTitleId} className={styles.documentTitle}>
+            {legalT(`${openDocument}.title`)}
+          </h2>
+          {/* Focusable so keyboard users can scroll the text. */}
+          <div className={styles.documentBody} tabIndex={0}>
+            {documents[openDocument]}
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

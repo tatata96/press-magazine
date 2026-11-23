@@ -15,7 +15,8 @@ import {
   updateCartLineQuantity,
 } from "@/lib/shopify/cart";
 import {readCartId, writeCartId} from "@/lib/cookies/cart-cookie";
-import {loadCheckoutState, readCheckoutCookies} from "./checkout-state";
+import {parseCheckoutSelection} from "../buyer-details/checkout-selection";
+import {prepareCheckoutState, readCheckoutInputs} from "./checkout-state";
 
 export type CartActionResult = {ok: true} | {ok: false; error: "invalid" | "failed"};
 
@@ -112,27 +113,31 @@ export async function removeFromCart(
   });
 }
 
+export type CheckoutActionError =
+  | "consent_required"
+  | "empty_cart"
+  | "login_required"
+  | "session_expired"
+  | "invalid_details"
+  | "agreement_changed"
+  | "unavailable"
+  | "failed";
+
 export type CheckoutActionResult =
   | {ok: true; checkoutUrl: string}
-  | {
-      ok: false;
-      error:
-        | "consent_required"
-        | "empty_cart"
-        | "needs_details"
-        | "agreement_changed"
-        | "unavailable"
-        | "failed";
-    };
+  | {ok: false; error: CheckoutActionError};
 
 // The only place the Shopify checkout URL is read. It is handed to the browser only when
-// the fingerprint of the agreement the buyer accepted still matches the agreement the
-// server builds right now, and the acceptance is recorded on the cart first. So the checkbox
-// is not just a UI state, and a changed cart or detail cannot ride on an old acceptance.
+// the buyer is signed in, and the fingerprint of the agreement they accepted still matches
+// the agreement the server builds right now, and the acceptance is recorded on the cart
+// first. So the checkbox is not just a UI state, and a changed cart or detail cannot ride on
+// an old acceptance. The customer is attached to the cart again here, with a fresh token,
+// because the handoff URL logs the buyer in with whatever the cart holds.
 // Limit: this guards our own flow. Shopify's hosted checkout can still change the delivery
 // address, option and total afterwards, and cannot be gated from this repo.
 export async function proceedToCheckout(
   acceptedFingerprint: string,
+  selectionInput: unknown,
   locale: string,
 ): Promise<CheckoutActionResult> {
   // Placeholder legal text must never reach a real checkout; see lib/legal/readiness.ts.
@@ -148,15 +153,20 @@ export async function proceedToCheckout(
     return {ok: false, error: "failed"};
   }
 
+  const selection = parseCheckoutSelection(selectionInput);
+
+  if (!selection) {
+    return {ok: false, error: "invalid_details"};
+  }
+
+  // Keep request-time cookie reads outside the try/catch below.
+  const inputs = await readCheckoutInputs();
+
   try {
-    const state = await loadCheckoutState(await readCheckoutCookies());
+    const state = await prepareCheckoutState(inputs, selection);
 
-    if (state.status === "empty") {
-      return {ok: false, error: "empty_cart"};
-    }
-
-    if (state.status === "needs_details") {
-      return {ok: false, error: "needs_details"};
+    if (state.status !== "ready") {
+      return {ok: false, error: state.status === "empty" ? "empty_cart" : state.status};
     }
 
     if (state.fingerprint !== acceptedFingerprint) {

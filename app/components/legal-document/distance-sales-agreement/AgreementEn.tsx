@@ -79,14 +79,14 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>3.4.</strong> Paid products offered through the Website may fall into the following categories:
       </p>
       <ul className={styles.bullets}>
-        <li><strong>Digital Publication:</strong> A digital edition of Press Magazine in PDF format.</li>
-        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with digital PDF versions of the same issues.</li>
+        <li><strong>Digital Publication:</strong> A digital PDF edition of a single issue of Press Magazine.</li>
+        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with the digital PDF version of the same issue.</li>
       </ul>
       <p className={styles.paragraph}>
-        <strong>3.5.</strong> Press Magazine is published twice a year. Unless otherwise stated on the relevant product page, an annual package covers the two issues published during that year, as a one-time payment with no automatic renewal.
+        <strong>3.5.</strong> Press Magazine is published twice a year. Unless otherwise stated on the relevant product page, each purchase covers a single issue, as a one-time payment with no automatic renewal.
       </p>
       <p className={styles.paragraph}>
-        <strong>3.6.</strong> Unless expressly stated otherwise on the product page, purchases are subject to a one-time payment. Packages do not renew automatically, and no additional payment will be charged at the end of the package period.
+        <strong>3.6.</strong> Unless expressly stated otherwise on the product page, purchases are subject to a one-time payment. Packages do not renew automatically, and no additional payment will be charged after the purchase.
       </p>
       <h2 className={styles.sectionHeading}>4. PRE-CONTRACTUAL INFORMATION PROVIDED TO THE BUYER</h2>
       <p className={styles.paragraph}>

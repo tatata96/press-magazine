@@ -101,23 +101,23 @@ export default function AgreementTr({data}: {data: AgreementData}) {
       </p>
       <ul className={styles.bullets}>
         <li>
-          <strong>Dijital Yayın:</strong> Press Magazine'in PDF formatındaki
-          dijital sayıları.
+          <strong>Dijital Yayın:</strong> Press Magazine'in bir sayısının PDF
+          formatındaki dijital versiyonu.
         </li>
         <li>
           <strong>Basılı + Dijital Yayın:</strong> Press Magazine'in fiziksel
-          dergisinin aynı sayılarının PDF formatındaki dijital versiyonları.
+          dergisinin aynı sayısının PDF formatındaki dijital versiyonu.
         </li>
       </ul>
       <p className={styles.paragraph}>
         <strong>3.5.</strong> Press Magazine yılda iki sayı yayımlanan bir
-        yayındır. Yıllık olarak sunulan bir paket, ürün sayfasında aksi
-        belirtilmedikçe ilgili yıl yayımlanan iki dergi sayısını kapsar; ödeme
-        tek seferliktir ve otomatik olarak yenilenmez.
+        yayındır. Ürün sayfasında aksi belirtilmedikçe her satın alma
+        tek bir dergi sayısını kapsar; ödeme tek seferliktir ve otomatik olarak
+        yenilenmez.
       </p>
       <p className={styles.paragraph}>
         <strong>3.6.</strong> Satın alma işlemi, ürün sayfasında açıkça aksi
-        belirtilmedikçe tek seferlik ödeme niteliğindedir. Paket süresi sonunda
+        belirtilmedikçe tek seferlik ödeme niteliğindedir. Satın alma sonrasında
         otomatik yenileme veya Alıcı'dan yeni bir ödeme tahsilatı yapılmaz.
       </p>
       <h2 className={styles.sectionHeading}>

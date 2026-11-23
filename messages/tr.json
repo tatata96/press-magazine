@@ -12,7 +12,8 @@
     "newsletter": "Bülten",
     "subscribe": "Mağaza",
     "logoAlt": "Press",
-    "languageLabel": "Dil"
+    "languageLabel": "Dil",
+    "account": "Hesap"
   },
   "Cover": {
     "alt": "Uzun bir ahşap saatin yanındaki buzlu camlı kapının ardında bir figür"
@@ -107,28 +108,33 @@
     "adding": "Ekleniyor…",
     "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
-    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma yılda iki sayıyı kapsar; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
+    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma tek bir sayı içindir; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
-        "name": "Dijital – 2 Sayı",
+        "name": "Dijital – 1 Sayı",
         "tagline": "Press'i her ekranda oku.",
         "benefits": [
-          "Yılda iki dijital PDF PRESS sayısı",
+          "Bir dijital PDF PRESS sayısı",
           "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       },
       "print": {
-        "name": "Basılı + Dijital – 2 Sayı",
-        "tagline": "İki sayı da elinde ve ekranında.",
+        "name": "Basılı + Dijital – 1 Sayı",
+        "tagline": "Sayı hem elinde hem ekranında.",
         "benefits": [
-          "Yılda iki basılı PRESS sayısı",
-          "Her iki sayının dijital PDF sürümleri",
+          "Bir basılı PRESS sayısı",
+          "Aynı sayının dijital PDF sürümü",
           "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       }
     }
+  },
+  "CheckoutPage": {
+    "metaTitle": "Siparişini gözden geçir",
+    "metaDescription": "Bilgilerini ve siparişini gözden geçir, ardından ödemeye geç.",
+    "heading": "Siparişini gözden geçir"
   },
   "CartPage": {
     "metaTitle": "Ödeme",
@@ -148,17 +154,18 @@
     "subtotal": "Ara toplam",
     "updateError": "Sepetin güncellenemedi. Lütfen tekrar dene.",
     "checkout": "Ödemeye geç",
-    "reviewAgreements": "Sözleşmeleri incele",
     "redirecting": "Ödemeye yönlendiriliyorsun…",
     "consentLabel": "<distanceSalesAgreement>Mesafeli Satış Sözleşmesi</distanceSalesAgreement>'ni ve <preInformation>Ön Bilgilendirme Formu</preInformation>'nu okudum ve kabul ediyorum.",
     "consentRequired": "Devam etmek için Mesafeli Satış Sözleşmesi'ni ve Ön Bilgilendirme Formu'nu kabul etmelisin.",
     "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
     "checkoutError": "Ödeme başlatılamadı. Lütfen tekrar dene.",
-    "editDetails": "Bilgilerini düzenle",
     "agreementChanged": "Alıcı bilgilerin, sepetin veya teslimat ücretin değişti. Güncellenen belgeleri incele ve yeniden kabul et.",
     "needsDetails": "Lütfen önce bilgilerini tamamla.",
     "checkoutUnavailable": "Ödeme henüz kullanılamıyor.",
-    "paymentMethods": "Kabul edilen ödeme yöntemleri"
+    "paymentMethods": "Kabul edilen ödeme yöntemleri",
+    "signInHeading": "Ödeme için giriş yap",
+    "signInBody": "Hesap olmadan göz atabilir ve sepetini doldurabilirsin. Ödeme için e-postanla giriş yap: sana tek kullanımlık bir kod göndeririz, hatırlaman gereken bir şifre yok.",
+    "signIn": "Giriş yap"
   },
   "NewsletterPage": {
     "heading": "Mektup",
@@ -197,13 +204,7 @@
     }
   },
   "BuyerDetails": {
-    "metaTitle": "Bilgilerin",
-    "metaDescription": "Kimin satın aldığını ve siparişin nereye gönderileceğini bize bildir.",
-    "heading": "Bilgilerin",
-    "loading": "Yükleniyor…",
     "loadError": "Bu sayfa şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
-    "emptyCart": "Sepetin boş.",
-    "browseShop": "Mağazaya göz at",
     "contact": "İletişim",
     "firstName": "Ad",
     "lastName": "Soyad",
@@ -219,16 +220,24 @@
     "address2": "Daire, kat vb. (isteğe bağlı)",
     "city": "Şehir",
     "zip": "Posta kodu",
-    "submit": "Sepete devam et",
     "saving": "Kaydediliyor…",
     "preparingCart": "Sepetin hazırlanıyor…",
     "required": "Bu alan zorunludur.",
     "invalid": "Lütfen bu alanı kontrol et.",
-    "emailInvalid": "Geçerli bir e-posta adresi gir.",
     "phoneInvalid": "Telefon numarasını ülke koduyla gir, örneğin +90 …",
     "checkoutEmpty": "Sepetin boş. Ödeme için bir ürün ekle.",
     "saveError": "Bilgilerin kaydedilemedi. Lütfen tekrar dene.",
-    "checkoutUnavailable": "Ödeme henüz kullanılamıyor."
+    "incompleteDetails": "Önce bilgilerini doldur ve kaydet.",
+    "checkoutUnavailable": "Ödeme henüz kullanılamıyor.",
+    "name": "Ad soyad",
+    "edit": "Düzenle",
+    "continue": "Devam et",
+    "cancel": "Vazgeç",
+    "emailManaged": "{email} ile giriş yapıyorsun. Buradan değiştirilemez.",
+    "addAddress": "Yeni adres ekle",
+    "addressRequired": "Bir adres seç veya ekle.",
+    "addressSaveError": "Bu adres kaydedilemedi. Lütfen kontrol edip tekrar dene.",
+    "defaultBadge": "Varsayılan"
   },
   "Agreement": {
     "digitalDelivery": "Dijital sayılar: fiziksel teslimat yoktur.",
@@ -236,5 +245,83 @@
     "placeholderValue": "[YER TUTUCU: {name}]",
     "productTypeDigital": "Dijital Yayın",
     "productTypePrint": "Basılı + Dijital Yayın"
+  },
+  "SignInFailed": {
+    "metaTitle": "Giriş başarısız",
+    "heading": "Giriş yapamadık",
+    "body": "Giriş yapılırken bir şeyler ters gitti. Sepetin olduğu gibi duruyor. Lütfen tekrar dene.",
+    "retry": "Tekrar dene",
+    "shop": "Mağazaya dön"
+  },
+  "Account": {
+    "metaTitle": "Hesap",
+    "heading": "Hesabın",
+    "navLabel": "Hesap",
+    "navProfile": "Profil",
+    "navAddresses": "Adresler",
+    "navOrders": "Siparişler",
+    "logout": "Çıkış yap",
+    "loading": "Hesabın yükleniyor…",
+    "loadError": "Hesabın şu anda yüklenemedi. Lütfen sayfayı yenile ya da daha sonra tekrar dene.",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "emailNote": "Bu e-postayla giriş yapıyorsun. Buradan değiştirilemez.",
+    "phone": "Telefon",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Kaydedildi.",
+    "saveError": "Değişiklikler kaydedilemedi. Lütfen tekrar dene.",
+    "required": "Bu alan zorunludur.",
+    "invalid": "Lütfen bu alanı kontrol et.",
+    "addressesEmpty": "Henüz kayıtlı adresin yok.",
+    "addAddress": "Adres ekle",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "confirmDelete": "Silmeyi onayla",
+    "cancel": "Vazgeç",
+    "makeDefault": "Varsayılan yap",
+    "defaultBadge": "Varsayılan",
+    "addressError": "Bu adres kaydedilemedi. Lütfen kontrol edip tekrar dene.",
+    "actionError": "Bir şeyler ters gitti. Lütfen tekrar dene.",
+    "ordersHeading": "Sipariş geçmişi",
+    "ordersEmpty": "Henüz siparişin yok.",
+    "ordersShop": "Mağazaya göz at",
+    "ordersLabel": "Siparişlerin",
+    "orderDate": "Tarih",
+    "orderTotal": "Toplam",
+    "orderStatus": "Durum",
+    "viewOrder": "Siparişi gör",
+    "backToOrders": "Siparişlere dön",
+    "orderItems": "Ürünler",
+    "quantity": "Adet",
+    "subtotal": "Ara toplam",
+    "shipping": "Kargo",
+    "total": "Toplam",
+    "shippingAddress": "Teslimat adresi",
+    "billingAddress": "Fatura adresi",
+    "statusPage": "Sipariş durum sayfasını aç",
+    "orderNotFound": "Bu sipariş bulunamadı.",
+    "financialStatus": {
+      "AUTHORIZED": "Yetkilendirildi",
+      "EXPIRED": "Süresi doldu",
+      "PAID": "Ödendi",
+      "PARTIALLY_PAID": "Kısmen ödendi",
+      "PARTIALLY_REFUNDED": "Kısmen iade edildi",
+      "PENDING": "Beklemede",
+      "REFUNDED": "İade edildi",
+      "VOIDED": "İptal edildi"
+    },
+    "fulfillmentStatus": {
+      "FULFILLED": "Tamamlandı",
+      "UNFULFILLED": "Henüz tamamlanmadı",
+      "PARTIALLY_FULFILLED": "Kısmen tamamlandı",
+      "ON_HOLD": "Beklemeye alındı",
+      "SCHEDULED": "Planlandı",
+      "IN_PROGRESS": "Hazırlanıyor",
+      "OPEN": "Açık",
+      "PENDING_FULFILLMENT": "Beklemede",
+      "RESTOCKED": "Stoğa geri döndü"
+    }
   }
 }

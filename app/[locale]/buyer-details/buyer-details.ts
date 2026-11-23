@@ -1,18 +1,23 @@
-import type {CartAddress, CartCheckoutContext} from "@/lib/shopify/cart";
 import {getTrimmedString} from "@/app/utils/string";
+import type {AddressInput} from "@/lib/customer-account/customer";
 
 export type PostalAddress = {
   address1: string;
   address2: string;
   city: string;
   zip: string;
+  /** ISO 3166-1 alpha-2. Each address names its own country. */
+  countryCode: string;
 };
 
+// What the Distance Sales Agreement states about the buyer. Built on the server from the
+// signed-in customer's Shopify account and the addresses they picked, never from browser input.
 export type BuyerDetails = {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
+  /** Country of the delivery address, or of the billing address for digital-only carts. */
   countryCode: string;
   /** Only for carts with a physical product. */
   shippingAddress: PostalAddress | null;
@@ -20,42 +25,53 @@ export type BuyerDetails = {
   billingAddress: PostalAddress | null;
 };
 
-// The part of the buyer details Shopify's cart cannot hold: it has no buyer name and no
-// billing address. Kept in an httpOnly cookie (see buyer-cookie.ts).
-export type StoredBuyerDetails = {
-  firstName: string;
-  lastName: string;
-  billingAddress: PostalAddress | null;
-};
-
 export type FieldErrorCode = "required" | "invalid";
-// Keys are form field names, e.g. "email" or "shipping.city".
-export type BuyerDetailsErrors = Partial<Record<string, FieldErrorCode>>;
+// Keys are form field names, e.g. "address1" or "firstName".
+export type FormErrors = Partial<Record<string, FieldErrorCode>>;
 
 const MAX_NAME_LENGTH = 100;
-const MAX_EMAIL_LENGTH = 254;
 const MAX_ADDRESS_LENGTH = 200;
 const MAX_CITY_LENGTH = 100;
 const MAX_ZIP_LENGTH = 20;
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// E.164: Shopify expects the country calling code, so a national number is rejected
-// rather than guessed at.
-const PHONE_PATTERN = /^\+[1-9][0-9]{6,14}$/;
 
-export function normalizePhone(value: string): string {
-  return value.replace(/[\s().-]/g, "");
+// Server-side validation. The browser's `required` attributes are only a convenience.
+export function parseNameForm(
+  formData: FormData,
+): {ok: true; name: {firstName: string; lastName: string}} | {ok: false; errors: FormErrors} {
+  const errors: FormErrors = {};
+  const name = {
+    firstName: getTrimmedString(formData.get("firstName")),
+    lastName: getTrimmedString(formData.get("lastName")),
+  };
+
+  for (const field of ["firstName", "lastName"] as const) {
+    if (!name[field]) {
+      errors[field] = "required";
+    } else if (name[field].length > MAX_NAME_LENGTH) {
+      errors[field] = "invalid";
+    }
+  }
+
+  return Object.keys(errors).length > 0 ? {ok: false, errors} : {ok: true, name};
 }
 
-function readAddress(
+export function parseAddressForm(
   formData: FormData,
-  prefix: "shipping" | "billing",
-  errors: BuyerDetailsErrors,
-): PostalAddress {
-  const address: PostalAddress = {
-    address1: getTrimmedString(formData.get(`${prefix}.address1`)),
-    address2: getTrimmedString(formData.get(`${prefix}.address2`)),
-    city: getTrimmedString(formData.get(`${prefix}.city`)),
-    zip: getTrimmedString(formData.get(`${prefix}.zip`)),
+  options: {
+    allowedCountryCodes: string[];
+    /** The recipient, taken from the customer's profile. */
+    name: {firstName: string; lastName: string};
+  },
+): {ok: true; address: AddressInput} | {ok: false; errors: FormErrors} {
+  const errors: FormErrors = {};
+  const address: AddressInput = {
+    firstName: options.name.firstName,
+    lastName: options.name.lastName,
+    address1: getTrimmedString(formData.get("address1")),
+    address2: getTrimmedString(formData.get("address2")),
+    city: getTrimmedString(formData.get("city")),
+    zip: getTrimmedString(formData.get("zip")),
+    countryCode: getTrimmedString(formData.get("countryCode")),
   };
   const limits = [
     ["address1", MAX_ADDRESS_LENGTH],
@@ -68,127 +84,17 @@ function readAddress(
     const value = address[field];
 
     if (!value && field !== "address2") {
-      errors[`${prefix}.${field}`] = "required";
+      errors[field] = "required";
     } else if (value.length > maxLength) {
-      errors[`${prefix}.${field}`] = "invalid";
+      errors[field] = "invalid";
     }
   }
 
-  return address;
-}
-
-// Server-side validation. The browser's `required` attributes are only a convenience.
-export function parseBuyerDetails(
-  formData: FormData,
-  options: {requiresShipping: boolean; allowedCountryCodes: string[]},
-): {ok: true; details: BuyerDetails} | {ok: false; errors: BuyerDetailsErrors} {
-  const errors: BuyerDetailsErrors = {};
-  const firstName = getTrimmedString(formData.get("firstName"));
-  const lastName = getTrimmedString(formData.get("lastName"));
-  const email = getTrimmedString(formData.get("email"));
-  const phone = normalizePhone(getTrimmedString(formData.get("phone")));
-  const countryCode = getTrimmedString(formData.get("countryCode"));
-
-  if (!firstName) {
-    errors.firstName = "required";
-  } else if (firstName.length > MAX_NAME_LENGTH) {
-    errors.firstName = "invalid";
-  }
-
-  if (!lastName) {
-    errors.lastName = "required";
-  } else if (lastName.length > MAX_NAME_LENGTH) {
-    errors.lastName = "invalid";
-  }
-
-  if (!email) {
-    errors.email = "required";
-  } else if (email.length > MAX_EMAIL_LENGTH || !EMAIL_PATTERN.test(email)) {
-    errors.email = "invalid";
-  }
-
-  if (!phone) {
-    errors.phone = "required";
-  } else if (!PHONE_PATTERN.test(phone)) {
-    errors.phone = "invalid";
-  }
-
-  if (!countryCode) {
+  if (!address.countryCode) {
     errors.countryCode = "required";
-  } else if (!options.allowedCountryCodes.includes(countryCode)) {
+  } else if (!options.allowedCountryCodes.includes(address.countryCode)) {
     errors.countryCode = "invalid";
   }
 
-  const shippingAddress = options.requiresShipping
-    ? readAddress(formData, "shipping", errors)
-    : null;
-  // Same-as-delivery is only an option when there is a delivery address.
-  const billingIsSameAsShipping =
-    options.requiresShipping && formData.get("billingSameAsShipping") === "on";
-  const billingAddress = billingIsSameAsShipping
-    ? null
-    : readAddress(formData, "billing", errors);
-
-  if (Object.keys(errors).length > 0) {
-    return {ok: false, errors};
-  }
-
-  return {
-    ok: true,
-    details: {
-      firstName,
-      lastName,
-      email,
-      phone,
-      countryCode,
-      shippingAddress,
-      billingAddress,
-    },
-  };
-}
-
-// Combines the cart (email, phone, country, delivery address) with the stored name and
-// billing address. Returns null when anything the cart's contents require is missing, which
-// sends the buyer back to the details step.
-export function assembleBuyerDetails(
-  stored: StoredBuyerDetails | null,
-  context: CartCheckoutContext,
-): BuyerDetails | null {
-  const {email, phone, countryCode} = context.buyer;
-
-  if (!stored || !email || !phone || !countryCode) {
-    return null;
-  }
-
-  const shippingAddress = toPostalAddress(context.shippingAddress);
-
-  if (context.requiresShipping && !shippingAddress) {
-    return null;
-  }
-
-  // Without a delivery address there is nothing for "same as delivery" to point at.
-  if (!stored.billingAddress && !shippingAddress) {
-    return null;
-  }
-
-  return {
-    firstName: stored.firstName,
-    lastName: stored.lastName,
-    email,
-    phone,
-    countryCode,
-    shippingAddress: context.requiresShipping ? shippingAddress : null,
-    billingAddress: stored.billingAddress,
-  };
-}
-
-function toPostalAddress(address: CartAddress | null): PostalAddress | null {
-  return address
-    ? {
-        address1: address.address1,
-        address2: address.address2,
-        city: address.city,
-        zip: address.zip,
-      }
-    : null;
+  return Object.keys(errors).length > 0 ? {ok: false, errors} : {ok: true, address};
 }

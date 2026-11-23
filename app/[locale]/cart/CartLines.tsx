@@ -10,6 +10,8 @@ import styles from "./cart.module.scss";
 type CartLinesProps = {
   cart: Cart;
   locale: string;
+  /** The review step shows the order without quantity controls. */
+  readOnly?: boolean;
   copy: {
     itemsLabel: string;
     quantity: string;
@@ -24,7 +26,7 @@ type CartLinesProps = {
 
 // Client component for the interactive parts only. Quantities and totals shown are
 // always the ones Shopify returned; nothing is calculated in the browser.
-export default function CartLines({cart, locale, copy}: CartLinesProps) {
+export default function CartLines({cart, locale, readOnly = false, copy}: CartLinesProps) {
   const [isPending, startTransition] = useTransition();
   const [hasError, setHasError] = useState(false);
 
@@ -42,14 +44,16 @@ export default function CartLines({cart, locale, copy}: CartLinesProps) {
       {isPending ? <LoadingScreen label={copy.updating} subtle /> : null}
       <ul className={styles.lines} aria-label={copy.itemsLabel}>
         {cart.lines.map((line) => (
-          <li key={line.id} className={styles.line}>
+          <li key={line.id} className={`${styles.line}${readOnly ? ` ${styles.lineReadOnly}` : ""}`}>
             <div className={styles.lineInfo}>
               <p className={styles.lineTitle}>{line.productTitle}</p>
               <p className={`type-mono ${styles.unitPrice}`}>
                 {formatMoney(line.unitPrice, locale)}
+                {readOnly ? ` × ${line.quantity}` : ""}
               </p>
             </div>
 
+            {readOnly ? null : (
             <div
               role="group"
               aria-label={`${copy.quantity}: ${line.productTitle}`}
@@ -81,11 +85,13 @@ export default function CartLines({cart, locale, copy}: CartLinesProps) {
                 +
               </button>
             </div>
+            )}
 
             <p className={styles.lineTotal}>
               {formatMoney(line.totalPrice, locale)}
             </p>
 
+            {readOnly ? null : (
             <button
               type="button"
               className={`type-mono ${styles.remove}`}
@@ -97,6 +103,7 @@ export default function CartLines({cart, locale, copy}: CartLinesProps) {
                 : {line.productTitle}
               </span>
             </button>
+            )}
           </li>
         ))}
       </ul>

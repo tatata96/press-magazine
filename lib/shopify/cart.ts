@@ -2,13 +2,15 @@ import "server-only";
 
 import {ShopifyError} from "./admin-client";
 import type {Money} from "./money";
+import {planIdFromTags, type PlanId} from "./plan-products";
 import {requestShopifyStorefrontGraphQL} from "./storefront-client";
 
 export type CartLine = {
   id: string;
   quantity: number;
   productTitle: string;
-  productHandle: string;
+  /** Which plan the product is, from its Shopify tags; null for anything else. */
+  planId: PlanId | null;
   unitPrice: Money;
   totalPrice: Money;
 };
@@ -24,7 +26,7 @@ type CartLineNode = {
   id: string;
   quantity: number;
   cost: {amountPerQuantity: Money; totalAmount: Money};
-  merchandise: {product?: {title: string; handle: string}};
+  merchandise: {product?: {title: string; tags: string[]}};
 };
 
 type CartNode = {
@@ -65,7 +67,7 @@ const CART_FIELDS = `
           ... on ProductVariant {
             product {
               title
-              handle
+              tags
             }
           }
         }
@@ -83,7 +85,7 @@ function toCart(node: CartNode): Cart {
       id: line.id,
       quantity: line.quantity,
       productTitle: line.merchandise.product?.title ?? "",
-      productHandle: line.merchandise.product?.handle ?? "",
+      planId: planIdFromTags(line.merchandise.product?.tags ?? []),
       unitPrice: line.cost.amountPerQuantity,
       totalPrice: line.cost.totalAmount,
     })),
@@ -438,22 +440,25 @@ export async function getCartWithCheckoutContext(
     : null;
 }
 
-export type CartBuyerInput = {
-  email: string;
+export type CartCustomerInput = {
+  /** The signed-in customer's Customer Account API access token. */
+  customerAccessToken: string;
   phone: string;
   countryCode: string;
   /** null clears any delivery address (digital-only carts). */
   shippingAddress: CartAddress | null;
 };
 
-// Puts the buyer on the cart so Shopify's hosted checkout opens prefilled. Uses
-// `cartBuyerIdentityUpdate` (email, phone, country) and `cartDeliveryAddressesReplace`
-// (idempotent, unlike Add). Shopify has no billing-address field on a cart, so billing is
-// never sent. Addresses are one-time use so nothing is saved to a customer account, and
-// COUNTRY_CODE_ONLY because we do not collect a province; checkout validates fully.
-export async function setCartBuyer(
+// Attaches the signed-in customer to the cart so Shopify's hosted checkout opens logged in and
+// prefilled, and puts the phone, country and delivery address on it. Uses
+// `cartBuyerIdentityUpdate` and `cartDeliveryAddressesReplace` (idempotent, unlike Add). The
+// email comes from the customer, so it is not sent. Shopify has no billing-address field on a
+// cart, so billing is never sent. Addresses are one-time use so nothing extra is saved to the
+// customer account, and COUNTRY_CODE_ONLY because we do not collect a province; checkout
+// validates fully. The token expires, so this must run again right before the checkout handoff.
+export async function setCartForCustomer(
   cartId: string,
-  buyer: CartBuyerInput,
+  buyer: CartCustomerInput,
 ): Promise<void> {
   const identity = await requestShopifyStorefrontGraphQL<{
     cartBuyerIdentityUpdate: {userErrors: UserError[]};
@@ -471,7 +476,7 @@ export async function setCartBuyer(
     {
       cartId,
       buyerIdentity: {
-        email: buyer.email,
+        customerAccessToken: buyer.customerAccessToken,
         phone: buyer.phone,
         countryCode: buyer.countryCode,
       },

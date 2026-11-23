@@ -1,61 +1,19 @@
-.main {
-  flex: 1;
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-  min-height: calc(100svh - 78px);
-  padding: 32px 16px 96px;
-
-  @media (min-width: 768px) {
-    padding: 48px 32px 128px;
-  }
-}
-
-.heading {
-  margin: 0 0 32px;
-  font-family: var(--font-family-title);
-  font-weight: var(--font-weight-regular);
-  font-size: var(--type-title-size);
-  line-height: var(--type-title-line-height);
-  letter-spacing: var(--type-title-letter-spacing);
-}
-
-.message {
-  margin: 0;
-  font-size: var(--type-body-size);
-  line-height: var(--type-body-line-height);
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-}
-
-.link {
-  font-family: var(--font-family-mono);
-  font-size: var(--type-label-size);
-  text-transform: uppercase;
-  text-underline-offset: 0.2em;
-
-  &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 4px;
-  }
-}
-
 .form {
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
 
+// Extra space on top of the form gap to separate contact details from the address sections.
+.contact {
+  margin-bottom: 32px;
+}
+
 // Wide row gap: TextField overlays its error message in the gap below the field.
 .group {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 24px;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -68,6 +26,71 @@
   text-transform: uppercase;
 }
 
+// Heading with its action on the same line, so the action reads as belonging to the section.
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  .legend {
+    margin-bottom: 0;
+  }
+
+  // Inside a .group the flex gap already provides the space below the heading.
+  .group > & {
+    margin-bottom: 0;
+  }
+}
+
+.note {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.message {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+// Name, email and phone as a compact read-only summary.
+.summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 0;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  dt {
+    margin: 0 0 4px;
+    font-family: var(--font-family-mono);
+    font-size: var(--type-caption-size, 14px);
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--type-body-size);
+    line-height: var(--type-body-line-height);
+  }
+}
+
+.summaryEmpty {
+  opacity: 0.6;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
 .row {
   display: grid;
   grid-template-columns: 1fr;
@@ -78,64 +101,97 @@
   }
 }
 
-.note {
+.helper {
   margin: 0;
-  text-transform: uppercase;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+  opacity: 0.7;
 }
 
-.select {
-  position: relative;
+// The Continue button, right-aligned under the order total.
+.actions {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: flex-end;
+  margin-top: 40px;
 }
 
-.selectLabel {
-  font-family: var(--font-family-mono);
-}
-
-.selectInput {
-  height: 40px;
+// Looks like the other underlined text actions on the cart page.
+.textButton {
+  align-self: flex-start;
   padding: 0;
   font-family: var(--font-family-mono);
   font-size: var(--type-label-size);
+  text-transform: uppercase;
   color: inherit;
-  background: var(--background);
+  background: none;
   border: 0;
-  border-bottom: 1.5px solid var(--foreground);
-  border-radius: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
 
   &:focus-visible {
-    outline: none;
-    background: var(--field-focus-background);
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
-// Same look and overlay as the TextField and newsletter errors. Nested under .select to
-// outrank the global .type-caption weight.
-.select .selectError {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+.choices {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 4px 0 0;
-  padding: 4px 0;
-  font-weight: var(--font-weight-semibold);
-  background: var(--background);
+  flex-direction: column;
+  gap: 12px;
+}
 
-  &::before {
-    content: "";
-    flex: none;
-    align-self: center;
-    width: 1.4em;
-    height: 1.4em;
-    background: currentColor;
-    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
-    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: var(--rule-width) solid var(--foreground);
+  cursor: pointer;
+
+  &:has(.radio:checked) {
+    background: var(--field-focus-background);
   }
+
+  &:has(.radio:focus-visible) {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.radio {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  accent-color: var(--foreground);
+}
+
+.choiceText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line-height);
+}
+
+.badge {
+  margin-left: 8px;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-caption-size, 14px);
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.addForm {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  margin-top: 8px;
 }
 
 .checkLabel {
@@ -157,13 +213,5 @@
   &:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 4px;
-  }
-}
-
-.submit {
-  align-self: stretch;
-
-  @media (min-width: 768px) {
-    align-self: flex-end;
   }
 }
