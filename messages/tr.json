@@ -108,23 +108,23 @@
     "adding": "Ekleniyor…",
     "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
-    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma yılda iki sayıyı kapsar; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
+    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma tek bir sayı içindir; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
-        "name": "Dijital – 2 Sayı",
+        "name": "Dijital – 1 Sayı",
         "tagline": "Press'i her ekranda oku.",
         "benefits": [
-          "Yılda iki dijital PDF PRESS sayısı",
+          "Bir dijital PDF PRESS sayısı",
           "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
       },
       "print": {
-        "name": "Basılı + Dijital – 2 Sayı",
-        "tagline": "İki sayı da elinde ve ekranında.",
+        "name": "Basılı + Dijital – 1 Sayı",
+        "tagline": "Sayı hem elinde hem ekranında.",
         "benefits": [
-          "Yılda iki basılı PRESS sayısı",
-          "Her iki sayının dijital PDF sürümleri",
+          "Bir basılı PRESS sayısı",
+          "Aynı sayının dijital PDF sürümü",
           "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]

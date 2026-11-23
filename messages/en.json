@@ -108,23 +108,23 @@
     "adding": "Adding…",
     "addError": "We could not add this to your cart. Please try again.",
     "metaTitle": "Shop",
-    "metaDescription": "Subscribe to Press, digital or in print. Each purchase covers two issues per year, as a one-time payment with no automatic renewal.",
+    "metaDescription": "Subscribe to Press, digital or in print. Each purchase is for one issue, as a one-time payment with no automatic renewal.",
     "plans": {
       "digital": {
-        "name": "Digital – 2 Issues",
+        "name": "Digital – 1 Issue",
         "tagline": "Read Press on any screen.",
         "benefits": [
-          "Two digital PDF issues of PRESS per year",
+          "One digital PDF issue of PRESS",
           "Email newsletter",
           "One-time payment, no automatic renewal"
         ]
       },
       "print": {
-        "name": "Print + Digital – 2 Issues",
-        "tagline": "Both issues in your hands, and on your screen.",
+        "name": "Print + Digital – 1 Issue",
+        "tagline": "The issue in your hands, and on your screen.",
         "benefits": [
-          "Two print issues of PRESS per year",
-          "Digital PDF editions of both issues",
+          "One print issue of PRESS",
+          "Digital PDF edition of the same issue",
           "Email newsletter",
           "One-time payment, no automatic renewal"
         ]
