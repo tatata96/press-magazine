@@ -1,0 +1,59 @@
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-family: var(--font-family-mono);
+  color: var(--field-label);
+}
+
+// react-phone-number-input renders its own .PhoneInput markup; its classes are global, so they
+// are reached through the module's own class. Same underline look as TextField and the selects.
+.input {
+  --PhoneInputCountryFlag-borderColor: transparent;
+  --PhoneInputCountrySelectArrow-color: currentColor;
+  --PhoneInputCountrySelectArrow-opacity: 1;
+  --PhoneInput-color--focus: var(--foreground);
+
+  align-items: stretch;
+  gap: 12px;
+  border-bottom: 1px solid var(--field-border);
+
+  &:focus-within {
+    border-bottom: 2px solid var(--foreground);
+  }
+
+  &.invalid,
+  &.invalid:focus-within {
+    border-bottom-color: var(--field-error);
+  }
+
+  :global(.PhoneInputCountry) {
+    margin-right: 0;
+  }
+
+  // The visible keyboard focus lives on the whole row's underline, and on the flag picker.
+  :global(.PhoneInputCountrySelect:focus-visible + .PhoneInputCountryIcon) {
+    outline: 2px solid var(--foreground);
+    outline-offset: 2px;
+  }
+
+  :global(.PhoneInputInput) {
+    height: 40px;
+    min-width: 0;
+    padding: 0;
+    font-family: var(--font-family-mono);
+    font-size: var(--type-label-size);
+    color: inherit;
+    background: var(--background);
+    border: 0;
+    border-radius: 0;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}

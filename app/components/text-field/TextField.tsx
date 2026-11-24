@@ -1,5 +1,6 @@
 import { useId } from "react";
 import type { InputHTMLAttributes } from "react";
+import FieldError from "../field-error/FieldError";
 import styles from "./text-field.module.scss";
 
 type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "id"> & {
@@ -49,11 +50,7 @@ export default function TextField({
           {helperText}
         </p>
       )}
-      {error && (
-        <p id={errorId} className={`${styles.error} type-caption`}>
-          {error}
-        </p>
-      )}
+      {error && <FieldError id={errorId}>{error}</FieldError>}
     </div>
   );
 }

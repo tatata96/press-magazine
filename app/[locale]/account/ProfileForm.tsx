@@ -4,6 +4,7 @@ import {useState, useTransition} from "react";
 import type {FormEvent} from "react";
 import {useLocale, useTranslations} from "next-intl";
 import Button from "@/app/components/button/Button";
+import PhoneField from "@/app/components/phone-field/PhoneField";
 import TextField from "@/app/components/text-field/TextField";
 import {redirectForAuthError} from "../cart/auth-redirect";
 import type {FormErrors} from "../buyer-details/buyer-details";
@@ -110,12 +111,9 @@ export default function ProfileForm({firstName, lastName, phone, email}: Profile
         autoComplete="email"
         disabled
       />
-      <TextField
+      <PhoneField
         name="phone"
-        type="tel"
         label={t("phone")}
-        helperText={detailsT("phoneHelper")}
-        autoComplete="tel"
         defaultValue={phone}
         error={errorText("phone")}
       />

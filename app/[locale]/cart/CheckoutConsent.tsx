@@ -56,6 +56,8 @@ export default function CheckoutConsent({
     null,
   );
   const [isRedirecting, setIsRedirecting] = useState(false);
+  // Ticked by the buyer while the agreements are still being prepared; shown as ticked at once.
+  const [isConsenting, setIsConsenting] = useState(false);
   const [error, setError] = useState<CheckoutError | null>(null);
   const checkoutError = error ?? (acceptedFingerprint && !hasConsent ? "agreement_changed" : null);
 
@@ -121,13 +123,15 @@ export default function CheckoutConsent({
     }
 
     busyRef.current = true;
+    setIsConsenting(true);
     setPrepared(null);
     setAcceptedFingerprint(null);
 
     try {
-      // Null when the details are incomplete or preparing failed; the form shows what is
-      // missing and the box stays unticked.
-      const checkout = await prepareCheckout();
+      // Silent: a checkbox click should not cover the page with a loader. Null when the
+      // details are incomplete or preparing failed; the form shows what is missing and the
+      // box goes back to unticked.
+      const checkout = await prepareCheckout({silent: true});
 
       if (checkout) {
         setPrepared({checkout, detailsKey});
@@ -137,6 +141,7 @@ export default function CheckoutConsent({
       setError("failed");
     } finally {
       busyRef.current = false;
+      setIsConsenting(false);
     }
   }
 
@@ -243,7 +248,8 @@ export default function CheckoutConsent({
           id={checkboxId}
           type="checkbox"
           className={styles.checkbox}
-          checked={hasConsent}
+          checked={hasConsent || isConsenting}
+          aria-busy={isConsenting}
           onChange={(event) => handleConsent(event.target.checked)}
         />
         <label htmlFor={checkboxId} className={styles.consentLabel}>

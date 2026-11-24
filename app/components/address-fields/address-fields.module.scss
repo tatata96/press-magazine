@@ -10,6 +10,9 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 36px 16px;
+  // The city select has its label above the line, the TextField inside it, so the two have
+  // different heights. Aligning to the bottom keeps their underlines on one line.
+  align-items: end;
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
@@ -47,32 +50,5 @@
   &[aria-invalid="true"],
   &[aria-invalid="true"]:focus-visible {
     border-bottom-color: var(--field-error);
-  }
-}
-
-// Same look and overlay as the TextField and newsletter errors. Nested under .select to
-// outrank the global .type-caption weight.
-.select .selectError {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 4px 0 0;
-  padding: 4px 0;
-  font-weight: var(--font-weight-semibold);
-  background: var(--background);
-
-  &::before {
-    content: "";
-    flex: none;
-    align-self: center;
-    width: 1.4em;
-    height: 1.4em;
-    background: currentColor;
-    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
-    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
   }
 }

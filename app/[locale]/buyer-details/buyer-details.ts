@@ -71,6 +71,7 @@ export function parseAddressForm(
     address2: getTrimmedString(formData.get("address2")),
     city: getTrimmedString(formData.get("city")),
     zip: getTrimmedString(formData.get("zip")),
+    stateCode: getTrimmedString(formData.get("stateCode")),
     countryCode: getTrimmedString(formData.get("countryCode")),
   };
   const limits = [

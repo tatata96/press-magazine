@@ -14,6 +14,8 @@ import {getSessionState} from "@/lib/customer-account/session";
 import {CustomerAccountError, CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {ShopifyError} from "@/lib/shopify/admin-client";
 import {updateCustomerPhone} from "@/lib/shopify/admin-customer";
+import {checkLocation} from "@/lib/locations/check-location";
+import {getLocationOptions} from "@/lib/locations/options";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import {parseAddressForm, parseNameForm, type FormErrors} from "../buyer-details/buyer-details";
 import {isAddressId, isValidPhone, normalizePhone} from "../buyer-details/checkout-selection";
@@ -63,6 +65,30 @@ async function runAsCustomer(
   }
 }
 
+// Form checks, then the state and city against the location data. The browser's lists are only
+// a convenience, so a hand-edited request cannot save a city that is not in the chosen state.
+async function parseAddressSubmission(
+  formData: FormData,
+  customer: {firstName: string; lastName: string},
+  allowedCountryCodes: string[],
+): Promise<{ok: true; address: AddressInput} | {ok: false; errors: FormErrors}> {
+  const parsed = parseAddressForm(formData, {
+    allowedCountryCodes,
+    name: {firstName: customer.firstName, lastName: customer.lastName},
+  });
+
+  if (!parsed.ok) {
+    return parsed;
+  }
+
+  const errors = checkLocation(
+    await getLocationOptions(parsed.address.countryCode, parsed.address.stateCode),
+    {stateCode: parsed.address.stateCode, city: parsed.address.city},
+  );
+
+  return Object.keys(errors).length > 0 ? {ok: false, errors} : parsed;
+}
+
 export async function updateName(formData: FormData): Promise<AccountActionResult> {
   if (!(formData instanceof FormData)) {
     return {ok: false, error: "failed"};
@@ -96,10 +122,7 @@ export async function addAddress(formData: FormData): Promise<AccountActionResul
       throw new ShopifyError("Selling countries could not be loaded.");
     }
 
-    const parsed = parseAddressForm(formData, {
-      allowedCountryCodes,
-      name: {firstName: customer.firstName, lastName: customer.lastName},
-    });
+    const parsed = await parseAddressSubmission(formData, customer, allowedCountryCodes);
 
     if (!parsed.ok) {
       return {ok: false, error: "invalid", errors: parsed.errors};
@@ -110,7 +133,9 @@ export async function addAddress(formData: FormData): Promise<AccountActionResul
       makeDefault: customer.addresses.length === 0,
     });
 
-    return result.ok ? {ok: true, addressId: result.addressId} : {ok: false, error: "invalid"};
+    return result.ok
+      ? {ok: true, addressId: result.addressId}
+      : {ok: false, error: "invalid", errors: result.fieldErrors};
   });
 }
 
@@ -153,10 +178,7 @@ export async function editAddress(
       return {ok: false, error: "failed"};
     }
 
-    const parsed = parseAddressForm(formData, {
-      allowedCountryCodes,
-      name: {firstName: customer.firstName, lastName: customer.lastName},
-    });
+    const parsed = await parseAddressSubmission(formData, customer, allowedCountryCodes);
 
     if (!parsed.ok) {
       return {ok: false, error: "invalid", errors: parsed.errors};
@@ -164,7 +186,7 @@ export async function editAddress(
 
     const result = await updateCustomerAddress(accessToken, addressId, parsed.address);
 
-    return result.ok ? {ok: true} : {ok: false, error: "invalid"};
+    return result.ok ? {ok: true} : {ok: false, error: "invalid", errors: result.fieldErrors};
   });
 }
 
@@ -189,6 +211,7 @@ export async function makeDefaultAddress(addressId: string): Promise<AccountActi
       address2: current.address2,
       city: current.city,
       zip: current.zip,
+      stateCode: current.stateCode,
       countryCode: current.countryCode,
     };
     const result = await setDefaultCustomerAddress(accessToken, addressId, address);

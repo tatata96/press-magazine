@@ -1,4 +1,4 @@
-// One screen high, with the cover centered; the footer sits below the fold. On wide
+// One screen high, with the cover at the top; the footer sits below the fold. On wide
 // screens HomeStage pins this section while the items around the cover scroll in.
 .stage {
   // Header height: HomeStage sets the measured --header-height on the root; until
@@ -8,7 +8,9 @@
   position: relative;
   min-height: calc(100svh - var(--header-size));
   display: flex;
-  align-items: center;
+  // The cover sits a fixed distance below the header instead of being centred, so the
+  // gap does not change with the window height.
+  align-items: flex-start;
   justify-content: center;
   padding: 32px 16px;
 

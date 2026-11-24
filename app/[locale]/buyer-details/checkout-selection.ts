@@ -1,8 +1,9 @@
+import {isValidPhoneNumber} from "libphonenumber-js/min";
 import type {CustomerAddress} from "@/lib/customer-account/customer";
 import type {BuyerDetails, PostalAddress} from "./buyer-details";
 
-// No runtime imports on purpose: this is the checkout's business rule for "who is buying and
-// where", and it is covered by tests/checkout-selection.test.mjs.
+// Only dependency-free libraries at runtime: this is the checkout's business rule for "who is
+// buying and where", and it is covered by tests/checkout-selection.test.mjs.
 
 // What the buyer chose on the cart page. Addresses are ids of the customer's saved addresses,
 // so the browser can never inject an address: the server looks each one up on Shopify.
@@ -23,8 +24,11 @@ export function normalizePhone(value: string): string {
   return value.replace(/[\s().-]/g, "");
 }
 
+// E.164 shape first, then the country's real numbering rules (length, area codes).
 export function isValidPhone(value: string): boolean {
-  return PHONE_PATTERN.test(normalizePhone(value));
+  const phone = normalizePhone(value);
+
+  return PHONE_PATTERN.test(phone) && isValidPhoneNumber(phone);
 }
 
 export function isAddressId(value: unknown): value is string {

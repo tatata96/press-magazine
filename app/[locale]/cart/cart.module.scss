@@ -82,7 +82,70 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 24px;
+}
+
+// Two plan cards side by side, filling the width so the empty page isn't mostly blank.
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 768px) {
+    gap: 32px;
+  }
+}
+
+.plan {
+  // Fills its list item, which the grid stretches to the taller card, so both match
+  // even when one name wraps to two lines.
+  height: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr;
+  align-items: start;
+  gap: 8px 16px;
+  border: var(--rule-width) solid var(--foreground);
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+
+  &:hover .planName {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+.planImage {
+  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--border-subtle);
+}
+
+// Text keeps its inset; the image above runs edge to edge inside the border.
+.planName {
+  padding: 0 0 12px 12px;
+}
+
+.planPrice {
+  padding: 0 12px 12px 0;
+  white-space: nowrap;
 }
 
 .link {

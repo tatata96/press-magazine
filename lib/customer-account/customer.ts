@@ -11,6 +11,8 @@ export type CustomerAddress = {
   address2: string;
   city: string;
   zip: string;
+  /** Province or state code within the country (Shopify's zoneCode), e.g. "34". Empty if none. */
+  stateCode: string;
   /** ISO 3166-1 alpha-2, e.g. "TR". */
   countryCode: string;
 };
@@ -27,7 +29,10 @@ export type Customer = {
 
 export type AddressInput = Omit<CustomerAddress, "id">;
 
-export type MutationResult = {ok: true} | {ok: false; error: "invalid"};
+// `fieldErrors` names the form fields Shopify rejected, when it said which ones.
+export type MutationResult =
+  | {ok: true}
+  | {ok: false; error: "invalid"; fieldErrors?: Partial<Record<string, "invalid">>};
 
 type AddressNode = {
   id: string;
@@ -37,10 +42,21 @@ type AddressNode = {
   address2: string | null;
   city: string | null;
   zip: string | null;
+  zoneCode: string | null;
   territoryCode: string | null;
 };
 
-type UserError = {code?: string | null};
+type UserError = {code?: string | null; field?: string[] | null};
+
+// Shopify's address input names, mapped to the form's field names.
+const FORM_FIELD_BY_SHOPIFY_FIELD: Record<string, string> = {
+  address1: "address1",
+  address2: "address2",
+  city: "city",
+  zip: "zip",
+  zoneCode: "stateCode",
+  territoryCode: "countryCode",
+};
 
 function toAddress(node: AddressNode): CustomerAddress {
   return {
@@ -51,6 +67,7 @@ function toAddress(node: AddressNode): CustomerAddress {
     address2: node.address2 ?? "",
     city: node.city ?? "",
     zip: node.zip ?? "",
+    stateCode: node.zoneCode ?? "",
     countryCode: node.territoryCode ?? "",
   };
 }
@@ -86,6 +103,7 @@ export async function getCustomer(accessToken: string): Promise<Customer> {
               address2
               city
               zip
+              zoneCode
               territoryCode
             }
           }
@@ -113,12 +131,25 @@ function toResult(operation: string, userErrors: UserError[]): MutationResult {
     return {ok: true};
   }
 
+  const fieldErrors: Partial<Record<string, "invalid">> = {};
+
+  for (const error of userErrors) {
+    const shopifyField = error.field?.[error.field.length - 1];
+    const formField = shopifyField ? FORM_FIELD_BY_SHOPIFY_FIELD[shopifyField] : undefined;
+
+    if (formField) {
+      fieldErrors[formField] = "invalid";
+    }
+  }
+
   console.error(
     `${operation} rejected:`,
-    userErrors.map((error) => error.code ?? "UNKNOWN").join(", "),
+    userErrors.map((error) => `${error.code ?? "UNKNOWN"}@${error.field?.join(".") ?? "-"}`).join(", "),
   );
 
-  return {ok: false, error: "invalid"};
+  return Object.keys(fieldErrors).length > 0
+    ? {ok: false, error: "invalid", fieldErrors}
+    : {ok: false, error: "invalid"};
 }
 
 export async function updateCustomerName(
@@ -152,6 +183,7 @@ function toAddressInput(address: AddressInput) {
     address2: address.address2 || undefined,
     city: address.city,
     zip: address.zip,
+    zoneCode: address.stateCode || undefined,
     territoryCode: address.countryCode,
   };
 }
@@ -160,7 +192,7 @@ export async function createCustomerAddress(
   accessToken: string,
   address: AddressInput,
   options: {makeDefault: boolean},
-): Promise<{ok: true; addressId: string} | {ok: false; error: "invalid"}> {
+): Promise<{ok: true; addressId: string} | Exclude<MutationResult, {ok: true}>> {
   const data = await requestCustomerAccount<{
     customerAddressCreate: {
       customerAddress: {id: string} | null;
@@ -181,9 +213,11 @@ export async function createCustomerAddress(
   const {customerAddress, userErrors} = data.customerAddressCreate;
   const result = toResult("customerAddressCreate", userErrors);
 
-  return result.ok && customerAddress
-    ? {ok: true, addressId: customerAddress.id}
-    : {ok: false, error: "invalid"};
+  if (result.ok && customerAddress) {
+    return {ok: true, addressId: customerAddress.id};
+  }
+
+  return result.ok ? {ok: false, error: "invalid"} : result;
 }
 
 export async function updateCustomerAddress(

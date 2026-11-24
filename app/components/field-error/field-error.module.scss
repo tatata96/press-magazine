@@ -1,0 +1,30 @@
+// Overlaid under the field instead of in the flow, so showing or clearing an error never moves
+// the rest of the form. It sits in the form's row gap; keep messages short enough for one or two
+// lines. Coloured text with an icon, so the state doesn't rely on colour alone. `p.error`
+// outranks the global .type-caption weight regardless of stylesheet order.
+p.error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
+  background: var(--background);
+
+  // Decorative icon, drawn as a mask so it takes the text colour.
+  &::before {
+    content: "";
+    flex: none;
+    align-self: center;
+    width: 1.4em;
+    height: 1.4em;
+    background: currentColor;
+    -webkit-mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+    mask: url("/images/exclamation-circle.svg") center / contain no-repeat;
+  }
+}

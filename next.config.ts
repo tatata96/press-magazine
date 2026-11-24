@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
     // Product images are served from Shopify's CDN.
     remotePatterns: [{protocol: "https", hostname: "cdn.shopify.com"}],
   },
+  // The location data is read from disk at request time, so it stays external and its files
+  // are included in the server bundle's file trace.
+  serverExternalPackages: ["@countrystatecity/countries"],
+  outputFileTracingIncludes: {
+    "/**": ["./node_modules/@countrystatecity/countries/dist/data/**"],
+  },
   cacheComponents: true,
   partialPrefetching: true,
 };

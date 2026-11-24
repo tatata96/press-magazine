@@ -40,6 +40,7 @@ async function AddressesContent() {
       address2: address.address2,
       city: address.city,
       zip: address.zip,
+      stateCode: address.stateCode,
       countryCode: address.countryCode,
     },
   }));
