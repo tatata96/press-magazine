@@ -7,7 +7,9 @@ import {
   isValidBirthYear,
   MAX_COUNTRY_LENGTH,
 } from "@/app/api/newsletter/validation";
+import BirthYearField from "../../components/birth-year-field/BirthYearField";
 import Button from "../../components/button/Button";
+import TextField from "../../components/text-field/TextField";
 import styles from "./newsletter.module.scss";
 
 type FieldErrors = { email?: string; birthYear?: string; country?: string };
@@ -147,121 +149,40 @@ export default function NewsletterForm({
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         {/* Provisional: name and surname are optional and not validated. */}
         <div className={styles.row}>
-          <div className={styles.field}>
-            <input
-              id="newsletter-name"
-              className={styles.input}
-              name="name"
-              autoComplete="given-name"
-              placeholder=" "
-            />
-            <label className={styles.label} htmlFor="newsletter-name">
-              {t("nameLabel")}
-            </label>
-          </div>
-          <div className={styles.field}>
-            <input
-              id="newsletter-surname"
-              className={styles.input}
-              name="surname"
-              autoComplete="family-name"
-              placeholder=" "
-            />
-            <label className={styles.label} htmlFor="newsletter-surname">
-              {t("surnameLabel")}
-            </label>
-          </div>
+          <TextField
+            name="name"
+            label={t("nameLabel")}
+            autoComplete="given-name"
+          />
+          <TextField
+            name="surname"
+            label={t("surnameLabel")}
+            autoComplete="family-name"
+          />
         </div>
-        <div className={styles.fieldGroup}>
-          <div className={styles.field}>
-            <input
-              ref={emailRef}
-              id="newsletter-email"
-              className={styles.input}
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              placeholder=" "
-              aria-invalid={errors.email ? true : undefined}
-              aria-describedby={
-                errors.email ? "newsletter-email-error" : undefined
-              }
-            />
-            <label className={styles.label} htmlFor="newsletter-email">
-              {t("emailLabel")}
-              {/* Decorative: the input's `required` attribute is what assistive tech announces. */}
-              <span aria-hidden="true"> *</span>
-            </label>
-          </div>
-          {errors.email && (
-            <p
-              id="newsletter-email-error"
-              className={`${styles.error} type-caption`}
-            >
-              {errors.email}
-            </p>
-          )}
-        </div>
+        <TextField
+          ref={emailRef}
+          type="email"
+          name="email"
+          label={t("emailLabel")}
+          autoComplete="email"
+          required
+          error={errors.email}
+        />
         {/* Provisional: country is optional free text. */}
         <div className={styles.detailsRow}>
-          <div className={styles.fieldGroup}>
-            <div className={styles.field}>
-              <input
-                id="newsletter-country"
-                className={styles.input}
-                name="country"
-                autoComplete="country-name"
-                maxLength={MAX_COUNTRY_LENGTH}
-                placeholder=" "
-                aria-invalid={errors.country ? true : undefined}
-                aria-describedby={
-                  errors.country ? "newsletter-country-error" : undefined
-                }
-              />
-              <label className={styles.label} htmlFor="newsletter-country">
-                {t("countryLabel")}
-              </label>
-            </div>
-            {errors.country && (
-              <p
-                id="newsletter-country-error"
-                className={`${styles.error} type-caption`}
-              >
-                {errors.country}
-              </p>
-            )}
-          </div>
-          <div className={styles.fieldGroup}>
-            <div className={styles.field}>
-              <input
-                ref={birthYearRef}
-                id="newsletter-birth-year"
-                className={styles.input}
-                type="number"
-                name="birthYear"
-                autoComplete="bday-year"
-                inputMode="numeric"
-                step={1}
-                placeholder=" "
-                aria-invalid={errors.birthYear ? true : undefined}
-                aria-describedby={
-                  errors.birthYear ? "newsletter-birth-year-error" : undefined
-                }
-              />
-              <label className={styles.label} htmlFor="newsletter-birth-year">
-                {t("birthYearLabel")}
-              </label>
-            </div>
-            {errors.birthYear && (
-              <p
-                id="newsletter-birth-year-error"
-                className={`${styles.error} type-caption`}
-              >
-                {errors.birthYear}
-              </p>
-            )}
-          </div>
+          <TextField
+            name="country"
+            label={t("countryLabel")}
+            autoComplete="country-name"
+            maxLength={MAX_COUNTRY_LENGTH}
+            error={errors.country}
+          />
+          <BirthYearField
+            ref={birthYearRef}
+            label={t("birthYearLabel")}
+            error={errors.birthYear}
+          />
         </div>
         {/* Honeypot: hidden from people and assistive tech; bots that fill it are ignored. */}
         <div className={styles.honeypot} aria-hidden="true">
