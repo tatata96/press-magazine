@@ -42,7 +42,7 @@ async function OrdersContent() {
             <p className={styles.orderMeta}>{dateFormat.format(new Date(order.processedAt))}</p>
             <p className={styles.orderMeta}>{getStatusLabel(financialLabels, order.financialStatus)}</p>
             <p className={styles.orderMeta}>{formatMoney(order.total, locale)}</p>
-            <Link href={`/account/orders/detail?id=${encodeOrderId(order.id)}`} className={styles.link}>
+            <Link href={`/account/orders/detail?id=${encodeOrderId(order.id)}`} className={`${styles.link} ${styles.orderLink}`}>
               {t("viewOrder")}
             </Link>
           </li>

@@ -74,9 +74,18 @@ async function OrderContent({searchParams}: OrderPageProps) {
     );
   }
 
+  const hasShipping = Number(order.shipping?.amount) > 0;
+
   return (
     <section className={styles.section} aria-labelledby="order-heading">
-      {backLink}
+      <div className={styles.orderToolbar}>
+        {backLink}
+        {order.statusPageUrl?.startsWith("https://") ? (
+          <a href={order.statusPageUrl} className={`${styles.link} ${styles.externalLink}`} rel="noopener noreferrer">
+            {t("statusPage")}
+          </a>
+        ) : null}
+      </div>
       <h2 id="order-heading" className={styles.orderName}>{order.name}</h2>
       <dl className={styles.summary}>
         <div>
@@ -86,10 +95,6 @@ async function OrderContent({searchParams}: OrderPageProps) {
         <div>
           <dt>{t("orderStatus")}</dt>
           <dd>{[financial, fulfillment].filter(Boolean).join(" · ")}</dd>
-        </div>
-        <div>
-          <dt>{t("orderTotal")}</dt>
-          <dd>{formatMoney(order.total, locale)}</dd>
         </div>
       </dl>
 
@@ -105,13 +110,14 @@ async function OrderContent({searchParams}: OrderPageProps) {
       </ul>
 
       <dl className={styles.totals}>
-        {order.subtotal ? (
+        {/* Subtotal and shipping only add information when shipping is charged (e.g. printed issues). */}
+        {order.subtotal && hasShipping ? (
           <>
             <dt>{t("subtotal")}</dt>
             <dd>{formatMoney(order.subtotal, locale)}</dd>
           </>
         ) : null}
-        {order.shipping ? (
+        {order.shipping && hasShipping ? (
           <>
             <dt>{t("shipping")}</dt>
             <dd>{formatMoney(order.shipping, locale)}</dd>
@@ -125,12 +131,6 @@ async function OrderContent({searchParams}: OrderPageProps) {
         {renderAddress(t("shippingAddress"), order.shippingAddress)}
         {renderAddress(t("billingAddress"), order.billingAddress)}
       </div>
-
-      {order.statusPageUrl?.startsWith("https://") ? (
-        <a href={order.statusPageUrl} className={styles.link} rel="noopener noreferrer">
-          {t("statusPage")}
-        </a>
-      ) : null}
     </section>
   );
 }

@@ -140,6 +140,34 @@
   }
 }
 
+// Back link on the left, status-page link on the right; wraps on narrow screens.
+.orderToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px 24px;
+  width: 100%;
+}
+
+// A .link with a trailing up-right arrow, marking a link that leaves the site. Decorative, like
+// .backLink's arrow.
+.externalLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+
+  &::after {
+    content: "";
+    flex: none;
+    width: 1.4em;
+    height: 1.4em;
+    background: currentColor;
+    -webkit-mask: url("/images/arrow-up-right.svg") center / contain no-repeat;
+    mask: url("/images/arrow-up-right.svg") center / contain no-repeat;
+  }
+}
+
 .summary {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -148,7 +176,7 @@
   margin: 0;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   dt {
@@ -259,11 +287,20 @@
   align-items: baseline;
   padding: 20px 0;
   border-bottom: var(--rule-width) solid var(--foreground);
+  position: relative;
 
   @media (min-width: 768px) {
     grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) auto auto;
-    gap: 24px;
+    column-gap: 48px;
+    row-gap: 24px;
   }
+}
+
+// Stretched link: the pseudo-element extends the link's hit area over the whole row.
+.orderLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .orderName {
