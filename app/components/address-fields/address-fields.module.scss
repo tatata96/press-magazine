@@ -10,6 +10,9 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 36px 16px;
+  // The city select has its label above the line, the TextField inside it, so the two have
+  // different heights. Aligning to the bottom keeps their underlines on one line.
+  align-items: end;
 
   @media (min-width: 768px) {
     grid-template-columns: 1fr 1fr;
