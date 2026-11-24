@@ -21,10 +21,11 @@
 }
 
 // Collage of tilted, overlapping photos bleeding off every edge, with the form
-// clear in the middle. With motion allowed they slide in from the nearest edge.
+// clear in the middle. With motion allowed they slide in horizontally from the nearest side.
 .images {
   position: absolute;
-  inset: 0;
+  // Starts below the header so no image is clipped by its bottom edge.
+  inset: var(--header-height) 0 0;
   pointer-events: none;
 }
 
@@ -37,6 +38,7 @@
   width: calc(var(--phone-width) * 1%);
   height: auto;
   --rotate-current: var(--phone-rotate);
+  --slide-from-x: var(--phone-from-x);
   transform: rotate(var(--rotate-current));
 
   @media (min-width: 900px) {
@@ -44,6 +46,7 @@
     top: var(--top);
     width: calc(var(--width) * 1%);
     --rotate-current: var(--rotate);
+    --slide-from-x: var(--from-x);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -65,7 +68,7 @@
 
 @keyframes slide-in {
   from {
-    transform: translate(var(--from-x), var(--from-y))
+    transform: translateX(var(--slide-from-x))
       rotate(calc(var(--rotate-current) + var(--spin-in))) scale(0.85);
   }
 }
