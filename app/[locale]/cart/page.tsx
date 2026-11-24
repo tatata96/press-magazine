@@ -1,5 +1,6 @@
 import {Suspense} from "react";
 import type {Metadata} from "next";
+import Image from "next/image";
 import {redirect} from "next/navigation";
 import {getLocale, getTranslations} from "next-intl/server";
 import {Link} from "../../../i18n/navigation";
@@ -9,6 +10,8 @@ import {getCustomer, type Customer} from "@/lib/customer-account/customer";
 import {getLoginPath, getRefreshPath} from "@/lib/customer-account/links";
 import {CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {getCartWithCheckoutContext} from "@/lib/shopify/cart";
+import {formatMoney} from "@/lib/shopify/money";
+import {getPlanProducts} from "@/lib/shopify/products";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
 import LoadingScreen from "@/app/components/loading-screen/LoadingScreen";
@@ -58,10 +61,51 @@ async function CartContent() {
   }
 
   if (!current || current.cart.lines.length === 0) {
+    const plansT = await getTranslations("SubscribePage");
+    const plansResult = await getPlanProducts();
+
     return (
       <div className={styles.empty}>
         <p className={styles.message}>{t("empty")}</p>
-        <Link href="/subscribe" className={styles.link}>{t("browseShop")}</Link>
+        {/* Names come from the Subscribe copy; prices stay Shopify's. Hidden if they failed to load. */}
+        {plansResult.status === "ok" && (
+          <ul className={styles.plans}>
+            {(["digital", "print"] as const).map((id) => {
+              const product = plansResult.products[id];
+
+              return (
+                <li key={id}>
+                  <Link href="/subscribe" className={styles.plan}>
+                    {product?.imageUrl ? (
+                      <Image
+                        src={product.imageUrl}
+                        alt=""
+                        width={400}
+                        height={500}
+                        sizes="(min-width: 768px) 30vw, 45vw"
+                        className={styles.planImage}
+                      />
+                    ) : (
+                      <span className={styles.planImage} aria-hidden="true" />
+                    )}
+                    <span className={styles.planName}>{plansT(`plans.${id}.name`)}</span>
+                    {product && (
+                      <span className={styles.planPrice}>
+                        {formatMoney(product.price, locale)}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <Link
+          href="/subscribe"
+          className={`${buttonStyles.button} type-label ${styles.signInButton}`}
+        >
+          {t("browseShop")}
+        </Link>
       </div>
     );
   }

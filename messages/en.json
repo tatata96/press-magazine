@@ -139,7 +139,7 @@
   "CartPage": {
     "metaTitle": "Checkout",
     "metaDescription": "Review your Press order and enter your details.",
-    "heading": "Checkout",
+    "heading": "Cart",
     "orderHeading": "Your order",
     "loading": "Loading your cart…",
     "loadError": "We could not load your cart right now. Please refresh the page or try again later.",
