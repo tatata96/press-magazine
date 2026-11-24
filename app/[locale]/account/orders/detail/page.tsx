@@ -25,7 +25,9 @@ async function OrderContent({searchParams}: OrderPageProps) {
       )
     : null;
   const backLink = (
-    <Link href="/account/orders" className={styles.link}>{t("backToOrders")}</Link>
+    <Link href="/account/orders" className={`${styles.link} ${styles.backLink}`}>
+      {t("backToOrders")}
+    </Link>
   );
 
   // A malformed id, an unknown order and someone else's order all look the same on purpose.

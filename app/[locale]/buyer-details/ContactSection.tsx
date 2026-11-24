@@ -1,6 +1,7 @@
 "use client";
 
 import {useTranslations} from "next-intl";
+import PhoneField from "@/app/components/phone-field/PhoneField";
 import TextField from "@/app/components/text-field/TextField";
 import type {FormErrors} from "./buyer-details";
 import styles from "./buyer-details.module.scss";
@@ -102,12 +103,9 @@ export default function ContactSection({
             error={errorText("lastName")}
           />
         </div>
-        <TextField
+        <PhoneField
           name="phone"
-          type="tel"
           label={t("phone")}
-          helperText={t("phoneHelper")}
-          autoComplete="tel"
           defaultValue={phone}
           required
           error={errorText("phone")}

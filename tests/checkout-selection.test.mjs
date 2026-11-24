@@ -37,6 +37,14 @@ describe("parseCheckoutSelection", () => {
     assert.deepEqual(parsed, {phone: "+905551112233", shippingAddressId: HOME.id, billingAddressId: null});
   });
 
+  it("checks the number against the country's numbering rules", () => {
+    assert.equal(isValidPhone("+905551112233"), true);
+    assert.equal(isValidPhone("+49 30 901820"), true);
+    // Right shape (+ and digits) but not a real number for the country.
+    assert.equal(isValidPhone("+9012345"), false);
+    assert.equal(isValidPhone("+90555111"), false);
+  });
+
   it("rejects a phone number without a country code", () => {
     assert.equal(parseCheckoutSelection({phone: "05551112233", shippingAddressId: null, billingAddressId: null}), null);
     assert.equal(isValidPhone("05551112233"), false);

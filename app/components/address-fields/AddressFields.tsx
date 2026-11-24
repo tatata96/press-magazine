@@ -2,6 +2,7 @@
 
 import {useEffect, useId, useState} from "react";
 import {useTranslations} from "next-intl";
+import FieldError from "@/app/components/field-error/FieldError";
 import TextField from "@/app/components/text-field/TextField";
 import type {LocationOptions} from "@/lib/locations/check-location";
 import {loadLocationOptions} from "./actions";
@@ -40,6 +41,7 @@ type SelectFieldProps = {
 // A native select keeps keyboard type-ahead and the platform's picker on phones.
 function SelectField({name, label, value, onChange, options, placeholder, disabled, error}: SelectFieldProps) {
   const id = useId();
+  const errorId = `${id}-error`;
 
   return (
     <div className={styles.select}>
@@ -54,6 +56,7 @@ function SelectField({name, label, value, onChange, options, placeholder, disabl
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
         aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         required
       >
         <option value="">{placeholder}</option>
@@ -63,11 +66,7 @@ function SelectField({name, label, value, onChange, options, placeholder, disabl
           </option>
         ))}
       </select>
-      {error ? (
-        <p role="alert" className={`type-caption ${styles.selectError}`}>
-          {error}
-        </p>
-      ) : null}
+      {error ? <FieldError id={errorId}>{error}</FieldError> : null}
     </div>
   );
 }
@@ -192,7 +191,7 @@ export default function AddressFields({countries, defaults, errors, namePrefix =
         />
       </div>
       {current && !current.options ? (
-        <p role="alert" className={`type-caption ${styles.selectError}`}>
+        <p role="alert" className="type-caption">
           {t("optionsError")}
         </p>
       ) : null}
