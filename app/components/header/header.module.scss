@@ -7,18 +7,10 @@
   align-items: center;
   gap: 16px;
   padding: 12px 16px;
-
-  // Mobile: the bar turns white together with the open menu panel.
-  &:has(.open) {
-    background: #fff;
-  }
+  background: var(--background);
 
   @media (min-width: 768px) {
     padding: 12px 32px;
-
-    &:has(.open) {
-      background: none;
-    }
   }
 }
 
