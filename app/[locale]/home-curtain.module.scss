@@ -1,0 +1,77 @@
+// A black curtain that covers the first paint of a fresh visit. A rectangle opens in it
+// exactly where the cover sits, holds for a beat, then grows until the whole page shows.
+// It starts as plain black in the server-rendered markup so the page is never visible
+// first; HomeCurtain then measures the cover and starts the opening.
+.curtain {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .curtain {
+    display: block;
+    position: fixed;
+    inset: 0;
+    // Above the sticky header and the loading screen.
+    z-index: 200;
+    background: #000;
+    // Never blocks clicks or keyboard focus, even if the animation does not run.
+    pointer-events: none;
+    // Safety net if the script never starts the opening: do not stay black forever.
+    animation: curtain-failsafe 0.4s ease 4s forwards;
+  }
+
+  // The opening is a hole in the black, drawn as a huge shadow around an empty box.
+  // The box is sized from --cover-* (set by HomeCurtain from the cover's real position).
+  .curtain[data-ready] {
+    background: transparent;
+    animation: none;
+  }
+
+  .hole {
+    display: none;
+  }
+
+  .curtain[data-ready] .hole {
+    display: block;
+    position: absolute;
+    left: var(--cover-left);
+    width: var(--cover-width);
+    top: var(--cover-top);
+    height: var(--cover-height);
+    box-shadow: 0 0 0 100vmax #000;
+    // Ease-in-out quartic, as in the reference. Eased per step: open, hold, grow.
+    animation: curtain-open 2.6s cubic-bezier(0.76, 0, 0.24, 1) both;
+  }
+}
+
+@keyframes curtain-open {
+  // Black, with the hole collapsed to a line through the middle of the cover.
+  0%,
+  25% {
+    top: calc(var(--cover-top) + var(--cover-height) / 2);
+    height: 0;
+  }
+
+  // Opens to the cover's size and holds.
+  45%,
+  62% {
+    top: var(--cover-top);
+    height: var(--cover-height);
+    left: var(--cover-left);
+    width: var(--cover-width);
+  }
+
+  // Grows past the viewport edges.
+  100% {
+    top: -2px;
+    left: -2px;
+    width: calc(100vw + 4px);
+    height: calc(100vh + 4px);
+  }
+}
+
+@keyframes curtain-failsafe {
+  to {
+    opacity: 0;
+  }
+}

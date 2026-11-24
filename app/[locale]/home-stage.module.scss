@@ -32,7 +32,9 @@
 
 .item {
   position: absolute;
-  z-index: 1;
+  // Above the wordmark (5) and the cover (6) from the intro, so the text is never
+  // covered when they overlap.
+  z-index: 20;
   max-width: 42vw;
   text-transform: uppercase;
   white-space: pre-line;

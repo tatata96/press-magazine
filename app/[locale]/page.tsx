@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import {getTranslations} from "next-intl/server";
 import {getPageMetadata} from "@/lib/seo";
 import Cover from "../components/cover/Cover";
+import HomeCurtain from "./HomeCurtain";
 import HomeIntro from "./HomeIntro";
 import HomeStage from "./HomeStage";
 
@@ -18,10 +19,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function Home() {
   return (
-    <HomeStage>
-      <HomeIntro>
-        <Cover />
-      </HomeIntro>
-    </HomeStage>
+    <>
+      <HomeCurtain />
+      <HomeStage>
+        <HomeIntro>
+          <Cover />
+        </HomeIntro>
+      </HomeStage>
+    </>
   );
 }
