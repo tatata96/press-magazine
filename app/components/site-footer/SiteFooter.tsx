@@ -35,26 +35,6 @@ export default async function SiteFooter() {
               ),
             })}
           </p>
-          <p className={`${styles.upper} type-mono`}>
-            <Link
-              href="/privacy"
-              className={styles.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("privacy")}
-            </Link>
-          </p>
-          <p className={`${styles.upper} type-mono`}>
-            <Link
-              href="/shipping-and-returns"
-              className={styles.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("shippingAndReturns")}
-            </Link>
-          </p>
         </div>
         <p className={`${styles.column} ${styles.inquiries} type-mono`}>
           {t("inquiries")}{" "}
@@ -64,6 +44,28 @@ export default async function SiteFooter() {
         </p>
         <p className={`${styles.upper} ${styles.location} type-mono`}>
           {t("location")}
+        </p>
+      </div>
+      <div className={styles.legal}>
+        <p className={`${styles.upper} type-mono`}>
+          <Link
+            href="/privacy"
+            className={styles.link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("privacy")}
+          </Link>
+        </p>
+        <p className={`${styles.upper} type-mono`}>
+          <Link
+            href="/shipping-and-returns"
+            className={styles.link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("shippingAndReturns")}
+          </Link>
         </p>
       </div>
       <Team className={styles.team} />
