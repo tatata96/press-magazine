@@ -238,6 +238,8 @@
 .cards {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  // Every row takes the height of the tallest card, so all cards share one size.
+  grid-auto-rows: 1fr;
   gap: 24px;
   width: 100%;
   margin: 0;
@@ -256,6 +258,12 @@
   min-width: 0;
   padding: 20px;
   border: var(--rule-width) solid var(--foreground);
+}
+
+// Inside a card, actions stay pinned to the bottom edge whatever the text height.
+.card > .actions {
+  justify-content: flex-end;
+  margin-top: auto;
 }
 
 .cardText {
@@ -277,6 +285,14 @@
   margin: 0;
   padding: 0;
   list-style: none;
+
+  // Wider: the list owns the columns and every row inherits them (subgrid), so columns line up
+  // whatever each row's content width is.
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) auto auto;
+    column-gap: 48px;
+  }
 }
 
 // Mobile: stacked. Wider: one row per order.
@@ -290,10 +306,14 @@
   position: relative;
 
   @media (min-width: 768px) {
-    grid-template-columns: 8rem minmax(0, 1fr) minmax(0, 1fr) auto auto;
-    column-gap: 48px;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
     row-gap: 24px;
   }
+}
+
+.orderTotal {
+  text-align: right;
 }
 
 // Stretched link: the pseudo-element extends the link's hit area over the whole row.

@@ -7,6 +7,7 @@ import {loadAsCustomer} from "@/lib/customer-account/guard";
 import {formatMoney} from "@/lib/shopify/money";
 import {encodeOrderId} from "../order-id";
 import {getStatusLabel} from "../order-status";
+import OrdersList from "./OrdersList";
 import styles from "../account.module.scss";
 
 async function OrdersContent() {
@@ -31,24 +32,16 @@ async function OrdersContent() {
   const dateFormat = new Intl.DateTimeFormat(locale, {dateStyle: "long", timeZone: "Europe/Istanbul"});
 
   return (
-    <section className={styles.section} aria-labelledby="orders-heading">
-      <h2 id="orders-heading" className={`type-mono ${styles.sectionHeading}`}>
-        {t("ordersHeading")}
-      </h2>
-      <ul className={styles.orders} aria-label={t("ordersLabel")}>
-        {orders.map((order) => (
-          <li key={order.id} className={styles.order}>
-            <p className={styles.orderName}>{order.name}</p>
-            <p className={styles.orderMeta}>{dateFormat.format(new Date(order.processedAt))}</p>
-            <p className={styles.orderMeta}>{getStatusLabel(financialLabels, order.financialStatus)}</p>
-            <p className={styles.orderMeta}>{formatMoney(order.total, locale)}</p>
-            <Link href={`/account/orders/detail?id=${encodeOrderId(order.id)}`} className={`${styles.link} ${styles.orderLink}`}>
-              {t("viewOrder")}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <OrdersList
+      orders={orders.map((order) => ({
+        id: order.id,
+        name: order.name,
+        date: dateFormat.format(new Date(order.processedAt)),
+        status: getStatusLabel(financialLabels, order.financialStatus),
+        total: formatMoney(order.total, locale),
+        href: `/account/orders/detail?id=${encodeOrderId(order.id)}`,
+      }))}
+    />
   );
 }
 
