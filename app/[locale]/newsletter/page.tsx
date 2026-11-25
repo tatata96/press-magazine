@@ -151,6 +151,8 @@ export default async function NewsletterPage() {
                     ? getSlideInOffset(image.phone.left, image.phone.width)
                     : undefined,
                 "--index": index,
+                // Thank-you bow leans each photo further the way it already tilts.
+                "--bow-direction": image.rotate < 0 ? -1 : 1,
                 "--spin-in": `${SPIN_IN[index % SPIN_IN.length]}deg`,
               } as CSSProperties
             }

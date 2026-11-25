@@ -73,6 +73,28 @@
   }
 }
 
+// Thank-you bow: when the confirmation replaces the form, every photo turns a
+// few degrees once, further in the direction it already tilts, and stays there. The page is a server component,
+// so the images react through :has() instead of state.
+@media (prefers-reduced-motion: no-preference) {
+  .main:has(.confirmation) .image {
+    animation: bow 1.2s ease-out both;
+    animation-delay: calc(var(--index) * 0.05s);
+  }
+}
+
+@keyframes bow {
+  from {
+    transform: rotate(var(--rotate-current));
+  }
+
+  to {
+    transform: rotate(
+      calc(var(--rotate-current) + var(--bow-direction) * 8deg)
+    );
+  }
+}
+
 .content {
   position: relative;
   z-index: 2;
