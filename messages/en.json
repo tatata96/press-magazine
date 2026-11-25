@@ -183,6 +183,7 @@
     "birthYearLabel": "Birth year",
     "birthYearInvalid": "Enter a valid year.",
     "countryLabel": "Country",
+    "countryPlaceholder": "Select",
     "countryInvalid": "Enter a valid country.",
     "submit": "Sign up",
     "nameLabel": "First name",

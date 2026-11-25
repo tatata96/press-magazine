@@ -148,6 +148,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 24px;
+  // The select's label sits above its line, the text field's inside it; align the lines.
+  align-items: end;
 }
 
 .notice,

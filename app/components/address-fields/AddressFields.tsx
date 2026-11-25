@@ -1,8 +1,8 @@
 "use client";
 
-import {useEffect, useId, useState} from "react";
+import {useEffect, useState} from "react";
 import {useTranslations} from "next-intl";
-import FieldError from "@/app/components/field-error/FieldError";
+import SelectField from "@/app/components/select-field/SelectField";
 import TextField from "@/app/components/text-field/TextField";
 import type {LocationOptions} from "@/lib/locations/check-location";
 import {loadLocationOptions} from "./actions";
@@ -26,50 +26,6 @@ type AddressFieldsProps = {
   /** Prefixed onto every input name, so two address forms can share one <form>. */
   namePrefix?: string;
 };
-
-type SelectFieldProps = {
-  name: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: {value: string; label: string}[];
-  placeholder: string;
-  disabled?: boolean;
-  error?: string;
-};
-
-// A native select keeps keyboard type-ahead and the platform's picker on phones.
-function SelectField({name, label, value, onChange, options, placeholder, disabled, error}: SelectFieldProps) {
-  const id = useId();
-  const errorId = `${id}-error`;
-
-  return (
-    <div className={styles.select}>
-      <label htmlFor={id} className={`type-caption ${styles.selectLabel}`}>
-        {label}
-      </label>
-      <select
-        id={id}
-        name={name}
-        className={styles.selectInput}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        disabled={disabled}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : undefined}
-        required
-      >
-        <option value="">{placeholder}</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {error ? <FieldError id={errorId}>{error}</FieldError> : null}
-    </div>
-  );
-}
 
 // Uncontrolled text inputs plus controlled selects: the parent wraps them in a <form> and reads
 // them with FormData, so the same fields serve checkout and the account's address book. The

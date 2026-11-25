@@ -183,6 +183,7 @@
     "birthYearLabel": "Doğum yılı",
     "birthYearInvalid": "Geçerli bir yıl gir.",
     "countryLabel": "Ülke",
+    "countryPlaceholder": "Seç",
     "countryInvalid": "Geçerli bir ülke gir.",
     "submit": "Kaydol",
     "nameLabel": "Ad",

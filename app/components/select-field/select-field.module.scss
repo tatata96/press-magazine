@@ -1,0 +1,33 @@
+.select {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selectLabel {
+  font-family: var(--font-family-mono);
+  color: var(--field-label);
+}
+
+.selectInput {
+  height: 40px;
+  padding: 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--type-label-size);
+  color: inherit;
+  background: var(--background);
+  border: 0;
+  border-bottom: 1px solid var(--field-border);
+  border-radius: 0;
+
+  &:focus-visible {
+    outline: none;
+    border-bottom: 2px solid var(--foreground);
+  }
+
+  &[aria-invalid="true"],
+  &[aria-invalid="true"]:focus-visible {
+    border-bottom-color: var(--field-error);
+  }
+}

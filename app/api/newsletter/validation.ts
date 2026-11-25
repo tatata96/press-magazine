@@ -1,4 +1,5 @@
 import {getTrimmedString} from "@/app/utils/string";
+import {COUNTRY_CODES} from "./countries";
 
 export type SignupField = "email" | "birthYear" | "name" | "country";
 
@@ -40,8 +41,6 @@ export function isValidBirthYear(text: string) {
 
   return year >= min && year <= max;
 }
-// Provisional: country is optional free text until the field format is confirmed.
-export const MAX_COUNTRY_LENGTH = 100;
 
 export function parseSignup(payload: unknown): ParsedSignup {
   const body =
@@ -74,9 +73,10 @@ export function parseSignup(payload: unknown): ParsedSignup {
     fields.push("birthYear");
   }
 
-  const country = getTrimmedString(body.country);
+  // Optional; when given it must be one of the ISO codes the form offers.
+  const country = getTrimmedString(body.country).toUpperCase();
 
-  if (country.length > MAX_COUNTRY_LENGTH) {
+  if (country && !COUNTRY_CODES.has(country)) {
     fields.push("country");
   }
 

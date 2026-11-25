@@ -3,12 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import {
-  isValidBirthYear,
-  MAX_COUNTRY_LENGTH,
-} from "@/app/api/newsletter/validation";
+import { isValidBirthYear } from "@/app/api/newsletter/validation";
 import BirthYearField from "../../components/birth-year-field/BirthYearField";
 import Button from "../../components/button/Button";
+import SelectField from "../../components/select-field/SelectField";
 import TextField from "../../components/text-field/TextField";
 import styles from "./newsletter.module.scss";
 
@@ -18,8 +16,11 @@ type Status = "idle" | "pending" | "success" | "error";
 // `children` is the intro shown above the form; it is dropped with the form on
 // success so the whole panel becomes the confirmation.
 export default function NewsletterForm({
+  countries,
   children,
 }: {
+  /** Selectable countries, labelled and sorted for the current locale. */
+  countries: { value: string; label: string }[];
   children?: ReactNode;
 }) {
   const t = useTranslations("NewsletterForm");
@@ -30,6 +31,7 @@ export default function NewsletterForm({
   const [errors, setErrors] = useState<FieldErrors>({});
   const confirmationRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("idle");
+  const [countryCode, setCountryCode] = useState("");
 
   // The form unmounts on success, so move focus to the confirmation or keyboard
   // and screen reader users are left on a vanished button.
@@ -92,7 +94,7 @@ export default function NewsletterForm({
           surname: data.get("surname"),
           email: data.get("email"),
           birthYear: data.get("birthYear"),
-          country: data.get("country"),
+          country: countryCode,
           website: data.get("website"),
         }),
       });
@@ -169,13 +171,16 @@ export default function NewsletterForm({
           required
           error={errors.email}
         />
-        {/* Provisional: country is optional free text. */}
+        {/* Country is optional; the stored value is its ISO code. */}
         <div className={styles.detailsRow}>
-          <TextField
+          <SelectField
             name="country"
             label={t("countryLabel")}
-            autoComplete="country-name"
-            maxLength={MAX_COUNTRY_LENGTH}
+            value={countryCode}
+            onChange={setCountryCode}
+            options={countries}
+            placeholder={t("countryPlaceholder")}
+            required={false}
             error={errors.country}
           />
           <BirthYearField
