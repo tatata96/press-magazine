@@ -63,7 +63,7 @@ function createSignupMetafields(input: SignupInput) {
 
   if (input.birthYear !== undefined) {
     metafields.push({
-      namespace: "press",
+      namespace: "custom",
       key: "birth_year",
       type: "number_integer",
       value: String(input.birthYear),
@@ -71,7 +71,7 @@ function createSignupMetafields(input: SignupInput) {
   }
   if (input.country !== undefined) {
     metafields.push({
-      namespace: "press",
+      namespace: "custom",
       key: "country",
       type: "single_line_text_field",
       value: input.country,

@@ -22,6 +22,18 @@ type NavigationProps = {
 export default function Navigation({ items, labels }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const renderItem = (item: NavigationItem) => (
+    <li key={item.href}>
+      <Link
+        href={item.href}
+        className={styles.link}
+        onClick={() => setIsOpen(false)}
+      >
+        {item.label}
+      </Link>
+    </li>
+  );
+
   return (
     <nav
       aria-label={labels.navigation}
@@ -40,9 +52,17 @@ export default function Navigation({ items, labels }: NavigationProps) {
       >
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           {isOpen ? (
-            <path d="M5 5L19 19M19 5L5 19" stroke="currentColor" strokeWidth="1.5" />
+            <path
+              d="M5 5L19 19M19 5L5 19"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
           ) : (
-            <path d="M3 7H21M3 12H21M3 17H21" stroke="currentColor" strokeWidth="1.5" />
+            <path
+              d="M3 7H21M3 12H21M3 17H21"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
           )}
         </svg>
       </button>
@@ -51,17 +71,7 @@ export default function Navigation({ items, labels }: NavigationProps) {
         id="main-menu"
         className={`${styles.list} ${isOpen ? styles.open : ""} type-mono`}
       >
-        {items.map((item) => (
-          <li key={item.href}>
-            <Link
-              href={item.href}
-              className={styles.link}
-              onClick={() => setIsOpen(false)}
-            >
-              {item.label}
-            </Link>
-          </li>
-        ))}
+        {items.map(renderItem)}
       </ul>
     </nav>
   );

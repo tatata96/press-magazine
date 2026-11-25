@@ -1,7 +1,8 @@
 import type {CSSProperties} from "react";
 import type {Metadata} from "next";
 import Image from "next/image";
-import {getTranslations} from "next-intl/server";
+import {getLocale, getTranslations} from "next-intl/server";
+import {getCountryOptions} from "@/app/api/newsletter/countries";
 import {getPageMetadata} from "@/lib/seo";
 import NewsletterForm from "./NewsletterForm";
 import styles from "./newsletter.module.scss";
@@ -120,6 +121,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function NewsletterPage() {
   const t = await getTranslations("NewsletterPage");
+  const locale = await getLocale();
 
   return (
     <main className={styles.main}>
@@ -151,6 +153,8 @@ export default async function NewsletterPage() {
                     ? getSlideInOffset(image.phone.left, image.phone.width)
                     : undefined,
                 "--index": index,
+                // Thank-you bow leans each photo further the way it already tilts.
+                "--bow-direction": image.rotate < 0 ? -1 : 1,
                 "--spin-in": `${SPIN_IN[index % SPIN_IN.length]}deg`,
               } as CSSProperties
             }
@@ -158,7 +162,7 @@ export default async function NewsletterPage() {
         ))}
       </div>
       <section className={styles.content}>
-        <NewsletterForm>
+        <NewsletterForm countries={getCountryOptions(locale)}>
           <p className={styles.lead}>{t("lead")}</p>
         </NewsletterForm>
       </section>

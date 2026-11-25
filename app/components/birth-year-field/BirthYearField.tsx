@@ -3,6 +3,7 @@ import TextField from "../text-field/TextField";
 type BirthYearFieldProps = {
   label: string;
   error?: string;
+  defaultValue?: string;
   ref?: React.Ref<HTMLInputElement>;
 };
 
@@ -12,6 +13,7 @@ type BirthYearFieldProps = {
 export default function BirthYearField({
   label,
   error,
+  defaultValue,
   ref,
 }: BirthYearFieldProps) {
   return (
@@ -23,6 +25,7 @@ export default function BirthYearField({
       autoComplete="bday-year"
       step={1}
       label={label}
+      defaultValue={defaultValue}
       error={error}
     />
   );

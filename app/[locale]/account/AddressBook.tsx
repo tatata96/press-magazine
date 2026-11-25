@@ -36,7 +36,6 @@ export default function AddressBook({addresses, countries}: AddressBookProps) {
   const locale = useLocale();
   // An address id while editing it, "new" while adding, null otherwise.
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [failure, setFailure] = useState<"address" | "action" | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -128,7 +127,6 @@ export default function AddressBook({addresses, countries}: AddressBookProps) {
                     onClick={() => {
                       setErrors({});
                       setFailure(null);
-                      setConfirmingId(null);
                       setEditingId(address.id);
                     }}
                   >
@@ -144,36 +142,15 @@ export default function AddressBook({addresses, countries}: AddressBookProps) {
                       {t("makeDefault")}
                     </button>
                   )}
-                  {confirmingId === address.id ? (
-                    <>
-                      <button
-                        type="button"
-                        className={styles.textButton}
-                        disabled={isPending}
-                        onClick={() =>
-                          run(() => removeAddress(address.id), () => setConfirmingId(null), "action")
-                        }
-                      >
-                        {t("confirmDelete")}
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.textButton}
-                        onClick={() => setConfirmingId(null)}
-                      >
-                        {t("cancel")}
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      className={styles.textButton}
-                      disabled={isPending}
-                      onClick={() => setConfirmingId(address.id)}
-                    >
-                      {t("delete")}
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className={styles.textButton}
+                    disabled={isPending}
+                    onClick={() => run(() => removeAddress(address.id), () => undefined, "action")}
+                  >
+                    {t("delete")}
+                  </button>
+
                 </div>
               </>
             )}
