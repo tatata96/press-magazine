@@ -160,6 +160,24 @@
   }
 }
 
+.headingWithBack {
+  margin-bottom: 12px;
+}
+
+// Sits right under the page title; the space below it replaces the title's own margin.
+.backLink {
+  display: inline-block;
+  margin-bottom: 40px;
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
 .lines {
   margin: 0;
   padding: 0;

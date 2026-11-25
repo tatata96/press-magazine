@@ -121,13 +121,7 @@ async function CheckoutContent({searchParams}: CheckoutPageProps) {
 
   return (
     <div className={cartStyles.layout}>
-      <section className={cartStyles.details} aria-labelledby="checkout-details-heading">
-        <div className={detailsStyles.sectionHeader}>
-          <h2 id="checkout-details-heading" className={`type-mono ${detailsStyles.legend}`}>
-            {detailsT("contact")}
-          </h2>
-          <Link href="/cart" className={cartStyles.link}>{detailsT("edit")}</Link>
-        </div>
+      <section className={cartStyles.details} aria-label={detailsT("contact")}>
         <dl className={detailsStyles.summary}>
           <div>
             <dt>{detailsT("name")}</dt>
@@ -191,7 +185,11 @@ export default async function CheckoutPage({searchParams}: CheckoutPageProps) {
 
   return (
     <main className={cartStyles.main}>
-      <h1 className={cartStyles.heading}>{t("heading")}</h1>
+      <h1 className={`${cartStyles.heading} ${cartStyles.headingWithBack}`}>{t("heading")}</h1>
+      {/* Goes back to the first step, so it sits under the page title with a back arrow. */}
+      <Link href="/cart" className={`${cartStyles.link} ${cartStyles.backLink}`}>
+        <span aria-hidden="true">←</span> {t("backToEdit")}
+      </Link>
       <Suspense fallback={<LoadingScreen label={cartT("loading")} />}>
         <div className={cartStyles.reveal}>
           <CheckoutContent searchParams={searchParams} />

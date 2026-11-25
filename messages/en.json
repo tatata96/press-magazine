@@ -134,7 +134,8 @@
   "CheckoutPage": {
     "metaTitle": "Review your order",
     "metaDescription": "Review your details and order, then continue to payment.",
-    "heading": "Review your order"
+    "heading": "Review your order",
+    "backToEdit": "Go back to edit"
   },
   "CartPage": {
     "metaTitle": "Checkout",
@@ -272,6 +273,8 @@
     "email": "Email",
     "emailNote": "You sign in with this email. It can’t be changed here.",
     "phone": "Phone",
+    "birthYear": "Birth year (optional)",
+    "birthYearInvalid": "Enter a valid year.",
     "save": "Save",
     "saving": "Saving…",
     "saved": "Saved.",

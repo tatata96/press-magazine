@@ -134,7 +134,8 @@
   "CheckoutPage": {
     "metaTitle": "Siparişini gözden geçir",
     "metaDescription": "Bilgilerini ve siparişini gözden geçir, ardından ödemeye geç.",
-    "heading": "Siparişini gözden geçir"
+    "heading": "Siparişini gözden geçir",
+    "backToEdit": "Düzenlemek için geri dön"
   },
   "CartPage": {
     "metaTitle": "Ödeme",
@@ -272,6 +273,8 @@
     "email": "E-posta",
     "emailNote": "Bu e-postayla giriş yapıyorsun. Buradan değiştirilemez.",
     "phone": "Telefon",
+    "birthYear": "Doğum yılı (isteğe bağlı)",
+    "birthYearInvalid": "Geçerli bir yıl gir.",
     "save": "Kaydet",
     "saving": "Kaydediliyor…",
     "saved": "Kaydedildi.",

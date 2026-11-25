@@ -13,7 +13,8 @@ import {
 import {getSessionState} from "@/lib/customer-account/session";
 import {CustomerAccountError, CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {ShopifyError} from "@/lib/shopify/admin-client";
-import {updateCustomerPhone} from "@/lib/shopify/admin-customer";
+import {updateCustomerBirthYear, updateCustomerPhone} from "@/lib/shopify/admin-customer";
+import {isValidBirthYear} from "@/app/api/newsletter/validation";
 import {checkLocation} from "@/lib/locations/check-location";
 import {getLocationOptions} from "@/lib/locations/options";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
@@ -153,6 +154,22 @@ export async function savePhone(phone: string): Promise<AccountActionResult> {
     const result = await updateCustomerPhone(customer.id, normalized);
 
     return result.ok ? {ok: true} : {ok: false, error: "invalid", errors: {phone: "invalid"}};
+  });
+}
+
+// Optional answer, stored as a customer metafield (same one as the newsletter signup).
+export async function saveBirthYear(birthYear: string): Promise<AccountActionResult> {
+  const text = typeof birthYear === "string" ? birthYear.trim() : "";
+
+  if (!isValidBirthYear(text)) {
+    return {ok: false, error: "invalid", errors: {birthYear: "invalid"}};
+  }
+
+  return runAsCustomer(async (accessToken) => {
+    const customer = await getCustomer(accessToken);
+    const result = await updateCustomerBirthYear(customer.id, Number(text));
+
+    return result.ok ? {ok: true} : {ok: false, error: "invalid", errors: {birthYear: "invalid"}};
   });
 }
 
