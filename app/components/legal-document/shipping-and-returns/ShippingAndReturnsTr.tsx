@@ -88,23 +88,14 @@ export default function ShippingAndReturnsTr({includesDigitalContent}: {includes
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(5)}. Cayma ve İade Koşulları</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(5)}. İade</h2>
         <div className={styles.document}>
-          <p className={styles.paragraph}>
-            6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği kapsamında, cayma hakkının geçerli olduğu mesafeli satışlarda tüketiciler 14 gün içerisinde herhangi bir gerekçe göstermeden ve cezai şart ödemeden sözleşmeden cayabilir.
-          </p>
-          <p className={styles.paragraph}>
-            Ancak bazı ürünler için mevzuatta cayma hakkı istisnaları bulunmaktadır.
-          </p>
-
-          <h3 className={page.subHeading}>Basılı Dergiler</h3>
+          {includesDigitalContent ? (
+            <h3 className={page.subHeading}>Basılı Dergiler</h3>
+          ) : null}
           <p className={styles.paragraph}>
             Mesafeli Sözleşmeler Yönetmeliği'nin 15. maddesi uyarınca, abonelik sözleşmesi kapsamında sağlananlar dışında gazete ve dergi gibi süreli yayınların teslimine ilişkin sözleşmelerde cayma hakkı bulunmamaktadır.
           </p>
-          <p className={styles.paragraph}>
-            Abonelik sözleşmesi kapsamında sunulan ürünlerde bu istisna uygulanmaz. İlgili satın alma işleminin niteliğine göre tüketicinin yasal cayma hakları saklıdır.
-          </p>
-
           {includesDigitalContent ? (
             <>
               <h3 className={page.subHeading}>Dijital Yayınlar</h3>
@@ -122,58 +113,13 @@ export default function ShippingAndReturnsTr({includesDigitalContent}: {includes
             </>
           ) : null}
           <p className={styles.paragraph}>
-            Cayma hakkına ilişkin istisnalar, ayıplı veya hatalı ürünlerle ilgili yasal haklarınızı ortadan kaldırmaz.
+            İade ile ilgili sorularınız için hello@pressmagazine.com.tr adresinden bizimle iletişime geçebilirsiniz. Yasal tüketici haklarınız saklıdır.
           </p>
         </div>
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. İade ile İlgili Sorular</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            İade ile ilgili sorularınız için hello@pressmagazine.com.tr adresinden bizimle iletişime geçebilirsiniz.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(7)}. Hasarlı, Hatalı veya Eksik Ürünler</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            Siparişinizin hasarlı, hatalı veya eksik teslim edilmesi durumunda bizimle iletişime geçebilirsiniz.
-          </p>
-          <p className={styles.paragraph}>
-            Sorunun daha hızlı değerlendirilebilmesi için sipariş numaranızı ve mümkünse sorunu gösteren fotoğrafları paylaşabilirsiniz.
-          </p>
-          <p className={styles.paragraph}>
-            Ayıplı mal ve hizmetlere ilişkin 6502 sayılı Kanun kapsamında sahip olduğunuz seçimlik haklar saklıdır.
-          </p>
-          <p className={styles.paragraph}>
-            Cayma hakkı istisnaları, ayıplı ürünlerle ilgili başvuru haklarınızı sınırlandırmaz.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(8)}. Geri Ödemeler</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            Cayma hakkının geçerli olduğu veya mevzuat gereği bedel iadesi yapılması gereken durumlarda geri ödemeler yasal süreler içerisinde gerçekleştirilir.
-          </p>
-          <p className={styles.paragraph}>
-            Cayma hakkının kullanıldığı mal satışlarında geri ödeme süresi, ilgili mevzuata göre iade ürününün belirtilen taşıyıcıya teslim edilmesi veya gerekli hallerde Satıcı'ya ulaşması esas alınarak belirlenir. Geçerli yasal süre 14 gündür.
-          </p>
-          <p className={styles.paragraph}>
-            Geri ödemeler, mevzuatta aksi öngörülmedikçe satın alma sırasında kullanılan ödeme aracına uygun şekilde ve tüketiciye ek masraf yüklenmeden yapılır.
-          </p>
-          <p className={styles.paragraph}>
-            İade tutarının banka veya kart hesabınıza yansıma süresi, ilgili finans kuruluşunun işlem süreçlerine bağlı olarak değişebilir.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(9)}. İletişim</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. İletişim</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             Teslimat, {includesDigitalContent ? "dijital erişim, " : ""}iade veya geri ödeme işlemleriyle ilgili sorularınız için bizimle iletişime geçebilirsiniz.

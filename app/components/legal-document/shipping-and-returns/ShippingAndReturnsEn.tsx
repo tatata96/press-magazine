@@ -87,23 +87,14 @@ export default function ShippingAndReturnsEn({includesDigitalContent}: {includes
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(5)}. Withdrawal and Return Conditions</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(5)}. Returns</h2>
         <div className={styles.document}>
-          <p className={styles.paragraph}>
-            Under Turkish Consumer Protection Law No. 6502 and the Regulation on Distance Contracts, consumers generally have the right to withdraw from eligible distance sales contracts within 14 days without providing a reason or incurring a penalty.
-          </p>
-          <p className={styles.paragraph}>
-            However, certain products are subject to statutory exceptions.
-          </p>
-
-          <h3 className={page.subHeading}>Printed Magazines</h3>
+          {includesDigitalContent ? (
+            <h3 className={page.subHeading}>Printed Magazines</h3>
+          ) : null}
           <p className={styles.paragraph}>
             Under Article 15 of the Turkish Regulation on Distance Contracts, the right of withdrawal does not apply to contracts concerning the delivery of newspapers, periodicals, or magazines, except where they are supplied under a subscription agreement.
           </p>
-          <p className={styles.paragraph}>
-            This exception does not apply to products supplied under a subscription agreement. Applicable statutory withdrawal rights remain subject to the legal nature of the purchase.
-          </p>
-
           {includesDigitalContent ? (
             <>
               <h3 className={page.subHeading}>Digital Publications</h3>
@@ -121,58 +112,13 @@ export default function ShippingAndReturnsEn({includesDigitalContent}: {includes
             </>
           ) : null}
           <p className={styles.paragraph}>
-            Exceptions to the right of withdrawal do not affect your statutory rights regarding defective or incorrectly supplied products.
+            For return-related inquiries, please contact us at hello@pressmagazine.com.tr. Your statutory consumer rights remain unaffected.
           </p>
         </div>
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. Return Inquiries</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            For return-related inquiries, please contact us at hello@pressmagazine.com.tr.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(7)}. Damaged, Incorrect, or Missing Products</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            If your order arrives damaged, contains an incorrect product, or is incomplete, please contact us.
-          </p>
-          <p className={styles.paragraph}>
-            To help us review the issue more efficiently, you may provide your order number and, where possible, photographs showing the problem.
-          </p>
-          <p className={styles.paragraph}>
-            Your statutory remedies under Turkish Consumer Protection Law No. 6502 regarding defective goods and services remain unaffected.
-          </p>
-          <p className={styles.paragraph}>
-            Exceptions to the right of withdrawal do not limit your statutory rights concerning defective products.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(8)}. Refunds</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>
-            Where a withdrawal right applies or a refund is otherwise required by law, refunds are processed within the applicable statutory periods.
-          </p>
-          <p className={styles.paragraph}>
-            For goods returned through the exercise of the right of withdrawal, the refund period is determined in accordance with applicable legislation, generally from the date the returned item is handed to the designated carrier or, where applicable, received by the Seller. The applicable statutory refund period is 14 days.
-          </p>
-          <p className={styles.paragraph}>
-            Unless otherwise required by law, refunds are issued using the payment method used for the original purchase, without additional charges to the consumer.
-          </p>
-          <p className={styles.paragraph}>
-            The time it takes for the refund to appear in your bank or card account may vary depending on the processing procedures of the relevant financial institution.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(9)}. Contact</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. Contact</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             For questions about shipping, {includesDigitalContent ? "digital access, " : ""}returns, or refunds, please contact us.
