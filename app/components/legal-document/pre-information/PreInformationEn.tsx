@@ -185,19 +185,11 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
       </p>
       <p className={styles.paragraph}>
         To exercise the right of withdrawal, the Buyer must notify the Seller of their decision through an
-        explicit statement within the statutory withdrawal period. The notice may be sent to:
+        explicit statement within the statutory withdrawal period.
       </p>
-      <ul className={styles.details}>
-        <li><strong>Email:</strong> {data.seller.supportEmail}</li>
-        <li><strong>Address:</strong> {data.seller.address}</li>
-      </ul>
       <p className={styles.paragraph}>
-        Where the right of withdrawal applies, the Buyer must return the Product to the Seller within
-        fourteen (14) days following the withdrawal notification.
+        For return-related inquiries, please contact us at {data.seller.supportEmail}.
       </p>
-      <ul className={styles.details}>
-        <li><strong>Return Carrier and Return Shipping Cost:</strong> {data.terms.returnCarrier}</li>
-      </ul>
       <p className={styles.paragraph}>
         Where the right of withdrawal is exercised, the Seller shall refund the payments received,
         including initial delivery costs where applicable, within the periods and under the conditions

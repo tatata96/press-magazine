@@ -351,31 +351,16 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         yeterlidir.
       </p>
       <p className={styles.paragraph}>
-        Cayma ve iade talepleri aşağıdaki iletişim adresinden iletilebilir:
+        İade ile ilgili sorularınız için {data.seller.supportEmail} adresinden bizimle iletişime geçebilirsiniz.
       </p>
       <p className={styles.paragraph}>
-        <strong>{data.seller.supportEmail}</strong>
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.5.</strong> Cayma hakkının geçerli olduğu bir satın alma
-        işleminde Alıcı, cayma bildirimini takip eden on dört gün içerisinde
-        ürünü Satıcı'ya geri göndermekle yükümlüdür.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.6.</strong> İadelerde kullanılacak taşıyıcı ve gönderim
-        bilgileri, cayma hakkının uygulanabildiği ürünler bakımından Ön
-        Bilgilendirme Formu'nda belirtilir. Mevzuata uygun şekilde belirtilen
-        taşıyıcının kullanılması halinde iade gönderim masrafları Alıcı'ya
-        yüklenmez.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.7.</strong> Cayma hakkının kullanıldığı durumlarda, Satıcı,
+        <strong>8.5.</strong> Cayma hakkının kullanıldığı durumlarda, Satıcı,
         Yönetmelik'te belirtilen süreler ve koşullar çerçevesinde, varsa ilk
         teslimat masrafları dahil olmak üzere tahsil edilen ödemeleri Alıcı'ya
         iade eder.
       </p>
       <p className={styles.paragraph}>
-        <strong>8.8.</strong> Geri ödeme, mevzuatta aksi öngörülmedikçe
+        <strong>8.6.</strong> Geri ödeme, mevzuatta aksi öngörülmedikçe
         Alıcı'nın satın alma sırasında kullandığı ödeme aracına uygun şekilde ve
         Alıcı'ya ek masraf yüklenmeden yapılır.
       </p>

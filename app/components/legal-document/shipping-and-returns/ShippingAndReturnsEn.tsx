@@ -63,7 +63,7 @@ export default function ShippingAndReturnsEn({includesDigitalContent}: {includes
               Viewing or downloading a digital publication may require an internet connection and a compatible device or software capable of opening PDF files.
             </p>
             <p className={styles.paragraph}>
-              If you experience difficulties accessing purchased digital content, please contact us at hello@septembercompany.com.
+              If you experience difficulties accessing purchased digital content, please contact us at hello@pressmagazine.com.tr.
             </p>
           </div>
         </section>
@@ -127,25 +127,10 @@ export default function ShippingAndReturnsEn({includesDigitalContent}: {includes
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. How to Request a Return</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. Return Inquiries</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
-            Where the right of withdrawal applies, you may submit your request within the statutory period by emailing:
-          </p>
-          <p className={styles.paragraph}>
-            <strong>hello@septembercompany.com</strong>
-          </p>
-          <p className={styles.paragraph}>
-            Including your order number and the product you wish to return will help us process your request more efficiently.
-          </p>
-          <p className={styles.paragraph}>
-            Where the right of withdrawal is exercised, the Product must be returned within 14 days following the withdrawal notification.
-          </p>
-          <p className={styles.paragraph}>
-            The designated return carrier and shipping instructions are specified in the Pre-Contractual Information Form relating to the order.
-          </p>
-          <p className={styles.paragraph}>
-            Return shipping costs are governed by applicable consumer legislation. Costs that cannot legally be charged to the consumer will not be passed on to the customer.
+            For return-related inquiries, please contact us at hello@pressmagazine.com.tr.
           </p>
         </div>
       </section>
@@ -199,7 +184,7 @@ export default function ShippingAndReturnsEn({includesDigitalContent}: {includes
             Etiler Mahallesi, Bade Sokak, No: 1, Beşiktaş, Istanbul, Türkiye
           </p>
           <p className={styles.paragraph}>
-            <strong>Email:</strong> hello@septembercompany.com
+            <strong>Email:</strong> hello@pressmagazine.com.tr
           </p>
           <p className={styles.paragraph}>
             <strong>Website:</strong> www.pressmagazine.com.tr

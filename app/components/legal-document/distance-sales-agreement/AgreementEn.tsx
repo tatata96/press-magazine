@@ -268,22 +268,13 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>8.4.</strong> To exercise the right of withdrawal, the Buyer must notify the Seller of their decision through an explicit statement within the statutory withdrawal period.
       </p>
       <p className={styles.paragraph}>
-        Withdrawal and return requests may be submitted to:
+        For return-related inquiries, please contact us at {data.seller.supportEmail}.
       </p>
       <p className={styles.paragraph}>
-        <strong>{data.seller.supportEmail}</strong>
+        <strong>8.5.</strong> Where the right of withdrawal is exercised, the Seller shall refund the payments received, including initial delivery costs where applicable, within the periods and under the conditions prescribed by the Regulation.
       </p>
       <p className={styles.paragraph}>
-        <strong>8.5.</strong> Where the right of withdrawal applies, the Buyer must return the Product to the Seller within fourteen (14) days following the withdrawal notification.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.6.</strong> The designated carrier and return shipping instructions shall be specified in the Pre-Contractual Information Form for Products eligible for withdrawal. Where the designated carrier is used in accordance with applicable legislation, return shipping costs shall not be charged to the Buyer.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.7.</strong> Where the right of withdrawal is exercised, the Seller shall refund the payments received, including initial delivery costs where applicable, within the periods and under the conditions prescribed by the Regulation.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.8.</strong> Unless otherwise provided by applicable legislation, refunds shall be made using the same payment method used by the Buyer for the original transaction, without imposing additional costs on the Buyer.
+        <strong>8.6.</strong> Unless otherwise provided by applicable legislation, refunds shall be made using the same payment method used by the Buyer for the original transaction, without imposing additional costs on the Buyer.
       </p>
       <h2 className={styles.sectionHeading}>9. EXCEPTIONS TO THE RIGHT OF WITHDRAWAL</h2>
       <p className={styles.paragraph}>

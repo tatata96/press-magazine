@@ -243,28 +243,11 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
       </p>
       <p className={styles.paragraph}>
         Cayma hakkını kullanmak için Alıcı'nın bu yöndeki açık bildirimini yasal
-        süre içerisinde Satıcı'ya yöneltmesi yeterlidir. Cayma bildirimi
-        aşağıdaki iletişim bilgilerine yapılabilir:
+        süre içerisinde Satıcı'ya yöneltmesi yeterlidir.
       </p>
-      <ul className={styles.details}>
-        <li>
-          <strong>E-posta:</strong> {data.seller.supportEmail}
-        </li>
-        <li>
-          <strong>Adres:</strong> {data.seller.address}
-        </li>
-      </ul>
       <p className={styles.paragraph}>
-        Cayma hakkının geçerli olduğu bir satın alma işleminde Alıcı, cayma
-        bildirimini takip eden on dört gün içerisinde ürünü Satıcı'ya geri
-        göndermekle yükümlüdür.
+        İade ile ilgili sorularınız için {data.seller.supportEmail} adresinden bizimle iletişime geçebilirsiniz.
       </p>
-      <ul className={styles.details}>
-        <li>
-          <strong>İade Taşıyıcısı ve İade Gönderim Masrafı:</strong>{" "}
-          {data.terms.returnCarrier}
-        </li>
-      </ul>
       <p className={styles.paragraph}>
         Cayma hakkının kullanıldığı durumlarda Satıcı, Yönetmelik'te belirtilen
         süreler ve koşullar çerçevesinde, varsa ilk teslimat masrafları dahil

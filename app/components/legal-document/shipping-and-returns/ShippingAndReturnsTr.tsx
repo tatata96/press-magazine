@@ -64,7 +64,7 @@ export default function ShippingAndReturnsTr({includesDigitalContent}: {includes
               Dijital yayınların görüntülenmesi veya indirilmesi için internet bağlantısı ve PDF formatını destekleyen bir cihaz veya yazılım gerekebilir.
             </p>
             <p className={styles.paragraph}>
-              Satın aldığınız dijital içeriğe erişmekte sorun yaşarsanız hello@septembercompany.com adresinden bizimle iletişime geçebilirsiniz.
+              Satın aldığınız dijital içeriğe erişmekte sorun yaşarsanız hello@pressmagazine.com.tr adresinden bizimle iletişime geçebilirsiniz.
             </p>
           </div>
         </section>
@@ -128,25 +128,10 @@ export default function ShippingAndReturnsTr({includesDigitalContent}: {includes
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. İade Talebi Nasıl Oluşturulur?</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. İade ile İlgili Sorular</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
-            Cayma hakkının geçerli olduğu durumlarda, yasal süre içerisinde aşağıdaki e-posta adresi üzerinden talebinizi iletebilirsiniz:
-          </p>
-          <p className={styles.paragraph}>
-            <strong>hello@septembercompany.com</strong>
-          </p>
-          <p className={styles.paragraph}>
-            Talebinizde sipariş numaranızı ve iade etmek istediğiniz ürünü belirtmeniz işlemlerin daha hızlı yürütülmesine yardımcı olacaktır.
-          </p>
-          <p className={styles.paragraph}>
-            Cayma hakkının kullanılması halinde ürün, bildirimin ardından 14 gün içerisinde geri gönderilmelidir.
-          </p>
-          <p className={styles.paragraph}>
-            İade için kullanılacak taşıyıcı ve gönderim bilgileri, ilgili siparişe ait Ön Bilgilendirme Formu'nda belirtilir.
-          </p>
-          <p className={styles.paragraph}>
-            İade gönderim masrafları konusunda yürürlükteki tüketici mevzuatı uygulanır. Mevzuat uyarınca tüketiciye yüklenemeyen iade masrafları müşteriden talep edilmez.
+            İade ile ilgili sorularınız için hello@pressmagazine.com.tr adresinden bizimle iletişime geçebilirsiniz.
           </p>
         </div>
       </section>
@@ -200,7 +185,7 @@ export default function ShippingAndReturnsTr({includesDigitalContent}: {includes
             Etiler Mahallesi, Bade Sokak, No: 1, Beşiktaş / İstanbul, Türkiye
           </p>
           <p className={styles.paragraph}>
-            <strong>E-posta:</strong> hello@septembercompany.com
+            <strong>E-posta:</strong> hello@pressmagazine.com.tr
           </p>
           <p className={styles.paragraph}>
             <strong>İnternet Sitesi:</strong> www.pressmagazine.com.tr
