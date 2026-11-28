@@ -99,6 +99,11 @@
   @media (min-width: 768px) {
     gap: 32px;
   }
+
+  // A single card gets its own column: half a phone screen is too narrow for it.
+  &:has(> :only-child) {
+    grid-template-columns: minmax(0, 360px);
+  }
 }
 
 .plan {

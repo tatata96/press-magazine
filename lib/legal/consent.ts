@@ -5,7 +5,7 @@
 // agreement and stored on every order that accepts it. Change it whenever the text changes.
 // "placeholder" is the sentinel readiness.ts treats as "not final".
 export const PLACEHOLDER_VERSION = "placeholder";
-export const LEGAL_DOCUMENTS_VERSION: string = "1.0";
+export const LEGAL_DOCUMENTS_VERSION: string = "1.1";
 
 export const CONSENT_ATTRIBUTE_KEYS = {
   accepted: "consent_distance_sales_and_pre_information",

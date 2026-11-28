@@ -98,7 +98,7 @@
   },
   "SubscribePage": {
     "heading": "Mağaza",
-    "lead": "Press yılda iki kez yayımlanır. Nasıl okumak istediğini seç.",
+    "lead": "Press yılda iki kez yayımlanır.",
     "planChoice": "Aboneliğini seç",
     "includesLabel": "İçerik",
     "priceNote": "Tek seferlik ödeme",
@@ -108,7 +108,7 @@
     "adding": "Ekleniyor…",
     "addError": "Sepete eklenemedi. Lütfen tekrar dene.",
     "metaTitle": "Mağaza",
-    "metaDescription": "Press'e dijital ya da basılı olarak abone ol. Her satın alma tek bir sayı içindir; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
+    "metaDescription": "Press'e basılı olarak abone ol. Her satın alma tek bir sayı içindir; ödeme tek seferliktir ve otomatik olarak yenilenmez.",
     "plans": {
       "digital": {
         "name": "Dijital – 1 Sayı",
@@ -120,11 +120,10 @@
         ]
       },
       "print": {
-        "name": "Basılı + Dijital – 1 Sayı",
-        "tagline": "Sayı hem elinde hem ekranında.",
+        "name": "Basılı Edisyon – 1 Sayı",
+        "tagline": "Sayı elinde.",
         "benefits": [
           "Bir basılı PRESS sayısı",
-          "Aynı sayının dijital PDF sürümü",
           "E-posta bülteni",
           "Tek seferlik ödeme, otomatik yenileme yok"
         ]
@@ -250,7 +249,7 @@
     "determinedAtCheckout": "Ödeme sayfasında belirlenir",
     "placeholderValue": "[YER TUTUCU: {name}]",
     "productTypeDigital": "Dijital Yayın",
-    "productTypePrint": "Basılı + Dijital Yayın"
+    "productTypePrint": "Basılı Yayın"
   },
   "SignInFailed": {
     "metaTitle": "Giriş başarısız",

@@ -56,7 +56,7 @@ export const BUSINESS_TERMS: Record<BusinessTermField, LocalizedText | null> = {
 // The agreement names two product categories (article 3.4). They are matched by the product's
 // `digital`/`print` Shopify tag (not its handle, which changes with every issue), so the
 // wording stays right whatever a product's shipping setting is.
-export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "printAndDigital"> = {
+export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "print"> = {
   digital: "digital",
-  print: "printAndDigital",
+  print: "print",
 };

@@ -3,9 +3,27 @@ import {Fragment} from "react";
 import type {AgreementData} from "@/lib/legal/agreement-data";
 import styles from "../legal-document.module.scss";
 
-// Distance Sales Agreement, Turkish text exactly as supplied. Only the values in braces come
-// from `data`; do not reword the text without approval.
+// Distance Sales Agreement, Turkish text as supplied, revised for the print-only offering
+// (version 1.1, pending legal review). Values in braces come from `data`; clauses about
+// digital publications appear only when `data.includesDigitalContent`. Do not reword the text
+// without approval.
 export default function AgreementTr({data}: {data: AgreementData}) {
+  // Article 4.1. The letters are assigned in order, so none is skipped.
+  const preInformationItems = [
+    "Satın alınan ürünün temel özellikleri ve kapsamı,",
+    "Satıcı'nın ticari unvanı, adresi ve iletişim bilgileri,",
+    "Ürünün tüm vergiler dahil toplam satış fiyatı,",
+    "Varsa kargo, teslimat ve diğer ek masraflar,",
+    "Kabul edilen ödeme yöntemleri,",
+    "Ürünün teslimat şekli ve süresi,",
+    ...(data.includesDigitalContent ? ["Dijital içeriklerin teslim ve erişim koşulları,"] : []),
+    "Cayma hakkının mevcut olup olmadığı, kullanım şartları ve istisnaları,",
+    "İade ve geri ödeme koşulları,",
+    // Ends the list when the digital item after it is left out.
+    data.includesDigitalContent ? "Şikâyet ve uyuşmazlıkların çözümü için başvuru yöntemleri," : "Şikâyet ve uyuşmazlıkların çözümü için başvuru yöntemleri.",
+    ...(data.includesDigitalContent ? ["Dijital içeriklerin kullanımını etkileyebilecek teknik gereklilikler."] : []),
+  ];
+
   return (
     <div className={styles.document}>
       <h2 className={styles.sectionHeading}>1. TARAFLAR</h2>
@@ -56,13 +74,14 @@ export default function AgreementTr({data}: {data: AgreementData}) {
       </p>
       <p className={styles.paragraph}>
         <strong>Ürün:</strong> Site üzerinden satışa sunulan Press Magazine
-        basılı dergilerini, dijital PDF yayınlarını ve bunlardan oluşan
-        paketleri,
+        basılı dergilerini{data.includesDigitalContent ? " ve dijital PDF yayınlarını" : ""},
       </p>
-      <p className={styles.paragraph}>
-        <strong>Dijital İçerik:</strong> Elektronik ortamda erişime sunulan veya
-        indirilebilen PDF formatındaki Press Magazine yayınlarını,
-      </p>
+      {data.includesDigitalContent ? (
+        <p className={styles.paragraph}>
+          <strong>Dijital İçerik:</strong> Elektronik ortamda erişime sunulan veya
+          indirilebilen PDF formatındaki Press Magazine yayınlarını,
+        </p>
+      ) : null}
       <p className={styles.paragraph}>
         <strong>Kanun:</strong> 6502 sayılı Tüketicinin Korunması Hakkında
         Kanun'u,
@@ -100,13 +119,15 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         kategorilerde olabilir:
       </p>
       <ul className={styles.bullets}>
+        {data.includesDigitalContent ? (
+          <li>
+            <strong>Dijital Yayın:</strong> Press Magazine'in bir sayısının PDF
+            formatındaki dijital versiyonu.
+          </li>
+        ) : null}
         <li>
-          <strong>Dijital Yayın:</strong> Press Magazine'in bir sayısının PDF
-          formatındaki dijital versiyonu.
-        </li>
-        <li>
-          <strong>Basılı + Dijital Yayın:</strong> Press Magazine'in fiziksel
-          dergisinin aynı sayısının PDF formatındaki dijital versiyonu.
+          <strong>Basılı Yayın:</strong> Press Magazine'in bir sayısının
+          fiziksel dergisi.
         </li>
       </ul>
       <p className={styles.paragraph}>
@@ -127,34 +148,11 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         <strong>4.1.</strong> Alıcı, sipariş vermeden önce aşağıdaki hususlarda
         bilgilendirilir:
       </p>
-      <p className={styles.paragraph}>
-        a) Satın alınan ürünün temel özellikleri ve kapsamı,
-      </p>
-      <p className={styles.paragraph}>
-        b) Satıcı'nın ticari unvanı, adresi ve iletişim bilgileri,
-      </p>
-      <p className={styles.paragraph}>
-        c) Ürünün tüm vergiler dahil toplam satış fiyatı,
-      </p>
-      <p className={styles.paragraph}>
-        d) Varsa kargo, teslimat ve diğer ek masraflar,
-      </p>
-      <p className={styles.paragraph}>e) Kabul edilen ödeme yöntemleri,</p>
-      <p className={styles.paragraph}>f) Ürünün teslimat şekli ve süresi,</p>
-      <p className={styles.paragraph}>
-        g) Dijital içeriklerin teslim ve erişim koşulları,
-      </p>
-      <p className={styles.paragraph}>
-        h) Cayma hakkının mevcut olup olmadığı, kullanım şartları ve
-        istisnaları,
-      </p>
-      <p className={styles.paragraph}>i) İade ve geri ödeme koşulları,</p>
-      <p className={styles.paragraph}>
-        j) Şikâyet ve uyuşmazlıkların çözümü için başvuru yöntemleri,
-      </p>
-      <p className={styles.paragraph}>
-        k) Dijital içeriklerin kullanımını etkileyebilecek teknik gereklilikler.
-      </p>
+      {preInformationItems.map((item, index) => (
+        <p key={item} className={styles.paragraph}>
+          {"abcdefghijk"[index]}) {item}
+        </p>
+      ))}
       <p className={styles.paragraph}>
         <strong>4.2.</strong> Bu bilgiler, ürün sayfası, sipariş özeti, Ön
         Bilgilendirme Formu ve işbu Sözleşme aracılığıyla Alıcı'ya sunulur.
@@ -303,30 +301,34 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         çözümü için iletişime geçer. Bu durum, Alıcı'nın kanuni haklarını
         ortadan kaldırmaz.
       </p>
-      <h3 className={styles.subHeading}>7.2. Dijital İçerik Teslimatı</h3>
-      <p className={styles.paragraph}>
-        <strong>7.2.1.</strong> Dijital yayınlar, PDF formatında elektronik
-        ortamda sunulur.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.2.</strong> Dijital içeriğe erişim yöntemi ve erişimin
-        başlayacağı tarih veya süre, satın alma öncesinde Alıcı'ya bildirilir.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.3.</strong> Dijital içeriğin indirilmesi veya görüntülenmesi
-        için internet bağlantısı ve PDF formatını destekleyen uygun bir cihaz
-        veya yazılım gerekebilir.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.4.</strong> Dijital içeriğin teknik bir sorun nedeniyle
-        erişilememesi halinde Alıcı, Satıcı ile iletişime geçerek sorunun
-        giderilmesini talep edebilir.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.5.</strong> Basılı ve dijital yayını birlikte içeren
-        paketlerde, her ürünün teslimatı kendi niteliğine uygun şekilde
-        gerçekleştirilir.
-      </p>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>7.2. Dijital İçerik Teslimatı</h3>
+          <p className={styles.paragraph}>
+            <strong>7.2.1.</strong> Dijital yayınlar, PDF formatında elektronik
+            ortamda sunulur.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.2.</strong> Dijital içeriğe erişim yöntemi ve erişimin
+            başlayacağı tarih veya süre, satın alma öncesinde Alıcı'ya bildirilir.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.3.</strong> Dijital içeriğin indirilmesi veya görüntülenmesi
+            için internet bağlantısı ve PDF formatını destekleyen uygun bir cihaz
+            veya yazılım gerekebilir.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.4.</strong> Dijital içeriğin teknik bir sorun nedeniyle
+            erişilememesi halinde Alıcı, Satıcı ile iletişime geçerek sorunun
+            giderilmesini talep edebilir.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.5.</strong> Basılı ve dijital yayını birlikte içeren
+            paketlerde, her ürünün teslimatı kendi niteliğine uygun şekilde
+            gerçekleştirilir.
+          </p>
+        </>
+      ) : null}
       <h2 className={styles.sectionHeading}>8. CAYMA HAKKI</h2>
       <p className={styles.paragraph}>
         <strong>8.1.</strong> Kanunda ve Yönetmelik'te düzenlenen istisnalar
@@ -392,26 +394,30 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         Abonelik sözleşmesi kapsamında sağlanan basılı dergiler bakımından ise
         bu istisna uygulanmaz.
       </p>
-      <h3 className={styles.subHeading}>9.3. Dijital Yayınlar</h3>
-      <p className={styles.paragraph}>
-        Elektronik ortamda anında ifa edilen hizmetler veya tüketiciye anında
-        teslim edilen gayrimaddi mallara ilişkin sözleşmelerde Yönetmelik'in
-        15/1-ğ maddesi uyarınca cayma hakkı kullanılamaz.
-      </p>
-      <p className={styles.paragraph}>
-        Bu istisna, satın alınan dijital yayının gerçekten anında teslim
-        edildiği durumlarda uygulanır.
-      </p>
-      <h3 className={styles.subHeading}>
-        9.4. Basılı ve Dijital İçeriği Birlikte İçeren Paketler
-      </h3>
-      <p className={styles.paragraph}>
-        Basılı ve dijital ürünleri birlikte içeren paketlerde, cayma hakkının
-        uygulanabilirliği ürünlerin niteliği, teslim şekli ve satın alma
-        ilişkisinin hukuki niteliği dikkate alınarak ilgili mevzuat çerçevesinde
-        değerlendirilir.
-      </p>
-      <h3 className={styles.subHeading}>9.5. Kanuni Hakların Saklılığı</h3>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>9.3. Dijital Yayınlar</h3>
+          <p className={styles.paragraph}>
+            Elektronik ortamda anında ifa edilen hizmetler veya tüketiciye anında
+            teslim edilen gayrimaddi mallara ilişkin sözleşmelerde Yönetmelik'in
+            15/1-ğ maddesi uyarınca cayma hakkı kullanılamaz.
+          </p>
+          <p className={styles.paragraph}>
+            Bu istisna, satın alınan dijital yayının gerçekten anında teslim
+            edildiği durumlarda uygulanır.
+          </p>
+          <h3 className={styles.subHeading}>
+            9.4. Basılı ve Dijital İçeriği Birlikte İçeren Paketler
+          </h3>
+          <p className={styles.paragraph}>
+            Basılı ve dijital ürünleri birlikte içeren paketlerde, cayma hakkının
+            uygulanabilirliği ürünlerin niteliği, teslim şekli ve satın alma
+            ilişkisinin hukuki niteliği dikkate alınarak ilgili mevzuat çerçevesinde
+            değerlendirilir.
+          </p>
+        </>
+      ) : null}
+      <h3 className={styles.subHeading}>{data.includesDigitalContent ? "9.5." : "9.3."} Kanuni Hakların Saklılığı</h3>
       <p className={styles.paragraph}>
         Cayma hakkına ilişkin istisnalar, ayıplı mal veya hizmete ilişkin
         tüketici haklarını ortadan kaldırmaz.
@@ -484,18 +490,22 @@ export default function AgreementTr({data}: {data: AgreementData}) {
         fotoğraflar, görseller, tasarımlar ve diğer içerikler üzerindeki fikri
         mülkiyet hakları ilgili hak sahiplerine aittir.
       </p>
+      {data.includesDigitalContent ? (
+        <>
+          <p className={styles.paragraph}>
+            <strong>12.2.</strong> Dijital yayınların satın alınması, Alıcı'ya
+            içerik üzerinde mülkiyet hakkı veya üçüncü kişilere ticari amaçlarla
+            dağıtım yetkisi vermez.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>12.3.</strong> Alıcı, satın aldığı dijital içeriği kişisel ve
+            ticari olmayan amaçlarla kullanabilir. Kanunen izin verilen kullanımlar
+            ve hak sahiplerince açıkça verilen izinler saklıdır.
+          </p>
+        </>
+      ) : null}
       <p className={styles.paragraph}>
-        <strong>12.2.</strong> Dijital yayınların satın alınması, Alıcı'ya
-        içerik üzerinde mülkiyet hakkı veya üçüncü kişilere ticari amaçlarla
-        dağıtım yetkisi vermez.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>12.3.</strong> Alıcı, satın aldığı dijital içeriği kişisel ve
-        ticari olmayan amaçlarla kullanabilir. Kanunen izin verilen kullanımlar
-        ve hak sahiplerince açıkça verilen izinler saklıdır.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>12.4.</strong> İçeriklerin izinsiz çoğaltılması, ticari
+        <strong>{data.includesDigitalContent ? "12.4." : "12.2."}</strong> İçeriklerin izinsiz çoğaltılması, ticari
         amaçlarla dağıtılması veya yeniden satışa sunulması, ilgili mevzuat
         kapsamında hak ihlaline yol açabilir.
       </p>

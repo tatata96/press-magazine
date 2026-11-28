@@ -74,6 +74,15 @@ public/            Static assets
 
 Not final yet, so no behaviour should be assumed: newsletter provider and consent copy, form fields, payment setup, PDF download limits, and archive access rules.
 
+## Digital edition (temporarily withdrawn)
+
+Since 28 November 2026 the storefront sells the print edition only. Digital support (plan tag, product fetching, translations, digital-cart handling, `digitalAccess` / `digitalProtection` terms) is kept.
+
+- `OFFERED_PLAN_IDS` in `lib/shopify/plan-products.ts` controls what the Shop page and the empty cart offer, and whether the blank legal pages and Shipping & Returns include digital clauses.
+- A filled-in agreement includes digital clauses only when the order contains a product tagged `digital`. Such a product can still be checked out if it is already in a cart.
+- Legal documents are at version 1.1. **The revised wording needs legal review before production deployment.**
+- To offer the digital edition again, add `"digital"` to `OFFERED_PLAN_IDS`, then review the Shop copy (`SubscribePage` in `messages/`) and the legal wording: the print + digital bundle definition was removed, some retained clauses still mention packages, and the Shipping & Returns introduction now describes print only.
+
 ## Checkout flow and sales agreement
 
 Flow: Subscribe → `/cart` (cart lines, then sign in) → `/cart` (signed in: contact summary, delivery and billing address, personalized Distance Sales Agreement) → Shopify hosted checkout (logged in) → iyzico. Shipping method is chosen by the buyer in Shopify checkout; there is no picker on our cart page.

@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {getLocale, getTranslations} from "next-intl/server";
 import {formatMoney} from "@/lib/shopify/money";
+import {OFFERED_PLAN_IDS} from "@/lib/shopify/plan-products";
 import {getPlanProducts} from "@/lib/shopify/products";
 import {getPageMetadata} from "@/lib/seo";
 import SubscribePlans, {type Plan} from "./SubscribePlans";
@@ -27,7 +28,7 @@ export default async function SubscribePage() {
   const t = await getTranslations("SubscribePage");
   const locale = await getLocale();
   const result = await getPlanProducts();
-  const plans: Plan[] = (["digital", "print"] as const).map((id) => {
+  const plans: Plan[] = OFFERED_PLAN_IDS.map((id) => {
     const product = result.status === "ok" ? result.products[id] : null;
 
     return {

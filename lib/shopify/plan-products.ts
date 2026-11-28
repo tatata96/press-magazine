@@ -8,6 +8,11 @@ export const PLAN_TAGS = {digital: "digital", print: "print"} as const;
 
 export type PlanId = keyof typeof PLAN_TAGS;
 
+// The plans the storefront offers for sale, in display order. The digital edition is
+// temporarily withdrawn: everything that supports it stays, and adding "digital" here offers
+// it again (see README, "Digital edition").
+export const OFFERED_PLAN_IDS: readonly PlanId[] = ["print"];
+
 export type PlanProduct = {
   variantId: string;
   price: Money;

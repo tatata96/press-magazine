@@ -34,6 +34,35 @@ type SubscribePlansProps = {
   };
 };
 
+// Thumbnail, name, tagline and price: the content of a plan card.
+function PlanCardContent({plan, copy}: {plan: Plan; copy: SubscribePlansProps["copy"]}) {
+  return (
+    <>
+      {plan.image ? (
+        <Image
+          src={plan.image}
+          alt=""
+          width={96}
+          height={120}
+          className={styles.thumb}
+        />
+      ) : (
+        <span className={styles.thumb} aria-hidden="true" />
+      )}
+      <span className={styles.choiceText}>
+        <span className={styles.choiceName}>{plan.name}</span>
+        <span className={styles.choiceTagline}>{plan.tagline}</span>
+        <span className={styles.choicePrice}>
+          {plan.price ?? copy.priceUnavailable}{" "}
+          {plan.price ? (
+            <span className="type-mono">{copy.priceNote}</span>
+          ) : null}
+        </span>
+      </span>
+    </>
+  );
+}
+
 // Client component only for the plan choice: the selected plan drives the large
 // image and the benefits list. Everything else is static copy from the server.
 export default function SubscribePlans({plans, copy}: SubscribePlansProps) {
@@ -97,42 +126,29 @@ export default function SubscribePlans({plans, copy}: SubscribePlansProps) {
           <p className={styles.lead}>{copy.lead}</p>
         </div>
 
-        <fieldset className={styles.choices}>
-          <legend className={styles.visuallyHidden}>{copy.planChoice}</legend>
-          {plans.map((plan) => (
-            <label key={plan.id} className={styles.choice}>
-              <input
-                type="radio"
-                name="plan"
-                value={plan.id}
-                checked={plan.id === selected.id}
-                onChange={() => setSelectedId(plan.id)}
-                className={styles.radio}
-              />
-              {plan.image ? (
-                <Image
-                  src={plan.image}
-                  alt=""
-                  width={96}
-                  height={120}
-                  className={styles.thumb}
+        {/* A single plan is shown as a plain card: there is nothing to choose between. */}
+        {plans.length > 1 ? (
+          <fieldset className={styles.choices}>
+            <legend className={styles.visuallyHidden}>{copy.planChoice}</legend>
+            {plans.map((plan) => (
+              <label key={plan.id} className={styles.choice}>
+                <input
+                  type="radio"
+                  name="plan"
+                  value={plan.id}
+                  checked={plan.id === selected.id}
+                  onChange={() => setSelectedId(plan.id)}
+                  className={styles.radio}
                 />
-              ) : (
-                <span className={styles.thumb} aria-hidden="true" />
-              )}
-              <span className={styles.choiceText}>
-                <span className={styles.choiceName}>{plan.name}</span>
-                <span className={styles.choiceTagline}>{plan.tagline}</span>
-                <span className={styles.choicePrice}>
-                  {plan.price ?? copy.priceUnavailable}{" "}
-                  {plan.price ? (
-                    <span className="type-mono">{copy.priceNote}</span>
-                  ) : null}
-                </span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
+                <PlanCardContent plan={plan} copy={copy} />
+              </label>
+            ))}
+          </fieldset>
+        ) : (
+          <div className={`${styles.choice} ${styles.choiceStatic}`}>
+            <PlanCardContent plan={selected} copy={copy} />
+          </div>
+        )}
 
         <div className={styles.summary}>
           <p className={`type-mono ${styles.legend}`}>{copy.includesLabel}</p>

@@ -184,6 +184,16 @@
   }
 }
 
+// The only plan on offer: no radio, so nothing is selectable and the text uses the full width.
+.choiceStatic {
+  cursor: default;
+
+  .choiceName,
+  .choiceTagline {
+    padding-right: 0;
+  }
+}
+
 // Also the placeholder (a plain span) for a product with no Shopify image.
 .thumb {
   display: block;

@@ -110,5 +110,8 @@ export async function buildAgreementData(
       date: today,
     },
     agreementDate: today,
+    // Decided by what is in this order, not by what is on sale: a cart filled earlier can
+    // still hold a digital publication.
+    includesDigitalContent: snapshot.lines.some((line) => line.planId === "digital"),
   };
 }

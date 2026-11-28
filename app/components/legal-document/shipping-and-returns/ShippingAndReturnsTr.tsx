@@ -2,20 +2,25 @@
 import styles from "../legal-document.module.scss";
 import page from "./shipping-and-returns.module.scss";
 
-// Teslimat ve İade Şartları, Turkish text as supplied. Do not reword without approval.
-export default function ShippingAndReturnsTr() {
+// Teslimat ve İade Şartları, Turkish text as supplied, revised for the print-only offering
+// (pending legal review). Do not reword without approval.
+export default function ShippingAndReturnsTr({includesDigitalContent}: {includesDigitalContent: boolean}) {
+  // Without the digital delivery section (3), the sections after it move up by one.
+  const sectionNumber = (numberWithDigital: number) =>
+    includesDigitalContent ? numberWithDigital : numberWithDigital - 1;
+
   return (
     <div className={page.sections}>
-      <p className={page.updated}>Son Güncelleme: 11 Kasım 2026</p>
+      <p className={page.updated}>Son Güncelleme: 28 Kasım 2026</p>
 
       <section>
         <h2 className={styles.sectionHeading}>1. Genel Bilgiler</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
-            Press Magazine üzerinden satın alınan basılı ve dijital yayınların teslimatı, iadesi ve geri ödeme koşulları bu sayfada açıklanmaktadır.
+            Press Magazine üzerinden satın alınan basılı yayınların teslimatı, iadesi ve geri ödeme koşulları bu sayfada açıklanmaktadır.
           </p>
           <p className={styles.paragraph}>
-            Press Magazine, yılda iki kez yayımlanan bir kültür yayınıdır. Dijital PDF ve basılı dergi + dijital PDF paketleri sunulmaktadır.
+            Press Magazine, yılda iki kez yayımlanan bir kültür yayınıdır. Basılı dergi olarak sunulmaktadır.
           </p>
           <p className={styles.paragraph}>
             Satın alınan ürünlerin kapsamı, fiyatı ve teslimat bilgileri ilgili ürün sayfasında ve sipariş sırasında belirtilir.
@@ -47,24 +52,26 @@ export default function ShippingAndReturnsTr() {
         </div>
       </section>
 
-      <section>
-        <h2 className={styles.sectionHeading}>3. Dijital Yayınların Teslimatı</h2>
-        <div className={styles.document}>
-          <p className={styles.paragraph}>Dijital yayınlar PDF formatında sunulur.</p>
-          <p className={styles.paragraph}>
-            Dijital içeriğe erişim yöntemi ve erişimin başlayacağı tarih, satın alma öncesinde ürün sayfasında belirtilir.
-          </p>
-          <p className={styles.paragraph}>
-            Dijital yayınların görüntülenmesi veya indirilmesi için internet bağlantısı ve PDF formatını destekleyen bir cihaz veya yazılım gerekebilir.
-          </p>
-          <p className={styles.paragraph}>
-            Satın aldığınız dijital içeriğe erişmekte sorun yaşarsanız hello@septembercompany.com adresinden bizimle iletişime geçebilirsiniz.
-          </p>
-        </div>
-      </section>
+      {includesDigitalContent ? (
+        <section>
+          <h2 className={styles.sectionHeading}>3. Dijital Yayınların Teslimatı</h2>
+          <div className={styles.document}>
+            <p className={styles.paragraph}>Dijital yayınlar PDF formatında sunulur.</p>
+            <p className={styles.paragraph}>
+              Dijital içeriğe erişim yöntemi ve erişimin başlayacağı tarih, satın alma öncesinde ürün sayfasında belirtilir.
+            </p>
+            <p className={styles.paragraph}>
+              Dijital yayınların görüntülenmesi veya indirilmesi için internet bağlantısı ve PDF formatını destekleyen bir cihaz veya yazılım gerekebilir.
+            </p>
+            <p className={styles.paragraph}>
+              Satın aldığınız dijital içeriğe erişmekte sorun yaşarsanız hello@septembercompany.com adresinden bizimle iletişime geçebilirsiniz.
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <section>
-        <h2 className={styles.sectionHeading}>4. Kargo Ücretleri</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(4)}. Kargo Ücretleri</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             Kargo ücretleri, teslimat adresine ve siparişin kapsamına bağlı olarak değişebilir.
@@ -72,14 +79,16 @@ export default function ShippingAndReturnsTr() {
           <p className={styles.paragraph}>
             Geçerli teslimat ücreti ve varsa diğer ek masraflar, ödeme işlemi tamamlanmadan önce gösterilir.
           </p>
-          <p className={styles.paragraph}>
-            Yalnızca dijital içerik içeren siparişlerde fiziksel gönderim yapılmaz ve kargo ücreti uygulanmaz.
-          </p>
+          {includesDigitalContent ? (
+            <p className={styles.paragraph}>
+              Yalnızca dijital içerik içeren siparişlerde fiziksel gönderim yapılmaz ve kargo ücreti uygulanmaz.
+            </p>
+          ) : null}
         </div>
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>5. Cayma ve İade Koşulları</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(5)}. Cayma ve İade Koşulları</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             6502 sayılı Tüketicinin Korunması Hakkında Kanun ve Mesafeli Sözleşmeler Yönetmeliği kapsamında, cayma hakkının geçerli olduğu mesafeli satışlarda tüketiciler 14 gün içerisinde herhangi bir gerekçe göstermeden ve cezai şart ödemeden sözleşmeden cayabilir.
@@ -96,18 +105,22 @@ export default function ShippingAndReturnsTr() {
             Abonelik sözleşmesi kapsamında sunulan ürünlerde bu istisna uygulanmaz. İlgili satın alma işleminin niteliğine göre tüketicinin yasal cayma hakları saklıdır.
           </p>
 
-          <h3 className={page.subHeading}>Dijital Yayınlar</h3>
-          <p className={styles.paragraph}>
-            Elektronik ortamda anında teslim edilen dijital içerikler, Mesafeli Sözleşmeler Yönetmeliği'nde belirtilen cayma hakkı istisnaları kapsamında değerlendirilebilir.
-          </p>
-          <p className={styles.paragraph}>
-            Bu istisna, dijital içeriğin gerçekten anında teslim edildiği durumlarda uygulanır.
-          </p>
+          {includesDigitalContent ? (
+            <>
+              <h3 className={page.subHeading}>Dijital Yayınlar</h3>
+              <p className={styles.paragraph}>
+                Elektronik ortamda anında teslim edilen dijital içerikler, Mesafeli Sözleşmeler Yönetmeliği'nde belirtilen cayma hakkı istisnaları kapsamında değerlendirilebilir.
+              </p>
+              <p className={styles.paragraph}>
+                Bu istisna, dijital içeriğin gerçekten anında teslim edildiği durumlarda uygulanır.
+              </p>
 
-          <h3 className={page.subHeading}>Basılı + Dijital Paketler</h3>
-          <p className={styles.paragraph}>
-            Basılı dergi ve dijital yayını birlikte içeren paketlerde cayma hakkı, satın alınan ürünlerin niteliği ve ilgili yasal düzenlemeler dikkate alınarak değerlendirilir.
-          </p>
+              <h3 className={page.subHeading}>Basılı + Dijital Paketler</h3>
+              <p className={styles.paragraph}>
+                Basılı dergi ve dijital yayını birlikte içeren paketlerde cayma hakkı, satın alınan ürünlerin niteliği ve ilgili yasal düzenlemeler dikkate alınarak değerlendirilir.
+              </p>
+            </>
+          ) : null}
           <p className={styles.paragraph}>
             Cayma hakkına ilişkin istisnalar, ayıplı veya hatalı ürünlerle ilgili yasal haklarınızı ortadan kaldırmaz.
           </p>
@@ -115,7 +128,7 @@ export default function ShippingAndReturnsTr() {
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>6. İade Talebi Nasıl Oluşturulur?</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(6)}. İade Talebi Nasıl Oluşturulur?</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             Cayma hakkının geçerli olduğu durumlarda, yasal süre içerisinde aşağıdaki e-posta adresi üzerinden talebinizi iletebilirsiniz:
@@ -139,7 +152,7 @@ export default function ShippingAndReturnsTr() {
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>7. Hasarlı, Hatalı veya Eksik Ürünler</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(7)}. Hasarlı, Hatalı veya Eksik Ürünler</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             Siparişinizin hasarlı, hatalı veya eksik teslim edilmesi durumunda bizimle iletişime geçebilirsiniz.
@@ -157,7 +170,7 @@ export default function ShippingAndReturnsTr() {
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>8. Geri Ödemeler</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(8)}. Geri Ödemeler</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
             Cayma hakkının geçerli olduğu veya mevzuat gereği bedel iadesi yapılması gereken durumlarda geri ödemeler yasal süreler içerisinde gerçekleştirilir.
@@ -175,10 +188,10 @@ export default function ShippingAndReturnsTr() {
       </section>
 
       <section>
-        <h2 className={styles.sectionHeading}>9. İletişim</h2>
+        <h2 className={styles.sectionHeading}>{sectionNumber(9)}. İletişim</h2>
         <div className={styles.document}>
           <p className={styles.paragraph}>
-            Teslimat, dijital erişim, iade veya geri ödeme işlemleriyle ilgili sorularınız için bizimle iletişime geçebilirsiniz.
+            Teslimat, {includesDigitalContent ? "dijital erişim, " : ""}iade veya geri ödeme işlemleriyle ilgili sorularınız için bizimle iletişime geçebilirsiniz.
           </p>
           <p className={styles.paragraph}>
             <strong>SEPTEMBER İLETİŞİM LİMİTED ŞİRKETİ</strong>
