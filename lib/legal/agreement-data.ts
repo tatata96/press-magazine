@@ -2,6 +2,7 @@ import "server-only";
 
 import type {Locale} from "next-intl";
 import {getLocale, getTranslations} from "next-intl/server";
+import {OFFERED_PLAN_IDS} from "@/lib/shopify/plan-products";
 import {
   BUSINESS_TERMS,
   SELLER,
@@ -39,6 +40,8 @@ export type AgreementData = {
     date: string;
   };
   agreementDate: string;
+  /** Whether the documents include the clauses about digital (PDF) publications. */
+  includesDigitalContent: boolean;
 };
 
 // The Pre-Contractual Information Form shows the same data plus the business terms.
@@ -98,6 +101,8 @@ export async function getBlankAgreementData(): Promise<AgreementData> {
       date: BLANK,
     },
     agreementDate: BLANK,
+    // With no order to look at, the general documents describe what is on sale.
+    includesDigitalContent: OFFERED_PLAN_IDS.includes("digital"),
   };
 }
 

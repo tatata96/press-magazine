@@ -98,7 +98,7 @@
   },
   "SubscribePage": {
     "heading": "Shop",
-    "lead": "Press is published twice a year. Choose how you would like to read it.",
+    "lead": "Press is published twice a year.",
     "planChoice": "Choose your subscription",
     "includesLabel": "Includes",
     "priceNote": "One time payment",
@@ -108,7 +108,7 @@
     "adding": "Adding…",
     "addError": "We could not add this to your cart. Please try again.",
     "metaTitle": "Shop",
-    "metaDescription": "Subscribe to Press, digital or in print. Each purchase is for one issue, as a one-time payment with no automatic renewal.",
+    "metaDescription": "Subscribe to Press in print. Each purchase is for one issue, as a one-time payment with no automatic renewal.",
     "plans": {
       "digital": {
         "name": "Digital – 1 Issue",
@@ -120,11 +120,10 @@
         ]
       },
       "print": {
-        "name": "Print + Digital – 1 Issue",
-        "tagline": "The issue in your hands, and on your screen.",
+        "name": "Print Edition – 1 Issue",
+        "tagline": "The issue in your hands.",
         "benefits": [
           "One print issue of PRESS",
-          "Digital PDF edition of the same issue",
           "Email newsletter",
           "One-time payment, no automatic renewal"
         ]
@@ -250,7 +249,7 @@
     "determinedAtCheckout": "Determined at checkout",
     "placeholderValue": "[PLACEHOLDER: {name}]",
     "productTypeDigital": "Digital Publication",
-    "productTypePrint": "Print + Digital Publication"
+    "productTypePrint": "Print Publication"
   },
   "SignInFailed": {
     "metaTitle": "Sign-in failed",

@@ -11,6 +11,7 @@ import {getLoginPath, getRefreshPath} from "@/lib/customer-account/links";
 import {CustomerSessionExpiredError} from "@/lib/customer-account/types";
 import {getCartWithCheckoutContext} from "@/lib/shopify/cart";
 import {formatMoney} from "@/lib/shopify/money";
+import {OFFERED_PLAN_IDS} from "@/lib/shopify/plan-products";
 import {getPlanProducts} from "@/lib/shopify/products";
 import {getSellingCountryCodes} from "@/lib/shopify/countries";
 import {isLegalContentPublishable} from "@/lib/legal/readiness";
@@ -70,7 +71,7 @@ async function CartContent() {
         {/* Names come from the Subscribe copy; prices stay Shopify's. Hidden if they failed to load. */}
         {plansResult.status === "ok" && (
           <ul className={styles.plans}>
-            {(["digital", "print"] as const).map((id) => {
+            {OFFERED_PLAN_IDS.map((id) => {
               const product = plansResult.products[id];
 
               return (

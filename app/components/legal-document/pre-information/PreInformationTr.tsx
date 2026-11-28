@@ -4,7 +4,8 @@ import type {PreInformationData} from "@/lib/legal/agreement-data";
 import styles from "../legal-document.module.scss";
 
 // Ön Bilgilendirme Formu (Mesafeli Sözleşmeler Yönetmeliği m. 5). Statements that repeat the
-// Mesafeli Satış Sözleşmesi use its wording. Values in braces come from `data`.
+// Mesafeli Satış Sözleşmesi use its wording. Values in braces come from `data`; text about
+// digital publications appears only when `data.includesDigitalContent`.
 export default function PreInformationTr({data}: {data: PreInformationData}) {
   return (
     <div className={styles.document}>
@@ -108,13 +109,15 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
         Satışa sunulan ücretli ürünler aşağıdaki kategorilerdedir:
       </p>
       <ul className={styles.bullets}>
+        {data.includesDigitalContent ? (
+          <li>
+            <strong>Dijital Yayın:</strong> Press Magazine'in PDF formatındaki
+            dijital sayıları.
+          </li>
+        ) : null}
         <li>
-          <strong>Dijital Yayın:</strong> Press Magazine'in PDF formatındaki
-          dijital sayıları.
-        </li>
-        <li>
-          <strong>Basılı + Dijital Yayın:</strong> Press Magazine'in fiziksel
-          dergisinin aynı sayılarının PDF formatındaki dijital versiyonları.
+          <strong>Basılı Yayın:</strong> Press Magazine'in bir sayısının
+          fiziksel dergisi.
         </li>
       </ul>
       <p className={styles.paragraph}>
@@ -181,7 +184,7 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
 
       <h2 className={styles.sectionHeading}>5. TESLİMAT KOŞULLARI</h2>
       <h3 className={styles.subHeading}>
-        5.1. Basılı Dergi Teslimatı (Basılı + Dijital Yayın)
+        5.1. Basılı Dergi Teslimatı (Basılı Yayın)
       </h3>
       <p className={styles.paragraph}>
         Basılı dergiler, Alıcı'nın sipariş sırasında belirttiği teslimat
@@ -202,27 +205,31 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
         Mevzuatta öngörülen istisnalar dışında, mal satışlarında teslimat süresi
         otuz günü aşamaz.
       </p>
-      <h3 className={styles.subHeading}>
-        5.2. Dijital İçerik Teslimatı (Dijital Yayın ve Basılı + Dijital Yayın)
-      </h3>
-      <p className={styles.paragraph}>
-        Dijital yayınlar, PDF formatında elektronik ortamda sunulur.
-      </p>
-      <ul className={styles.details}>
-        <li>
-          <strong>Erişim Yöntemi ve Zamanı:</strong> {data.terms.digitalAccess}
-        </li>
-        <li>
-          <strong>Teknik Gereklilikler:</strong> Dijital içeriğin indirilmesi
-          veya görüntülenmesi için internet bağlantısı ve PDF formatını
-          destekleyen uygun bir cihaz veya yazılım gerekebilir.
-        </li>
-        <li>
-          <strong>Teknik Koruma Önlemleri:</strong>{" "}
-          {data.terms.digitalProtection}
-        </li>
-      </ul>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>
+            5.2. Dijital İçerik Teslimatı (Dijital Yayın)
+          </h3>
+          <p className={styles.paragraph}>
+            Dijital yayınlar, PDF formatında elektronik ortamda sunulur.
+          </p>
+          <ul className={styles.details}>
+            <li>
+              <strong>Erişim Yöntemi ve Zamanı:</strong> {data.terms.digitalAccess}
+            </li>
+            <li>
+              <strong>Teknik Gereklilikler:</strong> Dijital içeriğin indirilmesi
+              veya görüntülenmesi için internet bağlantısı ve PDF formatını
+              destekleyen uygun bir cihaz veya yazılım gerekebilir.
+            </li>
+            <li>
+              <strong>Teknik Koruma Önlemleri:</strong>{" "}
+              {data.terms.digitalProtection}
+            </li>
+          </ul>
 
+        </>
+      ) : null}
       <h2 className={styles.sectionHeading}>6. CAYMA HAKKI</h2>
       <p className={styles.paragraph}>
         Kanunda ve Yönetmelik'te düzenlenen istisnalar saklı kalmak üzere Alıcı,
@@ -236,28 +243,11 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
       </p>
       <p className={styles.paragraph}>
         Cayma hakkını kullanmak için Alıcı'nın bu yöndeki açık bildirimini yasal
-        süre içerisinde Satıcı'ya yöneltmesi yeterlidir. Cayma bildirimi
-        aşağıdaki iletişim bilgilerine yapılabilir:
+        süre içerisinde Satıcı'ya yöneltmesi yeterlidir.
       </p>
-      <ul className={styles.details}>
-        <li>
-          <strong>E-posta:</strong> {data.seller.supportEmail}
-        </li>
-        <li>
-          <strong>Adres:</strong> {data.seller.address}
-        </li>
-      </ul>
       <p className={styles.paragraph}>
-        Cayma hakkının geçerli olduğu bir satın alma işleminde Alıcı, cayma
-        bildirimini takip eden on dört gün içerisinde ürünü Satıcı'ya geri
-        göndermekle yükümlüdür.
+        İade ile ilgili sorularınız için {data.seller.supportEmail} adresinden bizimle iletişime geçebilirsiniz.
       </p>
-      <ul className={styles.details}>
-        <li>
-          <strong>İade Taşıyıcısı ve İade Gönderim Masrafı:</strong>{" "}
-          {data.terms.returnCarrier}
-        </li>
-      </ul>
       <p className={styles.paragraph}>
         Cayma hakkının kullanıldığı durumlarda Satıcı, Yönetmelik'te belirtilen
         süreler ve koşullar çerçevesinde, varsa ilk teslimat masrafları dahil
@@ -282,19 +272,23 @@ export default function PreInformationTr({data}: {data: PreInformationData}) {
           hakkı kullanılamaz. Abonelik sözleşmesi kapsamında sağlanan basılı
           dergiler bakımından bu istisna uygulanmaz.
         </li>
-        <li>
-          <strong>Dijital yayınlar:</strong> Elektronik ortamda anında ifa
-          edilen hizmetler veya tüketiciye anında teslim edilen gayrimaddi
-          mallara ilişkin sözleşmelerde Yönetmelik'in 15/1-ğ maddesi uyarınca
-          cayma hakkı kullanılamaz. Bu istisna, satın alınan dijital yayının
-          gerçekten anında teslim edildiği durumlarda uygulanır.
-        </li>
-        <li>
-          <strong>Basılı ve dijital içeriği birlikte içeren paketler:</strong>{" "}
-          Cayma hakkının uygulanabilirliği ürünlerin niteliği, teslim şekli ve
-          satın alma ilişkisinin hukuki niteliği dikkate alınarak ilgili mevzuat
-          çerçevesinde değerlendirilir.
-        </li>
+        {data.includesDigitalContent ? (
+          <>
+            <li>
+              <strong>Dijital yayınlar:</strong> Elektronik ortamda anında ifa
+              edilen hizmetler veya tüketiciye anında teslim edilen gayrimaddi
+              mallara ilişkin sözleşmelerde Yönetmelik'in 15/1-ğ maddesi uyarınca
+              cayma hakkı kullanılamaz. Bu istisna, satın alınan dijital yayının
+              gerçekten anında teslim edildiği durumlarda uygulanır.
+            </li>
+            <li>
+              <strong>Basılı ve dijital içeriği birlikte içeren paketler:</strong>{" "}
+              Cayma hakkının uygulanabilirliği ürünlerin niteliği, teslim şekli ve
+              satın alma ilişkisinin hukuki niteliği dikkate alınarak ilgili mevzuat
+              çerçevesinde değerlendirilir.
+            </li>
+          </>
+        ) : null}
       </ul>
       <p className={styles.paragraph}>
         Cayma hakkına ilişkin istisnalar, ayıplı mal veya hizmete ilişkin

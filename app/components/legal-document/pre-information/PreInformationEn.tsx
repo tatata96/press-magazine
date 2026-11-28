@@ -5,7 +5,7 @@ import styles from "../legal-document.module.scss";
 
 // Pre-Contractual Information Form (Turkish Regulation on Distance Contracts, art. 5).
 // Statements that repeat the Distance Sales Agreement use its wording. Values in braces come
-// from `data`.
+// from `data`; text about digital publications appears only when `data.includesDigitalContent`.
 export default function PreInformationEn({data}: {data: PreInformationData}) {
   return (
     <div className={styles.document}>
@@ -81,8 +81,10 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
       </table>
       <p className={styles.paragraph}>Paid products offered for sale fall into the following categories:</p>
       <ul className={styles.bullets}>
-        <li><strong>Digital Publication:</strong> A digital edition of Press Magazine in PDF format.</li>
-        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with digital PDF versions of the same issues.</li>
+        {data.includesDigitalContent ? (
+          <li><strong>Digital Publication:</strong> A digital edition of Press Magazine in PDF format.</li>
+        ) : null}
+        <li><strong>Print Publication:</strong> A physical copy of a single issue of Press Magazine.</li>
       </ul>
       <p className={styles.paragraph}>
         Unless expressly stated otherwise on the product page, purchases are subject to a one-time
@@ -141,7 +143,7 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
       </p>
 
       <h2 className={styles.sectionHeading}>5. DELIVERY CONDITIONS</h2>
-      <h3 className={styles.subHeading}>5.1. Delivery of Printed Magazines (Print + Digital Publication)</h3>
+      <h3 className={styles.subHeading}>5.1. Delivery of Printed Magazines (Print Publication)</h3>
       <p className={styles.paragraph}>
         Printed magazines are shipped to the delivery address provided by the Buyer during checkout using
         the delivery method specified at the time of purchase.
@@ -155,17 +157,21 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
         Except where permitted by applicable legislation, delivery of physical goods shall not exceed
         thirty days.
       </p>
-      <h3 className={styles.subHeading}>5.2. Delivery of Digital Content (Digital Publication and Print + Digital Publication)</h3>
-      <p className={styles.paragraph}>Digital publications are provided electronically in PDF format.</p>
-      <ul className={styles.details}>
-        <li><strong>Access Method and Timing:</strong> {data.terms.digitalAccess}</li>
-        <li>
-          <strong>Technical Requirements:</strong> Downloading or viewing Digital Content may require an
-          internet connection and a compatible device or software capable of opening PDF files.
-        </li>
-        <li><strong>Technical Protection Measures:</strong> {data.terms.digitalProtection}</li>
-      </ul>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>5.2. Delivery of Digital Content (Digital Publication)</h3>
+          <p className={styles.paragraph}>Digital publications are provided electronically in PDF format.</p>
+          <ul className={styles.details}>
+            <li><strong>Access Method and Timing:</strong> {data.terms.digitalAccess}</li>
+            <li>
+              <strong>Technical Requirements:</strong> Downloading or viewing Digital Content may require an
+              internet connection and a compatible device or software capable of opening PDF files.
+            </li>
+            <li><strong>Technical Protection Measures:</strong> {data.terms.digitalProtection}</li>
+          </ul>
 
+        </>
+      ) : null}
       <h2 className={styles.sectionHeading}>6. RIGHT OF WITHDRAWAL</h2>
       <p className={styles.paragraph}>
         Subject to the exceptions provided under the Law and the Regulation, the Buyer has the right to
@@ -179,19 +185,11 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
       </p>
       <p className={styles.paragraph}>
         To exercise the right of withdrawal, the Buyer must notify the Seller of their decision through an
-        explicit statement within the statutory withdrawal period. The notice may be sent to:
+        explicit statement within the statutory withdrawal period.
       </p>
-      <ul className={styles.details}>
-        <li><strong>Email:</strong> {data.seller.supportEmail}</li>
-        <li><strong>Address:</strong> {data.seller.address}</li>
-      </ul>
       <p className={styles.paragraph}>
-        Where the right of withdrawal applies, the Buyer must return the Product to the Seller within
-        fourteen (14) days following the withdrawal notification.
+        For return-related inquiries, please contact us at {data.seller.supportEmail}.
       </p>
-      <ul className={styles.details}>
-        <li><strong>Return Carrier and Return Shipping Cost:</strong> {data.terms.returnCarrier}</li>
-      </ul>
       <p className={styles.paragraph}>
         Where the right of withdrawal is exercised, the Seller shall refund the payments received,
         including initial delivery costs where applicable, within the periods and under the conditions
@@ -213,18 +211,22 @@ export default function PreInformationEn({data}: {data: PreInformationData}) {
           magazines, except where they are supplied under a subscription agreement. This exception does
           not apply to printed magazines supplied under a subscription agreement.
         </li>
-        <li>
-          <strong>Digital publications:</strong> Pursuant to Article 15/1(ğ) of the Regulation, the right
-          of withdrawal does not apply to contracts concerning services performed instantly in an
-          electronic environment or intangible goods delivered instantly to the consumer. This exception
-          applies where the purchased Digital Content is actually delivered instantly.
-        </li>
-        <li>
-          <strong>Packages combining printed and digital publications:</strong> The applicability of the
-          right of withdrawal is determined in accordance with the relevant legislation, taking into
-          account the nature of the Products, their delivery methods, and the legal nature of the purchase
-          arrangement.
-        </li>
+        {data.includesDigitalContent ? (
+          <>
+            <li>
+              <strong>Digital publications:</strong> Pursuant to Article 15/1(ğ) of the Regulation, the right
+              of withdrawal does not apply to contracts concerning services performed instantly in an
+              electronic environment or intangible goods delivered instantly to the consumer. This exception
+              applies where the purchased Digital Content is actually delivered instantly.
+            </li>
+            <li>
+              <strong>Packages combining printed and digital publications:</strong> The applicability of the
+              right of withdrawal is determined in accordance with the relevant legislation, taking into
+              account the nature of the Products, their delivery methods, and the legal nature of the purchase
+              arrangement.
+            </li>
+          </>
+        ) : null}
       </ul>
       <p className={styles.paragraph}>
         Exceptions to the right of withdrawal do not limit or eliminate the Buyer's statutory rights

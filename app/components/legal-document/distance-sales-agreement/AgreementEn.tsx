@@ -3,9 +3,27 @@ import {Fragment} from "react";
 import type {AgreementData} from "@/lib/legal/agreement-data";
 import styles from "../legal-document.module.scss";
 
-// Distance Sales Agreement, English text exactly as supplied. Only the values in braces come
-// from `data`; do not reword the text without approval.
+// Distance Sales Agreement, English text as supplied, revised for the print-only offering
+// (version 1.1, pending legal review). Values in braces come from `data`; clauses about
+// digital publications appear only when `data.includesDigitalContent`. Do not reword the text
+// without approval.
 export default function AgreementEn({data}: {data: AgreementData}) {
+  // Article 4.1. The letters are assigned in order, so none is skipped.
+  const preInformationItems = [
+    "The essential characteristics and scope of the Product,",
+    "The Seller's legal name, address, and contact information,",
+    "The total purchase price, including all applicable taxes,",
+    "Any shipping, delivery, or additional charges,",
+    "Accepted payment methods,",
+    "Delivery methods and estimated delivery times,",
+    ...(data.includesDigitalContent ? ["Delivery and access conditions for Digital Content,"] : []),
+    "Whether the right of withdrawal applies, including its conditions and exceptions,",
+    "Return and refund conditions,",
+    // Ends the list when the digital item after it is left out.
+    data.includesDigitalContent ? "Available procedures for complaints and dispute resolution," : "Available procedures for complaints and dispute resolution.",
+    ...(data.includesDigitalContent ? ["Technical requirements that may affect the use of Digital Content."] : []),
+  ];
+
   return (
     <div className={styles.document}>
       <h2 className={styles.sectionHeading}>1. PARTIES</h2>
@@ -51,11 +69,13 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>Website:</strong> The website operating at www.pressmagazine.com.tr.
       </p>
       <p className={styles.paragraph}>
-        <strong>Product:</strong> Printed editions of Press Magazine, digital PDF publications, and packages combining these products offered for sale through the Website.
+        <strong>Product:</strong> Printed editions of Press Magazine{data.includesDigitalContent ? " and digital PDF publications" : ""} offered for sale through the Website.
       </p>
-      <p className={styles.paragraph}>
-        <strong>Digital Content:</strong> Press Magazine publications provided electronically in PDF format for viewing or downloading.
-      </p>
+      {data.includesDigitalContent ? (
+        <p className={styles.paragraph}>
+          <strong>Digital Content:</strong> Press Magazine publications provided electronically in PDF format for viewing or downloading.
+        </p>
+      ) : null}
       <p className={styles.paragraph}>
         <strong>Law:</strong> Turkish Consumer Protection Law No. 6502.
       </p>
@@ -79,8 +99,10 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>3.4.</strong> Paid products offered through the Website may fall into the following categories:
       </p>
       <ul className={styles.bullets}>
-        <li><strong>Digital Publication:</strong> A digital PDF edition of a single issue of Press Magazine.</li>
-        <li><strong>Print + Digital Publication:</strong> A physical copy of Press Magazine together with the digital PDF version of the same issue.</li>
+        {data.includesDigitalContent ? (
+          <li><strong>Digital Publication:</strong> A digital PDF edition of a single issue of Press Magazine.</li>
+        ) : null}
+        <li><strong>Print Publication:</strong> A physical copy of a single issue of Press Magazine.</li>
       </ul>
       <p className={styles.paragraph}>
         <strong>3.5.</strong> Press Magazine is published twice a year. Unless otherwise stated on the relevant product page, each purchase covers a single issue, as a one-time payment with no automatic renewal.
@@ -92,39 +114,11 @@ export default function AgreementEn({data}: {data: AgreementData}) {
       <p className={styles.paragraph}>
         <strong>4.1.</strong> Before placing an order, the Buyer shall be informed of the following:
       </p>
-      <p className={styles.paragraph}>
-        a) The essential characteristics and scope of the Product,
-      </p>
-      <p className={styles.paragraph}>
-        b) The Seller's legal name, address, and contact information,
-      </p>
-      <p className={styles.paragraph}>
-        c) The total purchase price, including all applicable taxes,
-      </p>
-      <p className={styles.paragraph}>
-        d) Any shipping, delivery, or additional charges,
-      </p>
-      <p className={styles.paragraph}>
-        e) Accepted payment methods,
-      </p>
-      <p className={styles.paragraph}>
-        f) Delivery methods and estimated delivery times,
-      </p>
-      <p className={styles.paragraph}>
-        g) Delivery and access conditions for Digital Content,
-      </p>
-      <p className={styles.paragraph}>
-        h) Whether the right of withdrawal applies, including its conditions and exceptions,
-      </p>
-      <p className={styles.paragraph}>
-        i) Return and refund conditions,
-      </p>
-      <p className={styles.paragraph}>
-        j) Available procedures for complaints and dispute resolution,
-      </p>
-      <p className={styles.paragraph}>
-        k) Technical requirements that may affect the use of Digital Content.
-      </p>
+      {preInformationItems.map((item, index) => (
+        <p key={item} className={styles.paragraph}>
+          {"abcdefghijk"[index]}) {item}
+        </p>
+      ))}
       <p className={styles.paragraph}>
         <strong>4.2.</strong> This information shall be made available to the Buyer through the product pages, order summary, Pre-Contractual Information Form, and this Agreement.
       </p>
@@ -240,22 +234,26 @@ export default function AgreementEn({data}: {data: AgreementData}) {
       <p className={styles.paragraph}>
         <strong>7.1.5.</strong> If delivery cannot be completed due to an incorrect or incomplete address provided by the Buyer, the Parties shall communicate to resolve the issue. This shall not eliminate the Buyer's statutory rights.
       </p>
-      <h3 className={styles.subHeading}>7.2. Delivery of Digital Content</h3>
-      <p className={styles.paragraph}>
-        <strong>7.2.1.</strong> Digital publications shall be provided electronically in PDF format.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.2.</strong> The method of accessing Digital Content and the date or period when access will become available shall be communicated to the Buyer before purchase.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.3.</strong> Downloading or viewing Digital Content may require an internet connection and a compatible device or software capable of opening PDF files.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.4.</strong> If Digital Content cannot be accessed due to a technical issue, the Buyer may contact the Seller to request that the issue be resolved.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>7.2.5.</strong> For packages combining printed and digital publications, each Product shall be delivered according to its respective nature and delivery conditions.
-      </p>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>7.2. Delivery of Digital Content</h3>
+          <p className={styles.paragraph}>
+            <strong>7.2.1.</strong> Digital publications shall be provided electronically in PDF format.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.2.</strong> The method of accessing Digital Content and the date or period when access will become available shall be communicated to the Buyer before purchase.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.3.</strong> Downloading or viewing Digital Content may require an internet connection and a compatible device or software capable of opening PDF files.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.4.</strong> If Digital Content cannot be accessed due to a technical issue, the Buyer may contact the Seller to request that the issue be resolved.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>7.2.5.</strong> For packages combining printed and digital publications, each Product shall be delivered according to its respective nature and delivery conditions.
+          </p>
+        </>
+      ) : null}
       <h2 className={styles.sectionHeading}>8. RIGHT OF WITHDRAWAL</h2>
       <p className={styles.paragraph}>
         <strong>8.1.</strong> Subject to the exceptions provided under the Law and the Regulation, the Buyer has the right to withdraw from a distance contract within fourteen (14) days without providing any reason and without incurring a penalty.
@@ -270,22 +268,13 @@ export default function AgreementEn({data}: {data: AgreementData}) {
         <strong>8.4.</strong> To exercise the right of withdrawal, the Buyer must notify the Seller of their decision through an explicit statement within the statutory withdrawal period.
       </p>
       <p className={styles.paragraph}>
-        Withdrawal and return requests may be submitted to:
+        For return-related inquiries, please contact us at {data.seller.supportEmail}.
       </p>
       <p className={styles.paragraph}>
-        <strong>{data.seller.supportEmail}</strong>
+        <strong>8.5.</strong> Where the right of withdrawal is exercised, the Seller shall refund the payments received, including initial delivery costs where applicable, within the periods and under the conditions prescribed by the Regulation.
       </p>
       <p className={styles.paragraph}>
-        <strong>8.5.</strong> Where the right of withdrawal applies, the Buyer must return the Product to the Seller within fourteen (14) days following the withdrawal notification.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.6.</strong> The designated carrier and return shipping instructions shall be specified in the Pre-Contractual Information Form for Products eligible for withdrawal. Where the designated carrier is used in accordance with applicable legislation, return shipping costs shall not be charged to the Buyer.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.7.</strong> Where the right of withdrawal is exercised, the Seller shall refund the payments received, including initial delivery costs where applicable, within the periods and under the conditions prescribed by the Regulation.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>8.8.</strong> Unless otherwise provided by applicable legislation, refunds shall be made using the same payment method used by the Buyer for the original transaction, without imposing additional costs on the Buyer.
+        <strong>8.6.</strong> Unless otherwise provided by applicable legislation, refunds shall be made using the same payment method used by the Buyer for the original transaction, without imposing additional costs on the Buyer.
       </p>
       <h2 className={styles.sectionHeading}>9. EXCEPTIONS TO THE RIGHT OF WITHDRAWAL</h2>
       <p className={styles.paragraph}>
@@ -298,18 +287,22 @@ export default function AgreementEn({data}: {data: AgreementData}) {
       <p className={styles.paragraph}>
         This exception does not apply to printed magazines supplied under a subscription agreement.
       </p>
-      <h3 className={styles.subHeading}>9.3. Digital Publications</h3>
-      <p className={styles.paragraph}>
-        Pursuant to Article 15/1(ğ) of the Regulation, the right of withdrawal does not apply to contracts concerning services performed instantly in an electronic environment or intangible goods delivered instantly to the consumer.
-      </p>
-      <p className={styles.paragraph}>
-        This exception applies where the purchased Digital Content is actually delivered instantly.
-      </p>
-      <h3 className={styles.subHeading}>9.4. Packages Combining Printed and Digital Publications</h3>
-      <p className={styles.paragraph}>
-        For packages containing both printed and digital Products, the applicability of the right of withdrawal shall be determined in accordance with the relevant legislation, taking into account the nature of the Products, their delivery methods, and the legal nature of the purchase arrangement.
-      </p>
-      <h3 className={styles.subHeading}>9.5. Preservation of Statutory Rights</h3>
+      {data.includesDigitalContent ? (
+        <>
+          <h3 className={styles.subHeading}>9.3. Digital Publications</h3>
+          <p className={styles.paragraph}>
+            Pursuant to Article 15/1(ğ) of the Regulation, the right of withdrawal does not apply to contracts concerning services performed instantly in an electronic environment or intangible goods delivered instantly to the consumer.
+          </p>
+          <p className={styles.paragraph}>
+            This exception applies where the purchased Digital Content is actually delivered instantly.
+          </p>
+          <h3 className={styles.subHeading}>9.4. Packages Combining Printed and Digital Publications</h3>
+          <p className={styles.paragraph}>
+            For packages containing both printed and digital Products, the applicability of the right of withdrawal shall be determined in accordance with the relevant legislation, taking into account the nature of the Products, their delivery methods, and the legal nature of the purchase arrangement.
+          </p>
+        </>
+      ) : null}
+      <h3 className={styles.subHeading}>{data.includesDigitalContent ? "9.5." : "9.3."} Preservation of Statutory Rights</h3>
       <p className={styles.paragraph}>
         Exceptions to the right of withdrawal do not limit or eliminate the Buyer's statutory rights concerning defective goods or services.
       </p>
@@ -355,14 +348,18 @@ export default function AgreementEn({data}: {data: AgreementData}) {
       <p className={styles.paragraph}>
         <strong>12.1.</strong> All intellectual property rights relating to texts, photographs, illustrations, designs, and other content published by Press Magazine belong to their respective rights holders.
       </p>
+      {data.includesDigitalContent ? (
+        <>
+          <p className={styles.paragraph}>
+            <strong>12.2.</strong> Purchasing a digital publication does not transfer ownership of intellectual property rights or grant the Buyer the right to commercially distribute the content to third parties.
+          </p>
+          <p className={styles.paragraph}>
+            <strong>12.3.</strong> The Buyer may use purchased Digital Content for personal, non-commercial purposes. Uses permitted by law and permissions expressly granted by the relevant rights holders shall remain unaffected.
+          </p>
+        </>
+      ) : null}
       <p className={styles.paragraph}>
-        <strong>12.2.</strong> Purchasing a digital publication does not transfer ownership of intellectual property rights or grant the Buyer the right to commercially distribute the content to third parties.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>12.3.</strong> The Buyer may use purchased Digital Content for personal, non-commercial purposes. Uses permitted by law and permissions expressly granted by the relevant rights holders shall remain unaffected.
-      </p>
-      <p className={styles.paragraph}>
-        <strong>12.4.</strong> Unauthorized reproduction, commercial distribution, or resale of the content may constitute an infringement of intellectual property rights under applicable legislation.
+        <strong>{data.includesDigitalContent ? "12.4." : "12.2."}</strong> Unauthorized reproduction, commercial distribution, or resale of the content may constitute an infringement of intellectual property rights under applicable legislation.
       </p>
       <h2 className={styles.sectionHeading}>13. DISPUTE RESOLUTION</h2>
       <p className={styles.paragraph}>

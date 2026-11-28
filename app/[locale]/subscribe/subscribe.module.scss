@@ -89,7 +89,8 @@
   background: var(--field-focus-background);
 
   @media (min-width: 900px) {
-    padding: 32px 48px 96px;
+    // Same bottom offset as .stageCaption, so the button and caption line up.
+    padding: 32px 48px calc(24px + 48px);
   }
 }
 
@@ -184,6 +185,16 @@
   }
 }
 
+// The only plan on offer: no radio, so nothing is selectable and the text uses the full width.
+.choiceStatic {
+  cursor: default;
+
+  .choiceName,
+  .choiceTagline {
+    padding-right: 0;
+  }
+}
+
 // Also the placeholder (a plain span) for a product with no Shopify image.
 .thumb {
   display: block;
@@ -228,10 +239,13 @@
   }
 }
 
+// Pushed to the bottom of the panel on desktop, taking the purchase section
+// below it along, so the benefits and the button stay together.
 .summary {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: auto;
 }
 
 .benefitsStack {
@@ -255,12 +269,10 @@
   visibility: hidden;
 }
 
-// Pinned to the bottom of the panel on desktop.
 .purchase {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: auto;
 }
 
 .cta {

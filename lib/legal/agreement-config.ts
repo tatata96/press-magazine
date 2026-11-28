@@ -18,7 +18,7 @@ export const SELLER: Record<SellerField, string | null> = {
   taxNumber: "7610578558",
   phone: "+90 530 208 56 90",
   email: "hello@pressmagazine.com.tr",
-  // Withdrawal and return requests go here (article 8.4); the same address as `email`.
+  // Return inquiries go here (article 8); the same address as `email`.
   supportEmail: "hello@pressmagazine.com.tr",
 };
 
@@ -39,7 +39,8 @@ export const BUSINESS_TERMS: Record<BusinessTermField, LocalizedText | null> = {
     tr: "Fiziksel dergi, sipariş tarihinden itibaren en geç 30 gün içerisinde teslim edilir.",
     en: "The physical magazine will be delivered within 30 days of the order date.",
   },
-  // Carrier for returns and who pays the return shipping (art. 5(1)(g); agreement 8.6).
+  // Carrier for returns and who pays the return shipping (art. 5(1)(g)). The documents no
+  // longer show it, but readiness.ts still requires it.
   returnCarrier: null,
   // How and from when the buyer can access the PDF (art. 5(1)(f); agreement 7.2.2).
   digitalAccess: {
@@ -56,7 +57,7 @@ export const BUSINESS_TERMS: Record<BusinessTermField, LocalizedText | null> = {
 // The agreement names two product categories (article 3.4). They are matched by the product's
 // `digital`/`print` Shopify tag (not its handle, which changes with every issue), so the
 // wording stays right whatever a product's shipping setting is.
-export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "printAndDigital"> = {
+export const PRODUCT_TYPE_BY_PLAN: Record<PlanId, "digital" | "print"> = {
   digital: "digital",
-  print: "printAndDigital",
+  print: "print",
 };
